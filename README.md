@@ -1,1 +1,1 @@
-# .
+# DiH (Collaborative Digital Herbarium) 
