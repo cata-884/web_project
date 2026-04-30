@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;700&display=swap');
+
+:root {
+    --color-light: #E5F0E6;
+    --color-accent: #F27300;
+    --color-teal: #086B8A;
+    --color-primary: #128246;
+    --color-brown: #6F4A39;
+    --text-main: #2D2D2D;
+    --text-light: #FFFFFF;
+
+    --font-family-main: 'Inter', sans-serif;
+    --font-family-headings: 'Roboto', sans-serif;
+
+    --font-body: 1rem;
+    --font-btn: 1.25rem;
+    --font-h1: clamp(2rem, 5vw + 1rem, 4rem);
+    --font-h2: clamp(1.5rem, 4vw + 0.5rem, 3rem);
+    --font-h3: clamp(1.125rem, 3vw + 0.5rem, 2rem);
+    --font-h4: 1.5rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: var(--font-family-main);
+}
+
+body {
+    background-color: var(--color-light);
+    color: var(--text-main);
+    font-size: var(--font-body);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-family-headings);
+    font-weight: 700;
+}
+
+h1 { font-size: var(--font-h1); color: var(--color-primary); }
+h2 { font-size: var(--font-h2); color: var(--color-teal); }
+h3 { font-size: var(--font-h3); color: var(--color-brown); }
+h4 { font-size: var(--font-h4); }
