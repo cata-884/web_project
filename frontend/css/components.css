@@ -18,3 +18,102 @@
     transform: scale(1.05);
     background-color: #d96600;
 }
+/* --- FEATURE CARD COMPONENT --- */
+.feature-card {
+    position: absolute;
+    background-color: #EAF2EB;
+    width: 100%; /* Cardul se va intinde fix cat ii permite .about-cards-stack */
+    box-sizing: border-box; /* Obligatoriu! Fortam padding-ul sa ramana in interiorul cardului */
+    padding: clamp(16px, 5vw, 24px); /* Padding inteligent: mai mic pe mobil, 24px pe desktop */
+    border-radius: 24px;
+    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: transform 0.3s ease;
+}
+
+
+.feature-card h3 {
+    font-size: var(--font-h3);
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.card-img img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+/* Butonul de pe card */
+.btn-dark {
+    width: 100%;
+    background-color: #1A0905; /* Maro/Negru foarte închis */
+    color: var(--text-light);
+    border: none;
+    padding: 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    font-size:var(--font-btn);
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px 30px;
+    width: 380px;
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.review-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--text-light);
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.review-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-light);
+    opacity: 0.85;
+}
+
+.active-card {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 350px;
+    /* Am eliminat min-width-ul fix ca sa ii permitem sa se stranga */
+}
+
+.side-card {
+    transform: scale(0.9);
+    opacity: 0.4;
+    z-index: 1;
+    width: 100%;
+    max-width: 350px;
+}
