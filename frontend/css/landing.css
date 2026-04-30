@@ -214,20 +214,19 @@ color: var(--text-light);
 .about-cards-stack {
     position: relative;
     height: 520px;
-    width: 100%; /* Ii spunem sa ocupe tot spatiul oferit */
-    max-width: 440px; /* Dar il blocam la 440px pe ecrane mari */
+    width: 100%;
+    max-width: 440px;
     flex-shrink: 0;
-    margin: 0 auto; /* Acest margin il va centra perfect cand trece pe modul coloana la ecrane mici */
+    margin: 0 auto;
 }
 @media (max-width: 500px) {
     .about-cards-stack {
-        height: 420px; /* Reducem inaltimea totala pe telefoane ca sa nu avem spatiu gol excesiv */
+        height: 420px;
     }
     .about-cards-stack {
         margin: 0 auto;
-        /* Aici e magia! Adaugam padding in dreapta ca sa avem loc pentru cardurile din spate */
         padding-right: 40px;
-        box-sizing: border-box; /* Ne asiguram ca padding-ul nu mareste cutia peste marginile ecranului */
+        box-sizing: border-box;
         max-width: 100%;
     }
     .feature-card.card-middle{
@@ -359,13 +358,10 @@ color: var(--text-light);
 }
 @media (max-width: 500px) {
     .active-card {
-        /* 100vw inseamna toata latimea ecranului. Scadem 64px pentru marginile laterale. */
-        /* Impartim la 1.05 pentru a compensa acel transform: scale care il face mai lat dintr-o data */
-        max-width: calc((100vw - 64px) / 1.05);
+         max-width: calc((100vw - 64px) / 1.05);
     }
 
     .side-card {
-        /* Daca cardurile laterale se mai vad si vrei sa aiba aceleasi margini sigure */
         max-width: calc((100vw - 64px) / 0.9);
     }
 }
@@ -476,7 +472,7 @@ color: var(--text-light);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-sizing: border-box; /* Asta rezolva problema umflarii */
+    box-sizing: border-box;
     width: 100%;
 }
 
@@ -534,8 +530,7 @@ color: var(--text-light);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-sizing: border-box; /* Asta rezolva problema umflarii */
-    width: 100%;
+    box-sizing: border-box;
 }
 
 .contact-form {
@@ -758,25 +753,21 @@ color: var(--text-light);
 }
 
 @media (max-width: 782px) {
-    /* 1. Ascunde linkurile din meniu */
     .nav-group {
         display: none;
     }
 
-    /* 2. Ascunde sectiunea cu statistici */
     .stats-grid {
         display: none;
     }
 
-    /* 3. Arata butonul hamburger */
     .hamburger-menu {
         display: flex;
     }
 
-    /* 4. Pastreaza meniul pe un singur rand pentru logo si buton */
     .main-nav {
         flex-direction: row;
         justify-content: space-between;
-        padding: 1rem 1.5rem; /* Putin mai ingust pe mobil */
+        padding: 1rem 1.5rem;
     }
 }
