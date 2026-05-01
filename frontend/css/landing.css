@@ -1,3 +1,4 @@
+/*Hero section------*/
 .top-header {
     position: absolute;
     top: 60px;
@@ -49,7 +50,7 @@
 .hamburger-menu .bar {
     width: 100%;
     height: 3px;
-    background-color: var(--text-light); /* am pus culoarea pentru fundal intunecat */
+    background-color: var(--text-light);
     border-radius: 10px;
     transition: all 0.3s ease;
 }
@@ -110,7 +111,7 @@
     line-height: 1.6;
     color: var(--text-light);
    /* font-size:var(--font-body);*/
-   font-size:16px;
+
 
 }
 
@@ -168,16 +169,44 @@ color: var(--text-light);
     opacity: 0.9;
     color: var(--text-light);
 }
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-main);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 782px) {
+    .nav-group {
+        display: none;
+    }
+
+    .stats-grid {
+        display: none;
+    }
+
+    .hamburger-menu {
+        display: flex;
+    }
+
+    .main-nav {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+    }
+}
 /* --- ABOUT SECTION --- */
 .about-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 80px 32px;
+   padding-top: clamp(60px, 8vw, 120px);
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
     gap: 60px;
+    padding-top: clamp(60px, 8vw, 120px) ;
 }
 .about-visual {
     flex: 1;
@@ -220,6 +249,28 @@ color: var(--text-light);
     max-width: 440px;
     flex-shrink: 0;
     margin: 0 auto;
+}
+.card-front {
+    z-index: 3;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-middle {
+    z-index: 2;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.98);
+    opacity: 0.95;
+}
+
+.card-back {
+    z-index: 1;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.96);
+    opacity: 0.9;
 }
 @media (max-width: 500px) {
     .about-cards-stack {
@@ -269,37 +320,21 @@ color: var(--text-light);
         margin: 0 auto;
     }
 }
-.card-front {
-    z-index: 3;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-}
 
-.card-middle {
-    z-index: 2;
-    left: 40px;
-    top: 50%;
-    transform: translateY(-50%) scale(0.98);
-    opacity: 0.95;
-}
-
-.card-back {
-    z-index: 1;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%) scale(0.96);
-    opacity: 0.9;
-}
 /*---------Review  SEction---------*/
 .reviews-section {
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('../assets/Review.jpg');
     background-size: cover;
     background-position: center;
-    padding: 100px 0;
+   margin-top: clamp(60px, 8vw, 120px);
     color: var(--text-light);
     text-align: center;
     overflow: hidden;
+    padding: clamp(24px, 5vw, 64px);
+    padding-top: clamp(60px, 8vw, 80px);
+     padding-bottom: clamp(60px, 8vw, 80px);
+
+
 }
 
 .reviews-header {
@@ -315,7 +350,7 @@ color: var(--text-light);
 }
 
 .reviews-header p {
-    font-size: 1rem;
+    font-size:var(--font-body);
     line-height: 1.6;
     opacity: 0.9;
 }
@@ -348,8 +383,8 @@ color: var(--text-light);
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 1rem;
+    height: 1rem;;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
 }
@@ -366,16 +401,14 @@ color: var(--text-light);
     .side-card {
         max-width: calc((100vw - 64px) / 0.9);
     }
-    .img-small{
-     display:none;
-    }
-    section{
-        margin-top:20px;
-    }
+
+
 }
 /* Sectiunea cu povestea platformei */
 .story-section {
-    padding: 100px 32px;
+    padding-left:  clamp(24px, 5vw, 64px);
+    padding-right: clamp(24px, 5vw, 64px);
+   padding-top: clamp(60px, 8vw, 120px);
     display: flex;
     justify-content: center;
     background-color: var(--color-light);
@@ -449,14 +482,30 @@ color: var(--text-light);
     .img-small {
         min-height: 250px;
     }
+     .img-small{
+     display:none;
+    }
+    .story-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
 }
----Contact Section------
+.btn-dark{
+    margin-top: 1rem;;
+}
+}
+
+/* --- Contact Section --- */
 .contact-section {
-    padding: 80px 32px;
     display: flex;
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
+    padding-left: clamp(24px, 5vw, 64px);
+    padding-right: clamp(24px, 5vw, 64px);
+     padding-top: clamp(60px, 8vw, 80px) ;
+
 }
 
 .contact-container {
@@ -490,22 +539,7 @@ color: var(--text-light);
     color: var(--text-light);
 }
 
-.contact-visual-card p {
-    opacity: 0.9;
-    line-height: 1.6;
-    margin-bottom: 40px;
-}
-
-.contact-info {
-    margin-bottom: 25px;
-}
-
-.contact-info h3 {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-    color: var(--text-light);
-}
-
+/* Nota: Aveai declaratia p de doua ori in codul tau, am pastrat-o pe cea cu clamp() */
 .contact-visual-card p {
     opacity: 0.9;
     line-height: 1.6;
@@ -581,6 +615,7 @@ color: var(--text-light);
     transition: border-color 0.3s ease;
     box-sizing: border-box;
 }
+
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--color-accent);
@@ -602,11 +637,7 @@ color: var(--text-light);
         flex-direction: column;
     }
 
-    .contact-visual-card {
-        padding: 40px 30px;
-        min-width: 100%;
-    }
-
+    .contact-visual-card,
     .contact-form-card {
         padding: 40px 30px;
         min-width: 100%;
@@ -620,9 +651,10 @@ color: var(--text-light);
 .main_footer {
     background-color: var(--color-primary);
     color: var(--text-light);
-    padding: 60px 32px 60px 32px;
+   /* padding: 60px 32px 60px 32px;*/
     width: 100%;
-    margin-top:120px;
+    margin-top: clamp(60px, 8vw, 120px);
+     padding-bottom: clamp(32px, 4vw, 60px);
 }
 .footer_wave {
     display: flex;
@@ -633,6 +665,10 @@ color: var(--text-light);
     margin: 0 auto 60px auto;
     align-items: center;
     box-sizing: border-box;
+    padding-left: clamp(24px, 5vw, 64px);
+    padding-right: clamp(24px, 5vw, 64px);
+    padding-top:clamp(32px, 4vw, 60px);
+     padding-bottom: clamp(32px, 4vw, 60px);
 }
 
 .footer_heading {
@@ -651,6 +687,8 @@ color: var(--text-light);
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding-left: clamp(24px, 5vw, 64px);
+    padding-right: clamp(24px, 5vw, 64px);
 }
 
 .footer_col {
@@ -720,16 +758,7 @@ color: var(--text-light);
         gap: 30px;
     }
 }
-.footer_wave {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    align-items: center;
-    box-sizing: border-box;
-}
+
 
 
 .footer_wave .footer_heading {
@@ -760,22 +789,20 @@ color: var(--text-light);
     transition: all 0.3s ease;
 }
 
-@media (max-width: 782px) {
-    .nav-group {
-        display: none;
+@media (max-width: 768px) {
+    .footer_wave {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
     }
 
-    .stats-grid {
-        display: none;
+    .footer_grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 20px;
     }
-
-    .hamburger-menu {
-        display: flex;
-    }
-
-    .main-nav {
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 1rem 1.5rem;
+}
+@media (max-width: 480px) {
+    .footer_grid {
+        grid-template-columns: 1fr;
     }
 }
