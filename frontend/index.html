@@ -67,34 +67,41 @@
         </div>
     </div>
 
-    <div class="about-cards-stack">
-        <article class="feature-card card-front">
-            <h3>Comprehensive Cataloging</h3>
-            <p>Easily document every detail. Add scientific names, geographic origins, images, and specific traits. Organize your findings in structured, easy-to-manage private or public workspaces.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Cataloging Image">
-            </div>
-            <button class="btn-dark">Discovery Team &gt;</button>
-        </article>
+   <div class="about-cards-stack">
+    <input type="radio" name="card_slider" id="slide1" checked>
+    <input type="radio" name="card_slider" id="slide2">
+    <input type="radio" name="card_slider" id="slide3">
 
-        <article class="feature-card card-middle">
-            <h3>Comprehensive Cataloging</h3>
-            <p>Easily document every detail. Add scientific names, geographic origins, images, and specific traits.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Cataloging Image">
-            </div>
-            <button class="btn-dark">Discovery Team &gt;</button>
-        </article>
+    <!-- Card 1 -->
+    <article class="feature-card" id="card1">
+        <h3>Comprehensive Cataloging</h3>
+        <p>Easily document every detail. Add scientific names, geographic origins, images, and specific traits. Organize your findings in structured, easy-to-manage private or public workspaces.</p>
+        <div class="card-img">
+            <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Cataloging Image">
+        </div>
+        <label for="slide2" class="btn-dark card-btn">Discovery Team &gt;</label>
+    </article>
 
-        <article class="feature-card card-back">
-            <h3>Comprehensive Cataloging</h3>
-            <p>Easily document every detail. Add scientific names, geographic origins, images, and specific traits.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Cataloging Image">
-            </div>
-            <button class="btn-dark">Discovery Team &gt;</button>
-        </article>
-    </div>
+    <!-- Card 2 -->
+    <article class="feature-card" id="card2">
+        <h3>Advanced Search</h3>
+        <p>Instantly find exactly what you need using multi-criteria search—like filtering by soil type, origin, and benefits. Seamlessly export your entire database in open JSON and XML formats.</p>
+        <div class="card-img">
+            <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Search Image">
+        </div>
+        <label for="slide3" class="btn-dark card-btn">Discovery Team &gt;</label>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="feature-card" id="card3">
+        <h3>Collaborative Workspaces</h3>
+        <p>Invite friends and colleagues to contribute to your herbaria. Assign strict Editor or Viewer roles to build vast collections together while keeping full control over your data.</p>
+        <div class="card-img">
+            <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Collaboration Image">
+        </div>
+        <label for="slide1" class="btn-dark card-btn">Discovery Team &gt;</label>
+    </article>
+</div>
 </section>
 <section class="reviews-section" id="reviews">
     <div class="reviews-header">
@@ -102,35 +109,52 @@
         <p>Dont just take our word for it. Discover how students, researchers, and nature lovers are using our platform to organize their findings, collaborate seamlessly, and share their botanical passion with the world.</p>
     </div>
 
+    <div class="reviews-interactive-container">
+    <input type="radio" name="review_slider" id="rev1" checked>
+    <input type="radio" name="review_slider" id="rev2">
+    <input type="radio" name="review_slider" id="rev3">
+
     <div class="carousel-wrapper">
         <div class="reviews-carousel">
-            <article class="review-card side-card">
-                <h4>Emily Carter</h4>
+            <!-- Review 1 -->
+            <article class="review-card" id="review1">
+                <h4>Emily Carter 1</h4>
                 <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
                 <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. The ability to assign editor roles and build a shared herbarium in real time is fantastic.</p>
             </article>
 
-            <article class="review-card active-card">
-                <h4>Emily Carter</h4>
+            <!-- Review 2 -->
+            <article class="review-card" id="review2">
+                <h4>Emily Carter 2</h4>
                 <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
-                <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. The ability to assign editor roles and build a shared herbarium in real time is fantastic. Plus, exporting our data straight to JSON makes submitting our research a breeze.</p>
+                <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. Plus, exporting our data straight to JSON makes submitting our research a breeze.</p>
             </article>
 
-            <article class="review-card side-card">
-                <h4>Emily Carter</h4>
+            <!-- Review 3 -->
+            <article class="review-card" id="review3">
+                <h4>Emily Carter 3</h4>
                 <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
                 <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. The ability to assign editor roles and build a shared herbarium in real time is fantastic.</p>
             </article>
+
+
         </div>
     </div>
 
     <div class="carousel-controls">
-        <span>&lt;</span>
-        <div class="dot"></div>
-        <div class="dot active-dot"></div>
-        <div class="dot"></div>
-        <span>&gt;</span>
+        <label for="rev3" class="arrow left-arrow" id="left-for-1">&lt;</label>
+        <label for="rev1" class="arrow left-arrow" id="left-for-2">&lt;</label>
+        <label for="rev2" class="arrow left-arrow" id="left-for-3">&lt;</label>
+
+        <label for="rev1" class="dot" id="dot1"></label>
+        <label for="rev2" class="dot" id="dot2"></label>
+        <label for="rev3" class="dot" id="dot3"></label>
+
+        <label for="rev2" class="arrow right-arrow" id="right-for-1">&gt;</label>
+        <label for="rev3" class="arrow right-arrow" id="right-for-2">&gt;</label>
+        <label for="rev1" class="arrow right-arrow" id="right-for-3">&gt;</label>
     </div>
+</div>
 </section>
 <section class="story-section" id="team">
     <div class="story-container">

@@ -35,14 +35,14 @@
 .feature-card h3 {
     font-size: var(--font-h3);
     color: var(--text-main);
-    margin-bottom: 10px;
+
 }
 
 .feature-card p {
     font-size: 0.85rem;
     color: var(--text-main);
     line-height: 1.5;
-    margin-bottom: 20px;
+
 }
 
 .card-img img {
@@ -50,7 +50,6 @@
     height: 160px;
     object-fit: cover;
     border-radius: 16px;
-    margin-bottom: 20px;
 }
 
 /* Butonul de pe card */
