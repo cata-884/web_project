@@ -22,9 +22,9 @@
 .feature-card {
     position: absolute;
     background-color: #EAF2EB;
-    width: 100%; /* Cardul se va intinde fix cat ii permite .about-cards-stack */
-    box-sizing: border-box; /* Obligatoriu! Fortam padding-ul sa ramana in interiorul cardului */
-    padding: clamp(16px, 5vw, 24px); /* Padding inteligent: mai mic pe mobil, 24px pe desktop */
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(16px, 5vw, 24px);
     border-radius: 24px;
     box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -55,7 +55,7 @@
 /* Butonul de pe card */
 .btn-dark {
     width: 100%;
-    background-color: #1A0905; /* Maro/Negru foarte închis */
+    background-color: #1A0905;
     color: var(--text-light);
     border: none;
     padding: 24px;
@@ -106,7 +106,6 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     width: 100%;
     max-width: 350px;
-    /* Am eliminat min-width-ul fix ca sa ii permitem sa se stranga */
 }
 
 .side-card {

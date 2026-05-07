@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - HerbaLink</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+
+    <main class="auth-layout">
+
+        <div class="auth-visual">
+            <img src="../assets/Mobile login-pana (1).svg" alt="Sign Up Illustration" class="illustration">
+        </div>
+
+        <div class="auth-form-container">
+            <div class="auth-card">
+                <h2>Sign Up</h2>
+                <p class="subtitle">One account to get help or support your local community.</p>
+
+                <form action="dashboard.html" method="GET" class="login-form">
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name" name="name" placeholder="e.g., John Doe" required>
+                            <span class="icon-eye" style="opacity: 0;"></span> </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder="e.g., name@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Create a password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat password" required>
+                        </div>
+                    </div>
+
+                    <div class="terms-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">Agree with <a href="#">Term&Conditions</a></label>
+                    </div>
+
+<button type="button" class="btn-submit" onclick="window.location.href='dashboard.html'">Sign Up</button>                </form>
+
+                <div class="divider">
+                    <span>Or</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="btn-social" type="button">
+                        <img src="../assets/google-icon.png" alt="G" width="18"> Google
+                    </button>
+                    <button class="btn-social" type="button">
+                        <img src="../assets/apple-icon.png" alt="A" width="18"> Apple
+                    </button>
+                </div>
+
+                <p class="signup-link">Already have an account? <a href="auth.html">Sign In</a></p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -10,23 +10,22 @@
 <body>
 
     <main class="auth-layout">
-        <section class="auth-visual">
-            <img src="../assets/Mobile login-pana (1).svg" alt="Login Illustration" class="illustration">
-        </section>
 
-        <section class="auth-form-container">
+        <div class="auth-visual">
+            <img src="../assets/Mobile login-pana (1).svg" alt="Login Illustration" class="illustration">
+        </div>
+
+        <div class="auth-form-container">
             <div class="auth-card">
                 <h2>Sign in</h2>
                 <p class="subtitle">Log in to request or offer local assistance.</p>
 
-                <!-- Formularul -->
-                <form action="login.php" method="POST" class="login-form">
+                <form action="dashboard.html" method="POST" class="login-form">
 
                     <div class="form-group">
                         <label for="email">Email</label>
                         <div class="input-wrapper">
                             <input type="email" id="email" name="email" placeholder="e.g., name@example.com" required>
-                            <span class="icon-eye">👁️</span>
                         </div>
                     </div>
 
@@ -34,7 +33,6 @@
                         <label for="password">Password</label>
                         <div class="input-wrapper">
                             <input type="password" id="password" name="password" placeholder="your password" required>
-                            <span class="icon-eye">👁️</span>
                         </div>
                     </div>
 
@@ -42,8 +40,7 @@
                         <a href="#">Forgot password?</a>
                     </div>
 
-                    <button type="submit" class="btn-submit">Sign In</button>
-                </form>
+<button type="button" class="btn-submit" onclick="window.location.href='dashboard.html'">Sign In</button>                </form>
 
                 <div class="divider">
                     <span>Or</span>
@@ -51,16 +48,16 @@
 
                 <div class="social-login">
                     <button class="btn-social" type="button">
-                        <img src="assets/google-icon.png" alt="G" width="18"> Google
+                        <img src="../assets/google-icon.png" alt="G" width="18"> Google
                     </button>
                     <button class="btn-social" type="button">
-                        <img src="assets/apple-icon.png" alt="A" width="18"> Apple
+                        <img src="../assets/apple-icon.png" alt="A" width="18"> Apple
                     </button>
                 </div>
 
-                <p class="signup-link">Don't have an account? <a href="#">Create Account</a></p>
+                <p class="signup-link">Don't have an account? <a href="register.html">Create Account</a></p>
             </div>
-        </section>
+        </div>
     </main>
 
 </body>
