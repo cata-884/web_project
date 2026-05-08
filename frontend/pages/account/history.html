@@ -6,8 +6,9 @@
     <title>Profil - CaT (Camping Info)</title>
 
     <link rel="stylesheet" href="../../css/global.css">
-   <link rel="stylesheet" href="../../css/account/account-layout.css">
-    <link rel="stylesheet" href="../../css/account/profile.css">
+<link rel="stylesheet" href="../../css/account/account-layout.css">
+    <link rel="stylesheet" href="../../css/account/history.css">
+
 </head>
 <body>
 
@@ -20,20 +21,20 @@
                 <button class="toggle-btn" type="button">White ☼</button>
             </div>
 
-           <nav class="sidebar-nav">
+            <nav class="sidebar-nav">
                 <a href="../../index.html" class="nav-item">
                     <span>Home</span>
                     <span class="arrow">↗</span>
                 </a>
-                <a href="history.html" class="nav-item">
+                <a href="history.html" class="nav-item active">
                     <span>History</span>
                     <span class="arrow">↗</span>
                 </a>
-                <a href="settings.html" class="nav-item">
+                <a href="settings.html" class="nav-item ">
                     <span>Settings</span>
                     <span class="arrow">↗</span>
                 </a>
-                <a href="profile.html" class="nav-item active">
+                <a href="profile.html" class="nav-item ">
                     <span>Profile</span>
                     <span class="arrow">↗</span>
                 </a>
@@ -42,7 +43,6 @@
                     <span class="arrow">↗</span>
                 </a>
             </nav>
-
 
             <button class="btn-logout" type="button" onclick="window.location.href='../auth.html'">Log Out</button>
         </aside>
@@ -59,35 +59,7 @@
             </div>
         </div>
     </header>
-    <div calss="profile-center-wrapper">
-    <div class="profile-widget">
 
-        <div class="profile-avatar"></div>
-
-        <div class="profile-form-box">
-
-            <div class="form-row split">
-                <div class="input-group">
-                    <label>Last name</label>
-                    <input type="text" placeholder="Mihai">
-                </div>
-                <div class="input-group">
-                    <label>First Name</label>
-                    <input type="text" placeholder="Gigel">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="input-group">
-                    <label>About Me</label>
-                    <textarea placeholder="Hello! I'm a software developer by day, but I know how frustrating a slow laptop or a disconnected Wi-Fi router can be..."></textarea>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-    </div>
 </main>
 
     </div>
