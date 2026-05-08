@@ -357,9 +357,21 @@ color: var(--text-light);
     .feature-card {
         width: calc(100% - 30px);
     }
+.feature-card.pos-0 {
+        transform: translateY(-50%) translateX(0) scale(1);
+    }
 
-.feature-card.pos-1 { transform: translateY(-50%) translateX(25px) scale(0.90); }
-    .feature-card.pos-2 { transform: translateY(-50%) translateX(50px) scale(0.80); }
+    .feature-card.pos-1 {
+        /* Am anulat translateX(50px) și am lăsat o scalare fină */
+        transform: translateY(-50%) translateX(0) scale(0.95);
+        opacity: 0.8;
+    }
+
+    .feature-card.pos-2 {
+        /* Am anulat translateX(100px) */
+        transform: translateY(-50%) translateX(0) scale(0.90);
+        opacity: 0.5;
+    }
 }
 
 /*---------Review  SEction---------*/

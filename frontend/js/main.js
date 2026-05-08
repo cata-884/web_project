@@ -292,4 +292,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Apelam funcția la încărcarea paginii
     renderWishlist();
+    // ==========================================
+    // 10. ACCORDION SYSTEM PENTRU PROFIL
+    // ==========================================
+    const accordions = document.querySelectorAll('.accordion-header');
+
+    if (accordions.length > 0) {
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                // Rotim iconita
+                const icon = this.querySelector('.acc-icon');
+
+                // Gasim continutul imediat urmator (div-ul cu checkbox-uri)
+                const content = this.nextElementSibling;
+
+                if (content.classList.contains('show')) {
+                    // Daca e deschis, il inchidem
+                    content.classList.remove('show');
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    // Daca e inchis, il deschidem
+                    content.classList.add('show');
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    }
+    // ==========================================
+    // 11. MOBILE HAMBURGER MENU (OFF-CANVAS)
+    // ==========================================
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const sidebar = document.querySelector('.account-sidebar');
+
+    if (hamburgerBtn && sidebar) {
+        // 1. Creăm acel fundal întunecat (overlay) dinamic din JavaScript
+        const overlay = document.createElement('div');
+        overlay.className = 'mobile-overlay';
+        document.body.appendChild(overlay);
+
+        // Funcția de deschidere/închidere
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('open');
+
+            if (sidebar.classList.contains('open')) {
+                overlay.classList.add('active');
+            } else {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // 2. Click pe butonul Hamburger
+        hamburgerBtn.addEventListener('click', toggleMobileMenu);
+
+        // 3. Click pe fundalul întunecat închide meniul
+        overlay.addEventListener('click', toggleMobileMenu);
+
+        // 4. Click pe ORICE buton din meniu închide sidebar-ul
+        // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
+        const sidebarLinks = sidebar.querySelectorAll('.nav-item');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Dacă suntem pe mobil (lățime <= 700), închidem meniul automat
+                if (window.innerWidth <= 700) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    }
 });

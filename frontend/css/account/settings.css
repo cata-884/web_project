@@ -1,0 +1,197 @@
+/* =========================================
+   CONTAINER PRINCIPAL SETĂRI
+   ========================================= */
+.settings-container {
+    width: clamp(280px, 100%, 700px); /* Lățimea maximă centrală */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-items); /* Spațiu generos între secțiuni */
+}
+
+/* --- HEADER TEXT (Dashed border) --- */
+.settings-header-text {
+    text-align: center;
+
+    padding: 24px;
+
+    background-color: transparent;
+}
+
+.settings-header-text h2 {
+    font-size: 28px;
+    color: #1A1A1A;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.settings-header-text p {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* =========================================
+   SECȚIUNILE (Account, Notificari, Security)
+   ========================================= */
+.settings-section h3 {
+    font-size: 18px;
+    color: #1A1A1A;
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 8px;
+}
+
+/* --- INPUTS & FORMS --- */
+.form-row.split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--gap-items);
+}
+
+.align-end {
+    align-items: flex-end; /* Aliniază butonul de parolă la nivel cu input-ul */
+}
+
+.input-group-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.input-group-settings label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+.input-group-settings input {
+    padding: 12px 16px;
+    border: 1px solid #7A7A7A;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+    height: 44px; /* Înălțime fixă pentru simetrie */
+    box-sizing: border-box;
+}
+
+.input-group-settings input:focus {
+    border-color: #84AC00;
+}
+
+/* Iconița de ochi pt parolă */
+.relative-input {
+    position: relative;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 16px;
+    bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+}
+
+/* =========================================
+   BUTOANE (Dark & Primary)
+   ========================================= */
+
+
+
+/* =========================================
+   NOTIFICĂRI (Switch-uri)
+   ========================================= */
+.notifications-row {
+    display: flex;
+    gap: var(--gap-items);
+    align-items: center;
+}
+
+.toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+/* Slider Design iOS style */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: transparent;
+    border: 2px solid #7A7A7A; /* Switch off */
+    transition: .3s;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px; /* Centrare pe inaltime */
+    background-color: #7A7A7A;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+    background-color: #1A1A1A; /* Devine negru cand e activ */
+    border-color: #1A1A1A;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(16px);
+    background-color: white;
+}
+.btn-dark{
+    padding:clamp(10px, 2vw, 16px) clamp(16px, 4vw, 24px);
+}
+
+/* =========================================
+   RESPONSIVE (Mobil < 600px)
+   ========================================= */
+@media (max-width: 500px) {
+    .form-row.split {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .btn-dark {
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .notifications-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}

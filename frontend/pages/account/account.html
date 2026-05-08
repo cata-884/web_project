@@ -6,11 +6,15 @@
     <title>Account - CaT (Camping Info)</title>
 
     <link rel="stylesheet" href="../../css/global.css">
-    <link rel="stylesheet" href="../../css/account/account-layout.css">
     <link rel="stylesheet" href="../../css/account/profile.css">
     <link rel="stylesheet" href="../../css/account/wishlist.css">
         <link rel="stylesheet" href="../../css/account/history.css">
            <link rel="stylesheet" href="../../css/account/booking-details.css">
+    <link rel="stylesheet" href="../../css/account/account-layout.css">
+        <link rel="stylesheet" href="../../css/components.css">
+                <link rel="stylesheet" href="../../css/account/settings.css">
+
+
 
 
 </head>
@@ -48,45 +52,103 @@
         </aside>
 
         <main class="account-content">
-            <header class="account-header">
-                <div class="header-logo">CaT</div>
+    <header class="account-header">
+    <button class="hamburger-btn" id="hamburger-btn">☰</button>
 
-                <div class="user-pill">
-                    <img src="../../assets/profil.jpg" alt="Avatar">
-                    <div class="user-info">
-                        <span class="user-name">Luciu Sebastian</span>
-                        <span class="user-email">sebastianluciu@gmail.com</span>
-                    </div>
-                </div>
-            </header>
+    <div class="header-logo">CaT</div>
+
+    <div class="user-pill">
+        <img src="../../assets/profil.jpg" alt="Avatar">
+        <div class="user-info">
+            <span class="user-name">Mihai Gigel</span>
+            <span class="user-email">mihai@gmail.com</span>
+        </div>
+    </div>
+</header>
 
             <div class="account-pages-wrapper">
-
                 <div id="profile" class="tab-section active-section">
-                    <div class="profile-center-wrapper">
-                        <div class="profile-widget">
-                            <div class="profile-avatar"></div>
-                            <div class="profile-form-box">
-                                <div class="form-row split">
-                                    <div class="input-group">
-                                        <label>Last name</label>
-                                        <input type="text" placeholder="Mihai">
-                                    </div>
-                                    <div class="input-group">
-                                        <label>First Name</label>
-                                        <input type="text" placeholder="Gigel">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="input-group">
-                                        <label>About Me</label>
-                                        <textarea placeholder="Hello! I'm a software developer..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="profile-split-layout">
+
+        <div class="profile-card-ui">
+
+            <div class="cover-photo-area" onclick="document.getElementById('cover-upload').click()" title="Apasă pentru a schimba imaginea de fundal">
+                </div>
+            <input type="file" id="cover-upload" accept="image/*" style="display: none;">
+
+            <div class="avatar-container">
+                <img src="../../assets/profil.jpg" alt="Avatar" class="profile-photo-circle" onclick="document.getElementById('avatar-upload').click()" title="Apasă pentru a schimba poza de profil">
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="profile-form-box">
+                <div class="form-row split">
+                    <div class="input-group">
+                        <label>Last name</label>
+                        <input type="text" value="Mihai">
+                    </div>
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" value="Gigel">
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>About Me</label>
+                        <textarea placeholder="Hello! I'm a software developer...">Hello! I'm a software developer by day, but I know how frustrating a slow laptop or a disconnected Wi-Fi router can be. If you're struggling with basic tech issues, setting up a new TV, or installing software, drop a request. Happy to help keep the neighborhood online!</textarea>
+                    </div>
+                </div>
+                <button class="btn-save-profile">Save Changes</button>
+            </div>
+        </div>
+
+
+    <div class="profile-right">
+        <h2>Your Profile</h2>
+        <p class="profile-subtitle">This is your digital handshake with the neighborhood. A friendly photo, a short bio, and a clear list of your skills help build trust. Complete your profile so locals know exactly how you can lend a hand and make a real impact.</p>
+
+        <div class="accordion-item">
+            <button class="accordion-header">
+                Areas of Interest <span class="acc-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <label class="check-row"><span>Off-Camping (Sălbatic)</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Glamping (Lux în natură)</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Rulote și Autorulote</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Drumeții Montane</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Pescuit și Relaxare</span> <input type="checkbox"></label>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-header">
+                Travel Style <span class="acc-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <label class="check-row"><span>Solo (Singur)</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Cuplu</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Familie cu copii</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Grup mare de prieteni</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Alături de animale de companie</span> <input type="checkbox"></label>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-header">
+                Preferred Zones <span class="acc-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <label class="check-row"><span>Zonă Montană</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Litoral / Mare</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Delta Dunării</span> <input type="checkbox"></label>
+                <label class="check-row"><span>Păduri și Lacuri</span> <input type="checkbox"></label>
+            </div>
+        </div>
+
+    </div>
+</div>
+                </div>
+
 
              <div id="history" class="tab-section">
     <div class="history-header">
@@ -102,21 +164,7 @@
     <div class="history-list" id="bookings-container"></div>
 </div>
 
-                <div id="settings" class="tab-section">
-                    <h2>Setări Cont</h2>
-                </div>
 
-               <div id="wishlist" class="tab-section">
-    <div class="wishlist-header" style="margin-bottom: 24px;">
-        <h2 style="color: #2D4C36; margin: 0;">Your Preferences</h2>
-        <p>Customize how you interact with the neighborhood. Update your private details, secure your account, and choose exactly how and when you want to be notified about local help requests.</p>
-
-    </div>
-
-    <div class="wishlist-list" id="wishlist-container"></div>
-</div>
-
-            </div>
             <div id="booking-details" class="tab-section">
                     <div class="booking-details-container">
                         <a href="#" id="back-to-history" class="back-link">← Înapoi la Istoric</a>
@@ -166,6 +214,68 @@
                         </section>
                     </div>
                 </div>
+
+
+
+                <div id="settings" class="tab-section">
+    <div class="settings-container">
+
+        <div class="settings-header-text">
+            <h2>Your Preferences</h2>
+            <p>Customize how you interact with the neighborhood. Update your private details, secure your account, and choose exactly how and when you want to be notified about local help requests.</p>
+        </div>
+
+        <div class="settings-section">
+            <h3>Account Details</h3>
+            <div class="form-row split">
+                <div class="input-group-settings">
+                    <label>Email Address</label>
+                    <input type="email" value="mihai@gmail.com" placeholder="Emailul tau">
+                </div>
+                <div class="input-group-settings">
+                    <label>Your Id</label>
+                    <input type="text" value="#12894" readonly style="background-color: rgba(0,0,0,0.02); color: #666;">
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Notifications</h3>
+            <div class="notifications-row">
+                <div class="toggle-wrapper">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">New Invites</span>
+                </div>
+
+                <div class="toggle-wrapper">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">Team Activity</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Security & Privacy</h3>
+            <div class="form-row split align-end">
+                <div class="input-group-settings relative-input">
+                    <label>Actual Password</label>
+                    <input type="password" value="secretpassword" placeholder=".....">
+                    <span class="eye-icon" title="Arată parola">👁️</span>
+                </div>
+                <button class="btn-dark">Change Password</button>
+            </div>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete Account</button>
+
+    </div>
+</div>
         </main>
 
     </div>

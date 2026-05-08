@@ -20,6 +20,8 @@
     --font-h4: 1.5rem;
     --spacing-form: clamp(16px, 3vw, 24px);
     --spacing-section: clamp(40px, 8vw, 80px);
+    --gap-layout: clamp(12px, 3vw, 40px);
+    --gap-items: clamp(8px, 1vw, 20px);
 }
 
 * {

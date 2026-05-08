@@ -92,12 +92,14 @@
 }
 
 .account-content {
-    flex: 1;
-    padding: clamp(24px, 4vw, 48px);
+    flex: 1; /* Ocupă tot spațiul rămas lângă sidebar */
+    padding: clamp(16px, 4vw, 48px); /* Padding responsive (mic pe telefon, mare pe PC) */
     background-color: #FFF3F1;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+min-height: 100vh;    /* MAGIA PENTRU CENTRARE: */
+    align-items: center;
 }
 
 .account-header {
@@ -167,4 +169,105 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+.account-header,
+.account-pages-wrapper {
+
+    width: clamp(280px, 100%, 1200px);
+}.hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: #2D4C36;
+    cursor: pointer;
+    padding: 0 10px 0 0;
+}
+@media (max-width: 700px) {
+
+    .hamburger-btn {
+        display: block;
+    }
+
+    .account-header {
+        flex-direction: row !important;
+        align-items: center;
+        justify-content: space-between;
+        width:clamp(280px, 100%, 600px);
+
+    }
+
+    .user-email {
+        display: none;
+    }
+
+
+    .account-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+        border-radius: 0;
+        border-right: none;
+    }
+
+    .account-sidebar.open {
+        left: 0;
+    }
+
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .mobile-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+    .booking-arrow{
+    display: none;
+    }
+    .history-filters {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Împarte spațiul în 2 coloane egale */
+        gap: 10px; /* Spațiul dintre butoane */
+    }
+
+    /* Facem butoanele să ocupe toată lățimea celulei lor din grilă */
+    .filter-btn {
+        width: 100%;
+        padding: 10px 8px; /* Un padding puțin mai adaptat pentru touch */
+        text-align: center; /* Ne asigurăm că textul e pe mijloc */
+    }
+    .bd-header{
+    flex-direction: column;
+    gap:var(--gap-items);
+    }
+    .bd-img{
+    width: 100%;
+    height: auto;
+    }
+    .bd-title-area{
+    text-align: center;
+    width:100%;
+    height:auto;
+
+    }
+    .bd-grid
+{
+    grid-template-columns: 1fr; /* O singură coloană pe mobil */
+    gap: var(--gap-items);
+}
 }
