@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - CaT (Camping Info)</title>
+
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/account/account-layout.css">
+    <link rel="stylesheet" href="../../css/account/profile.css">
+    <link rel="stylesheet" href="../../css/account/wishlist.css">
+        <link rel="stylesheet" href="../../css/account/history.css">
+           <link rel="stylesheet" href="../../css/account/booking-details.css">
+
+
+</head>
+<body>
+
+    <div class="account-layout">
+
+        <aside class="account-sidebar">
+
+            <div class="theme-toggle">
+                <button class="toggle-btn active" type="button">Dark ☾</button>
+                <button class="toggle-btn" type="button">White ☼</button>
+            </div>
+
+            <nav class="sidebar-nav account-tabs">
+                <a href="../../index.html" class="nav-item">
+                    <span>Home</span> <span class="arrow">↗</span>
+                </a>
+
+                <button class="nav-item" data-tab="history">
+                    <span>History</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <span>Settings</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item active" data-tab="profile">
+                    <span>Profile</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item" data-tab="wishlist">
+                    <span>Wishlist</span> <span class="arrow">↗</span>
+                </button>
+            </nav>
+
+            <button class="btn-logout" type="button" onclick="window.location.href='../auth.html'">Log Out</button>
+        </aside>
+
+        <main class="account-content">
+            <header class="account-header">
+                <div class="header-logo">CaT</div>
+
+                <div class="user-pill">
+                    <img src="../../assets/profil.jpg" alt="Avatar">
+                    <div class="user-info">
+                        <span class="user-name">Luciu Sebastian</span>
+                        <span class="user-email">sebastianluciu@gmail.com</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="account-pages-wrapper">
+
+                <div id="profile" class="tab-section active-section">
+                    <div class="profile-center-wrapper">
+                        <div class="profile-widget">
+                            <div class="profile-avatar"></div>
+                            <div class="profile-form-box">
+                                <div class="form-row split">
+                                    <div class="input-group">
+                                        <label>Last name</label>
+                                        <input type="text" placeholder="Mihai">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>First Name</label>
+                                        <input type="text" placeholder="Gigel">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>About Me</label>
+                                        <textarea placeholder="Hello! I'm a software developer..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+             <div id="history" class="tab-section">
+    <div class="history-header">
+        <h2>Istoric Rezervări</h2>
+        <div class="history-filters">
+            <button class="filter-btn active" data-filter="all">Toate</button>
+            <button class="filter-btn" data-filter="upcoming">Urmează</button>
+            <button class="filter-btn" data-filter="completed">Finalizate</button>
+            <button class="filter-btn" data-filter="cancelled">Anulate</button>
+        </div>
+    </div>
+
+    <div class="history-list" id="bookings-container"></div>
+</div>
+
+                <div id="settings" class="tab-section">
+                    <h2>Setări Cont</h2>
+                </div>
+
+               <div id="wishlist" class="tab-section">
+    <div class="wishlist-header" style="margin-bottom: 24px;">
+        <h2 style="color: #2D4C36; margin: 0;">Your Preferences</h2>
+        <p>Customize how you interact with the neighborhood. Update your private details, secure your account, and choose exactly how and when you want to be notified about local help requests.</p>
+
+    </div>
+
+    <div class="wishlist-list" id="wishlist-container"></div>
+</div>
+
+            </div>
+            <div id="booking-details" class="tab-section">
+                    <div class="booking-details-container">
+                        <a href="#" id="back-to-history" class="back-link">← Înapoi la Istoric</a>
+
+                        <div class="bd-header">
+                            <img id="bd-image" src="" alt="Imagine Camping" class="bd-img">
+                            <div class="bd-title-area">
+                                <h1 id="bd-name">Încărcare...</h1>
+                                <p id="bd-dates">--</p>
+                                <span id="bd-status" class="booking-status">--</span>
+                            </div>
+                        </div>
+
+                        <div class="bd-grid">
+                            <div class="bd-card">
+                                <h3>Detalii Check-in / Check-out</h3>
+                                <p><strong>Check-in:</strong> de la ora 15:00</p>
+                                <p><strong>Check-out:</strong> 08:00 - 11:30</p>
+                                <p><strong>Număr confirmare:</strong> 5813818980</p>
+                            </div>
+                            <div class="bd-card">
+                                <h3>Contactează proprietatea</h3>
+                                <p><strong>Telefon:</strong> +40 757 578 558</p>
+                                <button class="btn-outline">Trimite un mesaj</button>
+                            </div>
+                        </div>
+
+                        <section id="review-section" class="review-box">
+                            <h2>Cum a fost experiența ta?</h2>
+                            <div class="star-rating">
+                                <span>Alege nota:</span>
+                                <div class="stars" id="star-container">
+                                    <span data-value="1">★</span>
+                                    <span data-value="2">★</span>
+                                    <span data-value="3">★</span>
+                                    <span data-value="4">★</span>
+                                    <span data-value="5">★</span>
+                                </div>
+                            </div>
+                            <textarea class="review-textarea" placeholder="Scrie aici ce ți-a plăcut..."></textarea>
+                            <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
+                                <span class="upload-icon">📁</span>
+                                <p>Apasă aici pentru a adăuga poze sau videoclipuri</p>
+                                <input type="file" id="file-upload" multiple accept="image/*,video/*" style="display: none;">
+                            </div>
+                            <button class="btn-submit-review">Trimite Recenzia</button>
+                        </section>
+                    </div>
+                </div>
+        </main>
+
+    </div>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalii Rezervare - CaT</title>
+
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/account/account-layout.css">
+   <link rel="stylesheet" href="../../css/account/booking-details.css">
+    <link rel="stylesheet" href="../../css/account/booking-details.css">
+
+</head>
+<body>
+
+    <div class="account-layout">
+<aside class="account-sidebar">
+
+            <div class="theme-toggle">
+                <button class="toggle-btn active" type="button">Dark ☾</button>
+                <button class="toggle-btn" type="button">White ☼</button>
+            </div>
+
+            <nav class="sidebar-nav account-tabs">
+                <a href="../../index.html" class="nav-item">
+                    <span>Home</span> <span class="arrow">↗</span>
+                </a>
+
+                <button class="nav-item" data-tab="history">
+                    <span>History</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <span>Settings</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item active" data-tab="profile">
+                    <span>Profile</span> <span class="arrow">↗</span>
+                </button>
+                <button class="nav-item" data-tab="wishlist">
+                    <span>Wishlist</span> <span class="arrow">↗</span>
+                </button>
+            </nav>
+
+            <button class="btn-logout" type="button" onclick="window.location.href='../auth.html'">Log Out</button>
+        </aside>
+
+        <main class="account-content">
+            <header class="account-header">
+                <div class="header-logo">CaT</div>
+                <div class="user-pill">
+                    <img src="../../assets/profil.jpg" alt="Avatar">
+                    <div class="user-info">
+                        <span class="user-name">Luciu Sebastian</span>
+                        <span class="user-email">sebastianluciu@gmail.com</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="booking-details-container">
+                <a href="account.html" class="back-link">← Înapoi la Istoric</a>
+
+                <div class="bd-header">
+                    <img id="bd-image" src="" alt="Imagine Camping" class="bd-img">
+                    <div class="bd-title-area">
+                        <h1 id="bd-name">Încărcare...</h1>
+                        <p id="bd-dates">--</p>
+                        <span id="bd-status" class="booking-status">--</span>
+                    </div>
+                </div>
+
+                <div class="bd-grid">
+                    <div class="bd-card">
+                        <h3>Detalii Check-in / Check-out</h3>
+                        <p><strong>Check-in:</strong> de la ora 15:00</p>
+                        <p><strong>Check-out:</strong> 08:00 - 11:30</p>
+                        <p><strong>Număr confirmare:</strong> 5813818980</p>
+                    </div>
+                    <div class="bd-card">
+                        <h3>Contactează proprietatea</h3>
+                        <p><strong>Telefon:</strong> +40 757 578 558</p>
+                        <button class="btn-outline">Trimite un mesaj</button>
+                    </div>
+                </div>
+
+                <section id="review-section" class="review-box">
+                    <h2>Cum a fost experiența ta?</h2>
+
+                    <div class="star-rating">
+                        <span>Alege nota:</span>
+                        <div class="stars" id="star-container">
+                            <span data-value="1">★</span>
+                            <span data-value="2">★</span>
+                            <span data-value="3">★</span>
+                            <span data-value="4">★</span>
+                            <span data-value="5">★</span>
+                        </div>
+                    </div>
+
+                    <textarea class="review-textarea" placeholder="Scrie aici ce ți-a plăcut sau ce ar putea fi îmbunătățit..."></textarea>
+
+                    <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
+                        <span class="upload-icon">📁</span>
+                        <p>Apasă aici pentru a adăuga poze sau videoclipuri</p>
+                        <input type="file" id="file-upload" multiple accept="image/*,video/*" style="display: none;">
+                    </div>
+
+                    <button class="btn-submit-review">Trimite Recenzia</button>
+                </section>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+.wishlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Structura cartonasului (identică cu cea de History) */
+.wishlist-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    gap: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    border-left: 6px solid #7e7e7e; /* O margine subtilă portocalie */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    background-color: #FAFAFA;
+}
+
+.wishlist-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.wishlist-info {
+    flex: 1; /* Împinge inimioara la maxim dreapta */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wishlist-info h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #1A1A1A;
+}
+
+.wishlist-address {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Iconița de Inimioară */
+.wishlist-heart {
+    font-size: 28px;
+    color: #EF6A00; /* Inimă plină / portocalie */
+    padding: 8px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 50%;
+    user-select: none; /* Ca să nu o selectezi ca text din greșeală */
+}
+
+/* La hover pe inimioară, se mărește și pare că se "stinge" */
+.wishlist-heart:hover {
+    transform: scale(1.2);
+    opacity: 0.6;
+}

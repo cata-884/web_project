@@ -1,0 +1,136 @@
+/* --- HEADER SI FILTRE --- */
+.history-header {
+    margin-bottom: 24px;
+}
+
+.history-header h2 {
+    color: #2D4C36;
+    margin: 0 0 16px 0;
+}
+
+.history-filters {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #7A7A7A;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: #2D4C36;
+}
+
+.filter-btn.active {
+    background: #E6DFD5;
+    border-color: #2D4C36;
+    color: #2D4C36;
+    font-weight: 600;
+}
+
+/* --- LISTA DE REZERVARI --- */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Design-ul de baza al unui cartonas (rand) */
+.booking-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    gap: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border-left: 6px solid transparent; /* Pentru a pune o culoare pe margine in functie de status */
+}
+
+.booking-card:hover {
+    transform: translateY(-4px); /* Il ridica in sus cu 4 pixeli */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08); /* Umbra devine mai lata si difuza */
+    background-color: #FAFAFA; /* Un gri extrem de deschis la hover */
+}
+
+.booking-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.booking-info {
+    flex: 1; /* Ocupa tot spatiul de la poza pana la sageata */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.booking-info h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #1A1A1A;
+}
+
+.booking-dates {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.booking-status {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+.booking-arrow {
+    font-size: 20px;
+    color: #7A7A7A;
+    padding-right: 8px;
+    transition: transform 0.3s ease, color 0.3s ease; /* Pregatim sageata pentru miscare */
+}
+
+/* Cand pui mouse-ul pe cartonas, sageata se muta mai la dreapta si se face verde */
+.booking-card:hover .booking-arrow {
+    transform: translateX(6px);
+    color: #84AC00;
+}
+/* --- CULORI PENTRU STATUSURI --- */
+/* Verde pentru viitoare */
+.status-upcoming {
+    border-left-color: #84AC00;
+}
+.status-upcoming .booking-status {
+    color: #84AC00;
+}
+
+/* Albastru/Gri pentru finalizate */
+.status-completed {
+    border-left-color: #2D4C36;
+}
+.status-completed .booking-status {
+    color: #2D4C36;
+}
+
+/* Rosu/Portocaliu pentru anulate */
+.status-cancelled {
+    border-left-color: #EF6A00;
+    opacity: 0.7; /* O facem putin mai transparenta ca sa para inactiva */
+}
+.status-cancelled .booking-status {
+    color: #EF6A00;
+}
