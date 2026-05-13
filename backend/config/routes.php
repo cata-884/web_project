@@ -4,76 +4,29 @@ $uri    = str_replace(BASE_URL, '', $uri);
 $uri    = '/' . trim($uri, '/');
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 
-// 'METHOD /pattern' => [Controller, metoda]
+// CORS — permite frontend-ul să faca fetch() din altă origine la dev
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+if ($method === 'options') {
+    http_response_code(204);
+    exit();
+}
+
 $routes = [
-    // --- Public (pre-auth) ---
-    'get /'              => ['HomeController',        'index'],
-    'get /about'         => ['HomeController',        'about'],
-    'get /contact'       => ['HomeController',        'contact'],
-    'post /contact'      => ['HomeController',        'submitContact'],
-    'get /reviews'       => ['HomeController',        'reviews'],
+    // Auth API
+    'post /api/auth/register' => ['AuthController', 'register'],
+    'post /api/auth/login'    => ['AuthController', 'login'],
+    'post /api/auth/logout'   => ['AuthController', 'logout'],
+    'get /api/auth/me'        => ['AuthController', 'me'],
 
-    // --- Auth ---
-    'get /login'         => ['AuthController',        'loginForm'],
-    'post /login'        => ['AuthController',        'login'],
-    'get /register'      => ['AuthController',        'registerForm'],
-    'post /register'     => ['AuthController',        'register'],
-    'get /logout'        => ['AuthController',        'logout'],
-
-    // --- Dashboard (Modulul Descopera) ---
-    'get /dashboard'     => ['DashboardController',   'index'],
-
-    // --- Plante ---
-    'get /plants'        => ['PlantsController',      'index'],
-    'get /plants/new'    => ['PlantsController',      'create'],
-    'post /plants'       => ['PlantsController',      'store'],
-    'get /plants/(\d+)'  => ['PlantsController',      'show'],
-    'get /plants/(\d+)/edit'    => ['PlantsController', 'edit'],
-    'post /plants/(\d+)'        => ['PlantsController', 'update'],
-    'post /plants/(\d+)/delete' => ['PlantsController', 'destroy'],
-
-    // Endpoint-uri Ajax pentru plante
-    'get /api/plants/search'    => ['PlantsController', 'apiSearch'],
-    'get /api/plants/external'  => ['PlantsController', 'apiExternal'], // Trefle/GBIF
-
-    // --- Colectii (Spatiul de lucru) ---
-    'get /collections'                 => ['CollectionsController', 'index'],
-    'get /collections/new'             => ['CollectionsController', 'create'],
-    'post /collections'                => ['CollectionsController', 'store'],
-    'get /collections/(\d+)'           => ['CollectionsController', 'show'],
-    'get /collections/(\d+)/edit'      => ['CollectionsController', 'edit'],
-    'post /collections/(\d+)'          => ['CollectionsController', 'update'],
-    'post /collections/(\d+)/delete'   => ['CollectionsController', 'destroy'],
-    'post /collections/(\d+)/publish'  => ['CollectionsController', 'togglePublish'],
-
-    // Membri si permisiuni (rol: editor / viewer)
-    'get /collections/(\d+)/members'        => ['CollectionsController', 'members'],
-    'post /collections/(\d+)/members'       => ['CollectionsController', 'addMember'],
-    'post /collections/(\d+)/members/(\d+)/delete' => ['CollectionsController', 'removeMember'],
-
-    // Import / Export
-    'get /collections/(\d+)/export' => ['CollectionsController', 'export'], // ?format=json|xml
-    'post /collections/(\d+)/import' => ['CollectionsController', 'import'],
-
-    // --- Comunitate ---
-    'get /community'                  => ['CommunityController', 'index'],
-    'get /api/community/search'       => ['CommunityController', 'apiSearch'],
-    'post /community/friends/(\d+)'   => ['CommunityController', 'addFriend'],
-    'post /community/friends/(\d+)/accept' => ['CommunityController', 'acceptFriend'],
-    'post /community/friends/(\d+)/delete' => ['CommunityController', 'removeFriend'],
-
-    // --- Setari ---
-    'get /settings'                  => ['SettingsController', 'index'],
-    'post /settings/profile'         => ['SettingsController', 'updateProfile'],
-    'post /settings/password'        => ['SettingsController', 'updatePassword'],
-    'post /settings/preferences'     => ['SettingsController', 'updatePreferences'],
-    'post /settings/account/delete'  => ['SettingsController', 'deleteAccount'],
+    // --- TODO: adăugăm pe rând în zilele următoare ---
+    // campings, bookings, reviews, admin, stats, import/export
 ];
 
 $matched = false;
 foreach ($routes as $pattern => $handler) {
     [$routeMethod, $routePath] = explode(' ', $pattern, 2);
-
     if ($routeMethod !== $method) continue;
 
     if (preg_match('#^' . $routePath . '$#', $uri, $matches)) {
@@ -87,6 +40,6 @@ foreach ($routes as $pattern => $handler) {
 
 if (!$matched) {
     http_response_code(404);
-    echo '<h1>404 - Not Found</h1>';
-    echo '<p>URI: ' . htmlspecialchars($uri) . '</p>';
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['error' => 'Endpoint inexistent', 'uri' => $uri]);
 }
