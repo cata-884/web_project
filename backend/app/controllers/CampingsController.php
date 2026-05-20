@@ -57,8 +57,8 @@ class CampingsController extends Controller
         $body = $this->getJsonBody();
 
         // minimum validation
-        if (empty($body['name']) || strlen($body['name']) < 3) {
-            $this->json(['error' => 'name obligatoriu (min 3 caractere)'], 400);
+        if (empty($body['name']) || strlen($body['name']) < 3 || strlen($body['name']) > 200) {
+            $this->json(['error' => 'name obligatoriu (3-200 caractere)'], 400);
         }
         if (!isset($body['latitude'], $body['longitude'])) {
             $this->json(['error' => 'latitude și longitude obligatorii'], 400);

@@ -1,0 +1,109 @@
+let currentPage = 1;
+const limit = 12;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const filtersForm = document.getElementById('filters-form');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    filtersForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        currentPage = 1;
+        loadCampings();
+    });
+
+    btnPrev.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadCampings();
+        }
+    });
+
+    btnNext.addEventListener('click', () => {
+        currentPage++;
+        loadCampings();
+    });
+
+    loadCampings();
+});
+
+async function loadCampings() {
+    const grid = document.getElementById('campings-grid');
+    grid.innerHTML = `
+        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
+        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
+        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
+    `;
+
+    // Gather filters
+    const search = document.getElementById('filter-search').value;
+    const region = document.getElementById('filter-region').value;
+    const minPrice = document.getElementById('filter-min-price').value;
+    const maxPrice = document.getElementById('filter-max-price').value;
+    const minRating = document.getElementById('filter-min-rating').value;
+    
+    // Checkboxes for type
+    const types = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(el => el.value);
+
+    // Build URLSearchParams
+    const params = new URLSearchParams();
+    params.append('limit', limit);
+    params.append('offset', (currentPage - 1) * limit);
+
+    if (search) params.append('search', search);
+    if (region) params.append('region', region);
+    if (minPrice) params.append('min_price', minPrice);
+    if (maxPrice) params.append('max_price', maxPrice);
+    if (minRating) params.append('min_rating', minRating);
+    if (types.length === 1) params.append('type', types[0]); // Current backend only supports one type. We will just pass the first one selected for now.
+
+    try {
+        const response = await api.get(`/api/campings?${params.toString()}`);
+        renderCampings(response);
+    } catch (err) {
+        console.error("Failed to load campings", err);
+        grid.innerHTML = `<p style="color: red;">Eroare la încărcarea datelor.</p>`;
+    }
+}
+
+function renderCampings(data) {
+    const grid = document.getElementById('campings-grid');
+    const resultsCount = document.getElementById('results-count');
+    const pageInfo = document.getElementById('page-info');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    grid.innerHTML = '';
+    resultsCount.textContent = data.total || 0;
+
+    if (!data.campings || data.campings.length === 0) {
+        grid.innerHTML = `<p>Nu s-au găsit campinguri conform filtrelor.</p>`;
+    } else {
+        data.campings.forEach(c => {
+            const defaultImg = '../assets/About1.jpg'; // fallback image
+            const ratingStr = c.rating_avg ? `${parseFloat(c.rating_avg).toFixed(1)} ★` : 'Nou';
+
+            const card = document.createElement('div');
+            card.className = 'camping-card';
+            card.innerHTML = `
+                <img src="${defaultImg}" alt="${c.name}" class="card-image">
+                <div class="card-content">
+                    <span class="card-type">${c.type}</span>
+                    <h3 class="card-title">${c.name}</h3>
+                    <p class="card-region">📍 ${c.region || 'Locație necunoscută'}</p>
+                    <div class="card-bottom">
+                        <div class="card-price">${c.price_per_night} RON <span>/ noapte</span></div>
+                        <div class="card-rating">${ratingStr}</div>
+                    </div>
+                </div>
+                <a href="camping.html?slug=${c.slug}" class="btn-details">Vezi Detalii</a>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Pagination controls
+    pageInfo.textContent = `Pagina ${currentPage}`;
+    btnPrev.disabled = currentPage === 1;
+    btnNext.disabled = (currentPage * limit) >= (data.total || 0);
+}
