@@ -117,7 +117,11 @@ class AuthController extends Controller
             $this->json(['error' => 'Credentiale invalide'], 401);
         }
 
-        $token = $this->sessionModel->create((int)$user['id']);
+        try {
+            $token = $this->sessionModel->create((int)$user['id']);
+        } catch (Exception $e) {
+            $this->json(['error' => 'Eroare la creare sesiune: ' . $e->getMessage()], 500);
+        }
 
         unset($user['password_hash']);
 

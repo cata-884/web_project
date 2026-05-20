@@ -1,5 +1,5 @@
 <?php
-define('SEP',  DIRECTORY_SEPARATOR);
+const SEP = DIRECTORY_SEPARATOR;
 define('ROOT', dirname(__DIR__));
 
 session_start();

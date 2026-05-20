@@ -3,16 +3,16 @@
 use JetBrains\PhpStorm\NoReturn;
 
 /**
- * BookingsController — API REST pentru rezervări la locuri de camping.
+ * BookingsController — API REST pentru rezervari la locuri de camping.
  *
  * Utilizatorii pot crea, vizualiza și anula propriile rezervări.
- * Owner-ul campingului sau un admin poate confirma/completa rezervări.
+ * Ownerul campingului sau un admin poate confirma/completa rezervari.
  */
 class BookingsController extends Controller
 {
     /**
      * GET /api/bookings
-     * Listează rezervările userului curent (cu detalii camping).
+     * Listeaza rezervarile userului curent (cu detalii camping).
      */
     #[NoReturn]
     public function index(): void
@@ -32,7 +32,7 @@ class BookingsController extends Controller
 
     /**
      * GET /api/bookings/{id}
-     * Detaliile unei rezervări proprii.
+     * Detaliile unei rezervari proprii.
      */
     #[NoReturn]
     public function show(int $id): void
@@ -44,7 +44,7 @@ class BookingsController extends Controller
             $this->json(['error' => 'Rezervare inexistentă'], 404);
         }
 
-        // Doar proprietarul rezervării, owner-ul campingului sau admin
+        // Doar proprietarul rezervarii, owner-ul campingului sau admin
         $this->assertCanView($booking, $user);
 
         $this->json(['booking' => $booking]);
@@ -52,7 +52,7 @@ class BookingsController extends Controller
 
     /**
      * POST /api/bookings
-     * Creează o rezervare nouă. Body: { camping_id, check_in, check_out, guests }
+     * Creeaza o rezervare noua. Body: { camping_id, check_in, check_out, guests }
      */
     #[NoReturn]
     public function store(): void
@@ -60,7 +60,6 @@ class BookingsController extends Controller
         $user = $this->requireAuth();
         $body = $this->getJsonBody();
 
-        // Validare câmpuri obligatorii
         $campingId = (int)($body['camping_id'] ?? 0);
         $checkIn   = trim($body['check_in']    ?? '');
         $checkOut  = trim($body['check_out']   ?? '');
@@ -73,7 +72,6 @@ class BookingsController extends Controller
             $this->json(['error' => 'check_in și check_out obligatorii (YYYY-MM-DD)'], 400);
         }
 
-        // Validare format date
         $dateIn  = DateTime::createFromFormat('Y-m-d', $checkIn);
         $dateOut = DateTime::createFromFormat('Y-m-d', $checkOut);
         if (!$dateIn || !$dateOut) {
@@ -90,24 +88,19 @@ class BookingsController extends Controller
             $this->json(['error' => 'Minim 1 guest'], 400);
         }
 
-        // Verificare camping existent
         $campingModel = new CampingsModel();
         $camping = $campingModel->findById($campingId);
         if (!$camping) {
             $this->json(['error' => 'Camping inexistent'], 404);
         }
 
-        // Verificare capacitate
         if ($camping['capacity'] && $guests > (int)$camping['capacity']) {
             $this->json(['error' => 'Capacitate depășită (max: ' . $camping['capacity'] . ')'], 400);
         }
-
-        // Verificare disponibilitate
         if (!$this->model->checkAvailability($campingId, $checkIn, $checkOut)) {
             $this->json(['error' => 'Campingul nu este disponibil în perioada selectată'], 409);
         }
 
-        // Calculare preț
         $totalPrice = null;
         if ($camping['price_per_night']) {
             $totalPrice = $this->model->calculatePrice(
@@ -130,7 +123,7 @@ class BookingsController extends Controller
 
     /**
      * PATCH /api/bookings/{id}
-     * Actualizează o rezervare. Body: { status?, check_in?, check_out?, guests? }
+     * Actualizeaza o rezervare. Body: { status?, check_in?, check_out?, guests? }
      */
     #[NoReturn]
     public function update(int $id): void
@@ -147,14 +140,12 @@ class BookingsController extends Controller
             $this->json(['error' => 'Body gol'], 400);
         }
 
-        // Validare status dacă e prezent
         if (isset($body['status'])) {
             $validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
             if (!in_array($body['status'], $validStatuses, true)) {
                 $this->json(['error' => 'Status invalid'], 400);
             }
 
-            // Doar owner camping sau admin pot confirma/completa
             if (in_array($body['status'], ['confirmed', 'completed'], true)) {
                 $campingModel = new CampingsModel();
                 $campingOwnerId = $campingModel->getOwnerId((int)$booking['camping_id']);
@@ -166,7 +157,6 @@ class BookingsController extends Controller
                 }
             }
 
-            // Userul propriu poate doar anula
             if ($body['status'] === 'cancelled') {
                 $isOwner = (int)$user['id'] === (int)$booking['user_id'];
                 $isAdmin = ($user['role'] ?? 'user') === 'admin';
@@ -182,7 +172,7 @@ class BookingsController extends Controller
 
     /**
      * POST /api/bookings/{id}/cancel
-     * Shortcut: anulează o rezervare proprie.
+     * Shortcut: anuleaza o rezervare proprie.
      */
     #[NoReturn]
     public function cancel(int $id): void
@@ -194,7 +184,6 @@ class BookingsController extends Controller
             $this->json(['error' => 'Rezervare inexistentă'], 404);
         }
 
-        // Doar owner-ul rezervării sau admin
         $isOwner = (int)$user['id'] === (int)$booking['user_id'];
         $isAdmin = ($user['role'] ?? 'user') === 'admin';
         if (!$isOwner && !$isAdmin) {
@@ -214,7 +203,7 @@ class BookingsController extends Controller
 
     /**
      * GET /api/campings/{campingId}/availability
-     * Verifică disponibilitatea unui camping. Query: ?check_in=...&check_out=...
+     * Verifica disponibilitatea unui camping. Query: ?check_in=...&check_out=...
      */
     #[NoReturn]
     public function availability(int $campingId): void
@@ -231,7 +220,7 @@ class BookingsController extends Controller
     }
 
     /**
-     * Verifică dacă user-ul poate vedea rezervarea.
+     * Verifica daca user-ul poate vedea rezervarea.
      */
     private function assertCanView(array $booking, array $user): void
     {
@@ -240,7 +229,6 @@ class BookingsController extends Controller
 
         if ($isBookingOwner || $isAdmin) return;
 
-        // Owner-ul campingului poate vedea și el
         $campingModel = new CampingsModel();
         $campingOwnerId = $campingModel->getOwnerId((int)$booking['camping_id']);
         if ((int)$user['id'] === $campingOwnerId) return;

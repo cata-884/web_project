@@ -35,7 +35,7 @@ $routes = [
     'get /api/reviews/(\d+)'            => ['ReviewsController', 'show'],
     'patch /api/reviews/(\d+)'          => ['ReviewsController', 'update'],
     'delete /api/reviews/(\d+)'         => ['ReviewsController', 'destroy'],
-    
+
     // Bookings API
     'get /api/bookings'                     => ['BookingsController', 'index'],
     'post /api/bookings'                    => ['BookingsController', 'store'],
