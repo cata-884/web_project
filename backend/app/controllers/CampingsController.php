@@ -53,7 +53,8 @@ class CampingsController extends Controller
     #[NoReturn]
     public function store(): void
     {
-        $user = $this->requireAuth();
+        // Doar organizer sau admin pot crea campinguri
+        $user = $this->requireOrganizer();
         $body = $this->getJsonBody();
 
         // minimum validation
@@ -61,7 +62,7 @@ class CampingsController extends Controller
             $this->json(['error' => 'name obligatoriu (3-200 caractere)'], 400);
         }
         if (!isset($body['latitude'], $body['longitude'])) {
-            $this->json(['error' => 'latitude și longitude obligatorii'], 400);
+            $this->json(['error' => 'latitude si longitude obligatorii'], 400);
         }
         if ($body['latitude']  < -90  || $body['latitude']  > 90)  $this->json(['error' => 'latitude invalid'], 400);
         if ($body['longitude'] < -180 || $body['longitude'] > 180) $this->json(['error' => 'longitude invalid'], 400);

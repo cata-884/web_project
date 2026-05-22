@@ -4,7 +4,7 @@
  * ReviewsModel — CRUD pentru recenzii la locuri de camping.
  *
  * Fiecare user poate lasa maxim o recenzie per camping (UNIQUE constraint).
- * Rating-ul mediu al campingului se recalculează automat via trigger PL/pgSQL.
+ * Rating-ul mediu al campingului se recalculeaza automat via trigger PL/pgSQL.
  */
 class ReviewsModel extends Model
 {

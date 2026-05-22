@@ -5,7 +5,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * BookingsController — API REST pentru rezervari la locuri de camping.
  *
- * Utilizatorii pot crea, vizualiza și anula propriile rezervări.
+ * Utilizatorii pot crea, vizualiza si anula propriile rezervari.
  * Ownerul campingului sau un admin poate confirma/completa rezervari.
  */
 class BookingsController extends Controller
@@ -41,7 +41,7 @@ class BookingsController extends Controller
         $booking = $this->model->findById($id);
 
         if (!$booking) {
-            $this->json(['error' => 'Rezervare inexistentă'], 404);
+            $this->json(['error' => 'Rezervare inexistenta'], 404);
         }
 
         // Doar proprietarul rezervarii, owner-ul campingului sau admin
@@ -69,7 +69,7 @@ class BookingsController extends Controller
             $this->json(['error' => 'camping_id obligatoriu'], 400);
         }
         if (!$checkIn || !$checkOut) {
-            $this->json(['error' => 'check_in și check_out obligatorii (YYYY-MM-DD)'], 400);
+            $this->json(['error' => 'check_in si check_out obligatorii (YYYY-MM-DD)'], 400);
         }
 
         $dateIn  = DateTime::createFromFormat('Y-m-d', $checkIn);
@@ -78,10 +78,10 @@ class BookingsController extends Controller
             $this->json(['error' => 'Format date invalid (YYYY-MM-DD)'], 400);
         }
         if ($dateOut <= $dateIn) {
-            $this->json(['error' => 'check_out trebuie să fie după check_in'], 400);
+            $this->json(['error' => 'check_out trebuie sa fie dupa check_in'], 400);
         }
         if ($dateIn < new DateTime('today')) {
-            $this->json(['error' => 'Nu poți rezerva în trecut'], 400);
+            $this->json(['error' => 'Nu poti rezerva in trecut'], 400);
         }
 
         if ($guests < 1) {
@@ -95,10 +95,10 @@ class BookingsController extends Controller
         }
 
         if ($camping['capacity'] && $guests > (int)$camping['capacity']) {
-            $this->json(['error' => 'Capacitate depășită (max: ' . $camping['capacity'] . ')'], 400);
+            $this->json(['error' => 'Capacitate depasita (max: ' . $camping['capacity'] . ')'], 400);
         }
         if (!$this->model->checkAvailability($campingId, $checkIn, $checkOut)) {
-            $this->json(['error' => 'Campingul nu este disponibil în perioada selectată'], 409);
+            $this->json(['error' => 'Campingul nu este disponibil in perioada selectata'], 409);
         }
 
         $totalPrice = null;
@@ -132,7 +132,7 @@ class BookingsController extends Controller
         $booking = $this->model->findById($id);
 
         if (!$booking) {
-            $this->json(['error' => 'Rezervare inexistentă'], 404);
+            $this->json(['error' => 'Rezervare inexistenta'], 404);
         }
 
         $body = $this->getJsonBody();
@@ -161,7 +161,7 @@ class BookingsController extends Controller
                 $isOwner = (int)$user['id'] === (int)$booking['user_id'];
                 $isAdmin = ($user['role'] ?? 'user') === 'admin';
                 if (!$isOwner && !$isAdmin) {
-                    $this->json(['error' => 'Nu poți anula această rezervare'], 403);
+                    $this->json(['error' => 'Nu poti anula aceasta rezervare'], 403);
                 }
             }
         }
@@ -181,20 +181,20 @@ class BookingsController extends Controller
 
         $booking = $this->model->findById($id);
         if (!$booking) {
-            $this->json(['error' => 'Rezervare inexistentă'], 404);
+            $this->json(['error' => 'Rezervare inexistenta'], 404);
         }
 
         $isOwner = (int)$user['id'] === (int)$booking['user_id'];
         $isAdmin = ($user['role'] ?? 'user') === 'admin';
         if (!$isOwner && !$isAdmin) {
-            $this->json(['error' => 'Nu poți anula această rezervare'], 403);
+            $this->json(['error' => 'Nu poti anula aceasta rezervare'], 403);
         }
 
         if ($booking['status'] === 'cancelled') {
-            $this->json(['error' => 'Rezervarea este deja anulată'], 400);
+            $this->json(['error' => 'Rezervarea este deja anulata'], 400);
         }
         if ($booking['status'] === 'completed') {
-            $this->json(['error' => 'Nu poți anula o rezervare finalizată'], 400);
+            $this->json(['error' => 'Nu poti anula o rezervare finalizata'], 400);
         }
 
         $this->model->updateStatus($id, 'cancelled');
@@ -212,7 +212,7 @@ class BookingsController extends Controller
         $checkOut = trim($_GET['check_out'] ?? '');
 
         if (!$checkIn || !$checkOut) {
-            $this->json(['error' => 'check_in și check_out obligatorii'], 400);
+            $this->json(['error' => 'check_in si check_out obligatorii'], 400);
         }
 
         $available = $this->model->checkAvailability($campingId, $checkIn, $checkOut);
@@ -233,6 +233,6 @@ class BookingsController extends Controller
         $campingOwnerId = $campingModel->getOwnerId((int)$booking['camping_id']);
         if ((int)$user['id'] === $campingOwnerId) return;
 
-        $this->json(['error' => 'Nu ai acces la această rezervare'], 403);
+        $this->json(['error' => 'Nu ai acces la aceasta rezervare'], 403);
     }
 }

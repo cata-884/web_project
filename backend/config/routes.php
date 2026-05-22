@@ -4,7 +4,7 @@ $uri    = str_replace(BASE_URL, '', $uri);
 $uri    = '/' . trim($uri, '/');
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 
-// CORS — permite frontend-ul să faca fetch() din alta origine la dev
+// CORS — permite frontend-ul sa faca fetch() din alta origine la dev
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
@@ -15,13 +15,14 @@ if ($method === 'options') {
 
 $routes = [
     // Auth API
-    'post /api/auth/register' => ['AuthController', 'register'],
-    'post /api/auth/login'    => ['AuthController', 'login'],
-    'post /api/auth/logout'   => ['AuthController', 'logout'],
-    'get /api/auth/me'        => ['AuthController', 'me'],
+    'post /api/auth/register'  => ['AuthController', 'register'],
+    'post /api/auth/login'     => ['AuthController', 'login'],
+    'post /api/auth/logout'    => ['AuthController', 'logout'],
+    'get /api/auth/me'         => ['AuthController', 'me'],
+    'patch /api/users/me'      => ['AuthController', 'updateMe'],
 
     // Campings API
-    // /map TREBUIE să fie INAINTE de /(\d+) altfel ar matchui ca ID
+    // /map TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
     'get /api/campings/map'         => ['CampingsController', 'mapMarkers'],
     'get /api/campings'             => ['CampingsController', 'index'],
     'get /api/campings/(\d+)'       => ['CampingsController', 'show'],
@@ -53,6 +54,19 @@ $routes = [
     'get /api/sections/(\d+)/campings'               => ['SectionsController', 'campings'],
     'post /api/sections/(\d+)/campings'              => ['SectionsController', 'addCamping'],
     'delete /api/sections/(\d+)/campings/(\d+)'      => ['SectionsController', 'removeCamping'],
+
+    // Organizer API (cereri de promovare)
+    'post /api/organizers/apply'                     => ['OrganizersController', 'apply'],
+    'get /api/organizers/my-application'             => ['OrganizersController', 'myApplication'],
+    'get /api/organizers/pending'                    => ['OrganizersController', 'pending'],
+    'post /api/organizers/(\d+)/approve'             => ['OrganizersController', 'approve'],
+    'post /api/organizers/(\d+)/reject'              => ['OrganizersController', 'reject'],
+
+    // Admin API (gestionare useri + ban-uri)
+    'get /api/admin/users'                           => ['AdminController', 'listUsers'],
+    'post /api/admin/users/(\d+)/ban'                => ['AdminController', 'banUser'],
+    'post /api/admin/users/(\d+)/unban'              => ['AdminController', 'unbanUser'],
+    'get /api/admin/users/(\d+)/bans'                => ['AdminController', 'userBans'],
 ];
 
 $matched = false;

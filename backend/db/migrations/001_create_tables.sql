@@ -1,55 +1,25 @@
-/*
- docker run --name my-postgres \
-  -e POSTGRES_USER=user \
-  -e POSTGRES_PASSWORD=pass \
-  -p 5432:5432 \
-  -d postgres
+DROP TABLE IF EXISTS review_media CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS bookings CASCADE;
+DROP TABLE IF EXISTS camping_media CASCADE;
+DROP TABLE IF EXISTS campings CASCADE;
+DROP TABLE IF EXISTS contact_messages CASCADE;
+DROP TABLE IF EXISTS sesiuni CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS user_sections CASCADE;
+DROP TABLE IF EXISTS section_campings CASCADE;
+DROP TABLE IF EXISTS user_bans CASCADE;
+DROP TABLE IF EXISTS organizer_verifications CASCADE;
+DROP TYPE IF EXISTS user_role CASCADE;
+DROP TYPE IF EXISTS camping_type CASCADE;
+DROP TYPE IF EXISTS booking_status CASCADE;
+DROP TYPE IF EXISTS media_type CASCADE;
 
- docker ps
-
- php script/migrate.php
-
- */
-DROP TABLE
-
-IF EXISTS review_media CASCADE;
-	DROP TABLE
-
-IF EXISTS reviews CASCADE;
-	DROP TABLE
-
-IF EXISTS bookings CASCADE;
-	DROP TABLE
-
-IF EXISTS camping_media CASCADE;
-	DROP TABLE
-
-IF EXISTS campings CASCADE;
-	DROP TABLE
-
-IF EXISTS contact_messages CASCADE;
-	DROP TABLE
-
-IF EXISTS sesiuni CASCADE;
-	DROP TABLE
-
-IF EXISTS users CASCADE;
-	DROP TYPE
-
-IF EXISTS user_role CASCADE;
-	DROP TYPE
-
-IF EXISTS camping_type CASCADE;
-	DROP TYPE
-
-IF EXISTS booking_status CASCADE;
-	DROP TYPE
-
-IF EXISTS media_type CASCADE;
-	CREATE TYPE user_role AS ENUM (
-		'user'
-		,'admin'
-		);
+CREATE TYPE user_role AS ENUM (
+    'user',
+    'organizer',	
+    'admin'
+);
 
 CREATE TYPE camping_type AS ENUM (
 	'wild'
@@ -239,7 +209,37 @@ IF NOT EXISTS idx_sections_user ON user_sections(user_id);
 
 IF NOT EXISTS idx_section_campings_section ON section_campings(
 		section_id);
-	CREATE INDEX
-
-IF NOT EXISTS idx_section_campings_camping ON section_campings(
+	CREATE INDEX IF NOT EXISTS idx_section_campings_camping ON section_campings(
 		camping_id);
+
+-- Cereri de verificare / promovare la rolul de organizer
+CREATE TABLE organizer_verifications (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    legal_name VARCHAR(200) NOT NULL,
+    cui VARCHAR(50) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    document_url TEXT,                 -- URL document incarcat
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    admin_notes TEXT,
+    reviewed_by INT REFERENCES users(id),
+    submitted_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    reviewed_at TIMESTAMP,
+    CONSTRAINT chk_org_status CHECK (status IN ('pending', 'approved', 'rejected'))
+);
+
+CREATE INDEX idx_org_verif_user ON organizer_verifications(user_id);
+CREATE INDEX idx_org_verif_status ON organizer_verifications(status);
+
+-- Tabel pentru ban-uri utilizatori
+CREATE TABLE user_bans (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    reason TEXT NOT NULL,
+    banned_until TIMESTAMP,             -- NULL = permanent
+    banned_by INT NOT NULL REFERENCES users(id),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_bans_user_active ON user_bans(user_id, is_active);

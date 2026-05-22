@@ -82,7 +82,7 @@ class ReviewsController extends Controller
     {
         $review = $this->model->findById($id);
         if (!$review) {
-            $this->json(['error' => 'Recenzie inexistentă'], 404);
+            $this->json(['error' => 'Recenzie inexistenta'], 404);
         }
         $this->json(['review' => $review]);
     }
@@ -135,13 +135,13 @@ class ReviewsController extends Controller
     }
 
     /**
-     * Verifică că recenzia există si că userul are dreptul să o modifice
+     * Verifica ca recenzia exista si ca userul are dreptul sa o modifice
      */
     private function assertCanModify(int $reviewId, array $user): void
     {
         $ownerId = $this->model->getOwnerId($reviewId);
         if ($ownerId === null) {
-            $this->json(['error' => 'Recenzie inexistentă'], 404);
+            $this->json(['error' => 'Recenzie inexistenta'], 404);
         }
         if (($user['role'] ?? 'user') === 'admin') return;
         if ((int)$user['id'] === $ownerId) return;

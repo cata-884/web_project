@@ -45,7 +45,7 @@ class AuthController extends Controller
             $this->json(['error' => 'Email invalid'], 400);
         }
         if (strlen($password) < 8) {
-            $this->json(['error' => 'Parola trebuie să aibă minim 8 caractere'], 400);
+            $this->json(['error' => 'Parola trebuie sa aiba minim 8 caractere'], 400);
         }
 
         if ($this->userModel->findByUsername($username)) {
@@ -117,6 +117,17 @@ class AuthController extends Controller
             $this->json(['error' => 'Credentiale invalide'], 401);
         }
 
+        // Verifica ban activ inainte de a crea sesiune
+        $ban = (new BansModel())->findActiveByUserId((int)$user['id']);
+        if ($ban) {
+            $this->json([
+                'error'  => 'Contul tau este suspendat',
+                'reason' => $ban['reason'],
+                'banned' => true,
+                'banned_until' => $ban['banned_until'],
+            ], 403);
+        }
+
         try {
             $token = $this->sessionModel->create((int)$user['id']);
         } catch (Exception $e) {
@@ -134,11 +145,15 @@ class AuthController extends Controller
     /**
      * POST /api/auth/logout
      * Header: Authorization: Bearer {token}
+     *
+     * NU cheama requireAuth() — userul banat trebuie sa poata face logout.
      */
     #[NoReturn]
     public function logout(): void
     {
-        $this->requireAuth();
+        if ($this->currentUser === null) {
+            $this->json(['error' => 'Neautentificat'], 401);
+        }
         $this->sessionModel->delete($this->currentToken);
         $this->json(['ok' => true, 'message' => 'Deconectat cu succes']);
     }
@@ -146,11 +161,61 @@ class AuthController extends Controller
     /**
      * GET /api/auth/me
      * Header: Authorization: Bearer {token}
+     *
+     * NU cheama requireAuth() — userul banat trebuie sa poata vedea de ce e banat.
+     * Include informatii despre ban in raspuns daca userul e banat.
      */
     #[NoReturn]
     public function me(): void
     {
+        if ($this->currentUser === null) {
+            $this->json(['error' => 'Neautentificat'], 401);
+        }
+
+        $response = ['user' => $this->currentUser];
+
+        // Daca userul e banat, adauga informatiile de ban
+        if ($this->bannedReason !== null) {
+            $ban = (new BansModel())->findActiveByUserId((int)$this->currentUser['id']);
+            $response['banned'] = true;
+            $response['ban'] = [
+                'reason'       => $ban['reason'] ?? $this->bannedReason,
+                'banned_until' => $ban['banned_until'] ?? null,
+                'created_at'   => $ban['created_at'] ?? null,
+            ];
+        }
+
+        $this->json($response);
+    }
+
+    /**
+     * PATCH /api/users/me
+     * Body: { full_name?, username? }
+     */
+    #[NoReturn]
+    public function updateMe(): void
+    {
         $user = $this->requireAuth();
-        $this->json(['user' => $user]);
+        $body = $this->getJsonBody();
+
+        if (empty($body)) {
+            $this->json(['error' => 'Body gol'], 400);
+        }
+
+        if (isset($body['username'])) {
+            $username = trim($body['username']);
+            if (strlen($username) < 3 || strlen($username) > 50) {
+                $this->json(['error' => 'Username: 3-50 caractere'], 400);
+            }
+            $existing = $this->userModel->findByUsername($username);
+            if ($existing && (int)$existing['id'] !== (int)$user['id']) {
+                $this->json(['error' => 'Username deja folosit'], 409);
+            }
+            $body['username'] = $username;
+        }
+
+        $this->userModel->updateProfile((int)$user['id'], $body);
+        $updated = $this->userModel->findById((int)$user['id']);
+        $this->json(['user' => $updated]);
     }
 }

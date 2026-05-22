@@ -36,6 +36,26 @@ class UserModel extends Model
         return $stmt->fetch() ?: null;
     }
 
+    public function updateProfile(int $id, array $data): bool
+    {
+        $allowed = ['full_name', 'username'];
+        $sets    = [];
+        $params  = ['id' => $id];
+
+        foreach ($allowed as $col) {
+            if (array_key_exists($col, $data) && $data[$col] !== null) {
+                $sets[]      = "$col = :$col";
+                $params[$col] = $data[$col];
+            }
+        }
+        if (!$sets) return false;
+
+        $stmt = $this->pdo->prepare(
+            "UPDATE users SET " . implode(', ', $sets) . " WHERE id = :id"
+        );
+        return $stmt->execute($params);
+    }
+
     public function create(string $username, string $email, ?string $passwordHash, ?string $fullName): int
     {
         $stmt = $this->pdo->prepare(

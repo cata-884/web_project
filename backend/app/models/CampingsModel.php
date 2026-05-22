@@ -97,7 +97,8 @@ class CampingsModel extends Model
     {
         $stmt = $this->pdo->prepare(
             "SELECT id, name, slug, type, latitude AS lat, longitude AS lng,
-                    price_per_night AS price, rating_avg AS rating
+                    price_per_night AS price, rating_avg AS rating,
+                    (SELECT url FROM camping_media WHERE camping_id = campings.id ORDER BY sort_order LIMIT 1) AS image_url
              FROM campings
              WHERE is_published = TRUE
                AND latitude  BETWEEN :south AND :north
@@ -109,7 +110,7 @@ class CampingsModel extends Model
     }
 
     /**
-     * Detaliu camping cu media agregate în JSON
+     * Detaliu camping cu media agregate in JSON
      */
     public function findById(int $id): ?array
     {
@@ -231,8 +232,8 @@ class CampingsModel extends Model
     {
         $slug = strtolower($name);
         $slug = strtr($slug, [
-            'ă'=>'a','â'=>'a','î'=>'i','ș'=>'s','ț'=>'t',
-            'Ă'=>'a','Â'=>'a','Î'=>'i','Ș'=>'s','Ț'=>'t',
+            'a'=>'a','a'=>'a','i'=>'i','s'=>'s','t'=>'t',
+            'A'=>'a','A'=>'a','I'=>'i','S'=>'s','T'=>'t',
         ]);
         $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
         $slug = preg_replace('/[\s-]+/', '-', $slug);

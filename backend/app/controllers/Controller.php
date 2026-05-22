@@ -7,6 +7,7 @@ abstract class Controller
     protected mixed $model        = null;
     protected ?array $currentUser = null;
     protected ?string $currentToken = null;
+    protected ?string $bannedReason = null;  // Motivul ban-ului activ, daca exista
     protected string $viewPath    = '';
 
     public function __construct()
@@ -22,7 +23,10 @@ abstract class Controller
         $this->resolveCurrentUser();
     }
 
-    /** Identifica user-ul curent din header Authorization, dacă exista token valid. */
+    /**
+     * Identifica user-ul curent din header Authorization, daca exista token valid.
+     * Verifica si daca userul are ban activ — daca da, seteaza $bannedReason.
+     */
     private function resolveCurrentUser(): void
     {
         $token = $this->extractBearerToken();
@@ -36,6 +40,14 @@ abstract class Controller
 
         $this->currentUser  = $user;
         $this->currentToken = $token;
+
+        // Verifica ban activ (exceptand admin-ii — nu pot fi banati)
+        if (($user['role'] ?? 'user') !== 'admin') {
+            $ban = (new BansModel())->findActiveByUserId((int)$user['id']);
+            if ($ban) {
+                $this->bannedReason = $ban['reason'];
+            }
+        }
     }
 
     private function extractBearerToken(): ?string
@@ -43,7 +55,7 @@ abstract class Controller
         // Sursa 1: $_SERVER
         $header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
 
-        // Sursă 2: apache_request_headers (Apache strip-ește uneori headerele)
+        // Sursa 2: apache_request_headers (Apache strip-este uneori headerele)
         if (!$header && function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
             $header = $headers['Authorization'] ?? $headers['authorization'] ?? '';
@@ -72,11 +84,26 @@ abstract class Controller
         return is_array($decoded) ? $decoded : [];
     }
 
+    /**
+     * Cere autentificare. Daca userul e banat, returneaza 403 cu motivul.
+     * Exceptie: AuthController::me() si ::logout() nu cheama requireAuth(),
+     * ci verifica direct $this->currentUser.
+     */
     protected function requireAuth(): array
     {
         if ($this->currentUser === null) {
             $this->json(['error' => 'Neautentificat'], 401);
         }
+
+        // Verifica ban — userul e logat dar banat
+        if ($this->bannedReason !== null) {
+            $this->json([
+                'error'  => 'Contul tau este suspendat',
+                'reason' => $this->bannedReason,
+                'banned' => true,
+            ], 403);
+        }
+
         return $this->currentUser;
     }
 
@@ -89,11 +116,24 @@ abstract class Controller
         return $user;
     }
 
+    /**
+     * Cere rol de organizer sau admin.
+     */
+    protected function requireOrganizer(): array
+    {
+        $user = $this->requireAuth();
+        $role = $user['role'] ?? 'user';
+        if ($role !== 'organizer' && $role !== 'admin') {
+            $this->json(['error' => 'Necesita rol de organizer'], 403);
+        }
+        return $user;
+    }
+
     protected function render(string $view, array $data = [], ?string $layout = 'main'): void
     {
         $viewFile = $this->viewPath . $view . '.php';
         if (!file_exists($viewFile)) {
-            $this->json(['error' => "View negăsit: $view"], 500);
+            $this->json(['error' => "View negasit: $view"], 500);
         }
         extract($data);
         if ($layout === null) {
