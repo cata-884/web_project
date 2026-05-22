@@ -1,4 +1,4 @@
-
+/* layout principal autentificare */
 .auth-layout {
     display: flex;
     min-height: 100vh;
@@ -7,7 +7,7 @@
 
 .auth-visual {
     flex: 1;
-    background-color: #FDF3F1;
+    background-color: var(--bg-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,7 +23,7 @@
 
 .auth-form-container {
     flex: 1;
-    background-color: #274C35;
+    background-color: var(--color-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,11 +31,11 @@
     box-sizing: border-box;
 }
 
-/* --- AUTH CARD --- */
+/* cardul de autentificare */
 .auth-card {
     width: 100%;
     max-width: 500px;
-    background-color: #FFF3F1;
+    background-color: var(--bg-card);
     border-radius: 24px;
     padding: 40px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -44,14 +44,15 @@
 
 .auth-card h2 {
     font-size: var(--font-h2);
-    color: #1A1A1A;
+    color: var(--text-main);
     margin: 0 0 8px 0;
 }
 
 .auth-card .subtitle {
     font-size: var(--font-body);
-    color: #555;
-    margin-bottom: var(--spacing-form) ;
+    color: var(--text-main);
+    opacity: 0.8;
+    margin-bottom: var(--spacing-form);
 }
 
 .form-group,
@@ -61,13 +62,13 @@
     margin-bottom: var(--spacing-form);
 }
 
-/* --- INPUTURI ȘI ETICHETE --- */
+/* inputuri si etichete */
 .form-group label {
     display: block;
     font-weight: 600;
     font-size: var(--font-body);
     margin-bottom: 8px;
-    color: #333;
+    color: var(--text-main);
 }
 
 .input-wrapper {
@@ -78,18 +79,19 @@
 .input-wrapper input {
     width: 100%;
     padding: 14px 45px 14px 16px;
-    border: 1px solid #CCC;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     font-family: inherit;
     font-size: var(--font-body);
-    background: transparent;
+    background-color: transparent;
+    color: var(--text-main);
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.3s;
 }
 
 .input-wrapper input:focus {
-    border-color: #274C35;
+    border-color: var(--color-primary);
 }
 
 .icon-eye {
@@ -98,22 +100,23 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
+    color: var(--text-main);
     opacity: 0.5;
 }
 
-/* --- PAROLA UITATA --- */
+/* parola uitata */
 .forgot-password {
     text-align: right;
 }
 
 .forgot-password a {
-    color: #1A1A1A;
+    color: var(--text-main);
     font-size: var(--font-body);
     font-weight: 600;
     text-decoration: underline;
 }
 
-/* --- CHECKBOX (TERMENI SI CONDITII) --- */
+/* checkbox termeni si conditii */
 .terms-group {
     display: flex;
     align-items: center;
@@ -123,49 +126,50 @@
 .terms-group input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: #1E3B29;
+    accent-color: var(--color-primary);
     cursor: pointer;
 }
 
 .terms-group label {
     font-size: calc(var(--font-body) * 0.9);
-    color: #333;
+    color: var(--text-main);
     cursor: pointer;
     margin-bottom: 0;
     font-weight: 500;
 }
 
 .terms-group a {
-    color: #1A1A1A;
+    color: var(--text-main);
     font-weight: 700;
     text-decoration: underline;
 }
 
-/* --- BUTON SUBMIT --- */
+/* buton submit */
 .btn-submit {
     width: 100%;
     padding: 16px;
-    background-color: #1E3B29;
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--text-light);
     border: none;
     border-radius: 12px;
     font-size: var(--font-btn);
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: opacity 0.3s;
 }
 
 .btn-submit:hover {
-    background-color: #14281c;
+    opacity: 0.9;
 }
 
-/* --- DIVIDER (OR) --- */
+/* divider or */
 .divider {
     display: flex;
     align-items: center;
     text-align: center;
     margin: var(--spacing-form) 0;
-    color: #555;
+    color: var(--text-main);
+    opacity: 0.8;
     font-size: var(--font-body);
     font-weight: 500;
 }
@@ -174,14 +178,14 @@
 .divider::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .divider span {
     padding: 0 15px;
 }
 
-/* --- SOCIAL LOGIN --- */
+/* social login */
 .social-login {
     display: flex;
     gap: 15px;
@@ -194,8 +198,9 @@
     justify-content: center;
     gap: 10px;
     padding: 12px;
-    background: transparent;
-    border: 1px solid #CCC;
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
@@ -204,26 +209,24 @@
 }
 
 .btn-social:hover {
-    background-color: rgba(0,0,0,0.05);
+    background-color: var(--bg-main);
 }
 
-/* --- LINK SIGNUP/SIGNIN JOS --- */
+/* link signup signin jos */
 .signup-link {
     text-align: center;
     font-size: var(--font-body);
-    color: #333;
+    color: var(--text-main);
     margin: 0;
 }
 
 .signup-link a {
     font-weight: 600;
-    color: #1A1A1A;
+    color: var(--text-main);
     text-decoration: underline;
 }
 
-/* =========================================
-   RESPONSIVE (TABLETE & TELEFOANE)
-   ========================================= */
+/* responsive tablete si telefoane */
 @media (max-width: 1000px) {
     .auth-layout {
         flex-direction: column;

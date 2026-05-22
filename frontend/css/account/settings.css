@@ -1,50 +1,44 @@
-/* =========================================
-   CONTAINER PRINCIPAL SETĂRI
-   ========================================= */
+/* container principal setari */
 .settings-container {
-    width: clamp(280px, 100%, 700px); /* Lățimea maximă centrală */
+    width: clamp(280px, 100%, 700px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: var(--gap-items); /* Spațiu generos între secțiuni */
+    gap: var(--gap-items);
 }
 
-/* --- HEADER TEXT (Dashed border) --- */
+/* header text */
 .settings-header-text {
     text-align: center;
-
     padding: 24px;
-
     background-color: transparent;
 }
 
 .settings-header-text h2 {
     font-size: 28px;
-    color: #1A1A1A;
+    color: var(--text-main);
     margin-top: 0;
     margin-bottom: 12px;
 }
 
 .settings-header-text p {
     font-size: 14px;
-    color: #333;
+    color: var(--text-main);
     line-height: 1.5;
     margin: 0;
 }
 
-/* =========================================
-   SECȚIUNILE (Account, Notificari, Security)
-   ========================================= */
+/* sectiunile */
 .settings-section h3 {
     font-size: 18px;
-    color: #1A1A1A;
+    color: var(--text-main);
     margin-top: 0;
     margin-bottom: 16px;
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted var(--border-color);
     padding-bottom: 8px;
 }
 
-/* --- INPUTS & FORMS --- */
+/* inputs si forms */
 .form-row.split {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -52,7 +46,7 @@
 }
 
 .align-end {
-    align-items: flex-end; /* Aliniază butonul de parolă la nivel cu input-ul */
+    align-items: flex-end;
 }
 
 .input-group-settings {
@@ -65,27 +59,28 @@
 .input-group-settings label {
     font-size: 13px;
     font-weight: 600;
-    color: #1A1A1A;
+    color: var(--text-main);
 }
 
 .input-group-settings input {
     padding: 12px 16px;
-    border: 1px solid #7A7A7A;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     font-family: inherit;
     font-size: 14px;
-    background: transparent;
+    background-color: transparent;
+    color: var(--text-main);
     outline: none;
     transition: border-color 0.2s;
-    height: 44px; /* Înălțime fixă pentru simetrie */
+    height: 44px;
     box-sizing: border-box;
 }
 
 .input-group-settings input:focus {
-    border-color: #84AC00;
+    border-color: var(--color-primary);
 }
 
-/* Iconița de ochi pt parolă */
+/* iconita ochi parola */
 .relative-input {
     position: relative;
 }
@@ -96,18 +91,10 @@
     bottom: 12px;
     cursor: pointer;
     font-size: 16px;
-    color: #666;
+    color: var(--text-main);
 }
 
-/* =========================================
-   BUTOANE (Dark & Primary)
-   ========================================= */
-
-
-
-/* =========================================
-   NOTIFICĂRI (Switch-uri)
-   ========================================= */
+/* notificari switch uri */
 .notifications-row {
     display: flex;
     gap: var(--gap-items);
@@ -123,10 +110,10 @@
 .toggle-label {
     font-size: 14px;
     font-weight: 600;
-    color: #1A1A1A;
+    color: var(--text-main);
 }
 
-/* Slider Design iOS style */
+/* slider design */
 .switch {
     position: relative;
     display: inline-block;
@@ -145,7 +132,7 @@
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: transparent;
-    border: 2px solid #7A7A7A; /* Switch off */
+    border: 2px solid var(--border-color);
     transition: .3s;
     border-radius: 22px;
 }
@@ -156,28 +143,27 @@
     height: 14px;
     width: 14px;
     left: 2px;
-    bottom: 2px; /* Centrare pe inaltime */
-    background-color: #7A7A7A;
+    bottom: 2px;
+    background-color: var(--border-color);
     transition: .3s;
     border-radius: 50%;
 }
 
 .switch input:checked + .slider {
-    background-color: #1A1A1A; /* Devine negru cand e activ */
-    border-color: #1A1A1A;
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 .switch input:checked + .slider:before {
     transform: translateX(16px);
-    background-color: white;
-}
-.btn-dark{
-    padding:clamp(10px, 2vw, 16px) clamp(16px, 4vw, 24px);
+    background-color: var(--text-light);
 }
 
-/* =========================================
-   RESPONSIVE (Mobil < 600px)
-   ========================================= */
+.btn-dark {
+    padding: clamp(10px, 2vw, 16px) clamp(16px, 4vw, 24px);
+}
+
+/* responsive mobil */
 @media (max-width: 500px) {
     .form-row.split {
         grid-template-columns: 1fr;

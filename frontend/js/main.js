@@ -344,9 +344,47 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Click pe butonul Hamburger
         hamburgerBtn.addEventListener('click', toggleMobileMenu);
 
-        // 3. Click pe fundalul întunecat închide meniul
-        overlay.addEventListener('click', toggleMobileMenu);
+        const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
 
+    if (themeButtons.length > 0) {
+        // citim tema salvata
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        // aplicam tema imediat
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+
+        // actualizam vizual butonul activ
+        themeButtons.forEach(btn => {
+            if (btn.getAttribute('data-set-theme') === savedTheme) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // ascultam click pe butoane
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedTheme = button.getAttribute('data-set-theme');
+
+                // aplicam tema pe body
+                if (selectedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                } else {
+                    document.body.removeAttribute('data-theme');
+                }
+
+                // salvam in memorie
+                localStorage.setItem('theme', selectedTheme);
+
+                // schimbam clasa active intre butoane
+                themeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+    }
         // 4. Click pe ORICE buton din meniu închide sidebar-ul
         // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
         const sidebarLinks = sidebar.querySelectorAll('.nav-item');
