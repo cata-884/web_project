@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // BOOKING DETAILS PANEL
     window.openBookingDetails = function (id) {
         const booking = allBookings.find(b => b.id === id);
+        booking.camping_name = undefined;
         if (!booking) return;
 
         const imgEl = document.getElementById('bd-image');
@@ -184,8 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
-            const label = STATUS_LABELS[booking.status] || booking.status;
-            statusEl.textContent = label;
+            statusEl.textContent = STATUS_LABELS[booking.status] || booking.status;
             statusEl.style.backgroundColor = '';
             statusEl.style.color = 'white';
             if (booking.status === 'pending') statusEl.style.backgroundColor = '#84AC00';
@@ -439,7 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         hamburgerBtn.addEventListener('click', toggleMobileMenu);
-<<<<<<< Updated upstream
 
         const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
 
@@ -486,11 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
         const sidebarLinks = sidebar.querySelectorAll('.nav-item');
         sidebarLinks.forEach(link => {
-=======
-        overlay.addEventListener('click', toggleMobileMenu);
-
-        sidebar.querySelectorAll('.nav-item').forEach(link => {
->>>>>>> Stashed changes
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 700) {
                     sidebar.classList.remove('open');
