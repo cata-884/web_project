@@ -130,7 +130,10 @@
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: transparent;
     border: 2px solid var(--border-color);
     transition: .3s;
@@ -149,12 +152,12 @@
     border-radius: 50%;
 }
 
-.switch input:checked + .slider {
+.switch input:checked+.slider {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.switch input:checked + .slider:before {
+.switch input:checked+.slider:before {
     transform: translateX(16px);
     background-color: var(--text-light);
 }

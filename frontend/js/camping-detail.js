@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (err) {
         console.error(err);
-        document.getElementById('detail-main').innerHTML = '<h2 style="color:red">Eroare la încărcarea campingului.</h2>';
+        document.getElementById('detail-main').innerHTML = '<h2 style="color:red">Eroare la incarcarea campingului.</h2>';
     }
 });
 
@@ -64,7 +64,7 @@ function renderCampingDetails() {
         thumbnailsHTML = `<img src="../assets/About1.jpg" class="active" alt="Thumbnail">`;
     }
 
-    const ratingStr = currentCamping.rating_avg ? `${parseFloat(currentCamping.rating_avg).toFixed(1)} / 5` : 'Fără recenzii';
+    const ratingStr = currentCamping.rating_avg ? `${parseFloat(currentCamping.rating_avg).toFixed(1)} / 5` : 'Fara recenzii';
 
     main.innerHTML = `
         <div class="gallery-container">
@@ -79,17 +79,15 @@ function renderCampingDetails() {
                 <h1>${currentCamping.name}</h1>
                 <div class="rating-location">
                     <span class="rating-badge">★ ${ratingStr}</span>
-                    <span>📍 ${currentCamping.address || currentCamping.region || 'Locație necunoscută'}</span>
-                    <span>🏕️ Tip: ${currentCamping.type}</span>
+                    <span>${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
+                    <span>Tip: ${currentCamping.type}</span>
                 </div>
 
                 <div class="camping-description">
-                    ${currentCamping.description || 'Nicio descriere disponibilă.'}
+                    ${currentCamping.description || 'Nicio descriere disponibila.'}
                 </div>
 
-                <div class="map-placeholder">
-                    Harta va fi afișată aici (Commit 3)
-                </div>
+                <div id="camping-map" class="camping-mini-map"></div>
 
                 <div class="reviews-section" id="reviews-section">
                     <h3>Recenzii</h3>
@@ -98,18 +96,18 @@ function renderCampingDetails() {
                         <div class="star-select" id="star-select">
                             <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
                         </div>
-                        <textarea id="review-text" placeholder="Cum a fost experiența ta?"></textarea>
+                        <textarea id="review-text" placeholder="Cum a fost experienta ta?"></textarea>
                         <button class="btn-dark" onclick="submitReview()">Trimite Recenzia</button>
                     </div>
                     <div id="reviews-list">
-                        <p>Nu există recenzii încă.</p>
+                        <p>Nu exista recenzii inca.</p>
                     </div>
                 </div>
             </div>
 
             <aside>
                 <div class="booking-card">
-                    <h3>Rezervă acum</h3>
+                    <h3>Rezerva acum</h3>
                     <div class="form-group">
                         <label>Data Check-in</label>
                         <input type="date" id="book-checkin" onchange="calculatePrice()">
@@ -121,7 +119,7 @@ function renderCampingDetails() {
                     
                     <div class="price-calculation" id="price-calc-display" style="display: none;">
                         <div class="calc-row">
-                            <span id="calc-nights">0 nopți x ${currentPricePerNight} RON</span>
+                            <span id="calc-nights">0 nopti x ${currentPricePerNight} RON</span>
                             <span id="calc-base-price">0 RON</span>
                         </div>
                         <div class="calc-total">
@@ -130,7 +128,7 @@ function renderCampingDetails() {
                         </div>
                     </div>
 
-                    <button class="btn-dark" style="width: 100%; margin-top: 16px;" onclick="handleBooking()">Confirmă Rezervarea</button>
+                    <button class="btn-dark" style="width: 100%; margin-top: 16px;" onclick="handleBooking()">Confirma Rezervarea</button>
                 </div>
             </aside>
         </div>
@@ -152,6 +150,7 @@ function renderCampingDetails() {
     }, 100);
 
     loadReviews();
+    initMiniMap();
 }
 
 window.changeMainImage = function(thumbElement, url) {
@@ -172,7 +171,7 @@ function calculatePrice() {
         
         if (diffDays > 0 && date2 > date1) {
             document.getElementById('price-calc-display').style.display = 'block';
-            document.getElementById('calc-nights').textContent = `${diffDays} nopți x ${currentPricePerNight} RON`;
+            document.getElementById('calc-nights').textContent = `${diffDays} nopti x ${currentPricePerNight} RON`;
             
             const total = diffDays * currentPricePerNight;
             document.getElementById('calc-base-price').textContent = `${total} RON`;
@@ -188,12 +187,12 @@ async function handleBooking() {
     const co = document.getElementById('book-checkout').value;
 
     if (!ci || !co) {
-        alert("Selectează datele!");
+        alert("Selecteaza datele!");
         return;
     }
     
     if (new Date(ci) >= new Date(co)) {
-        alert("Check-out trebuie să fie după check-in!");
+        alert("Check-out trebuie sa fie dupa check-in!");
         return;
     }
 
@@ -206,10 +205,10 @@ async function handleBooking() {
             guests_count: 2, // Hardcoded for now based on prompt/UI
             special_requests: ""
         });
-        alert("Rezervare creată cu succes!");
+        alert("Rezervare creata cu succes!");
         window.location.href = "account/account.html";
     } catch (err) {
-        alert(err.message || "Eroare la rezervare. Ești autentificat?");
+        alert(err.message || "Eroare la rezervare. Esti autentificat?");
     }
 }
 
@@ -257,7 +256,7 @@ window.submitReview = async function() {
     const comment = document.getElementById('review-text').value;
 
     if (!rating) {
-        alert("Selectează o notă!");
+        alert("Selecteaza o nota!");
         return;
     }
 
@@ -267,9 +266,40 @@ window.submitReview = async function() {
             rating: parseInt(rating),
             comment: comment
         });
-        alert("Recenzie adăugată!");
+        alert("Recenzie adaugata!");
         window.location.reload();
     } catch (err) {
         alert(err.message || "Eroare la recenzie.");
     }
 };
+
+function initMiniMap() {
+    const mapEl = document.getElementById('camping-map');
+    if (!mapEl || !currentCamping) return;
+
+    const lat = parseFloat(currentCamping.latitude);
+    const lng = parseFloat(currentCamping.longitude);
+
+    // If no valid coordinates, hide the map
+    if (isNaN(lat) || isNaN(lng)) {
+        mapEl.style.display = 'none';
+        return;
+    }
+
+    const miniMap = L.map('camping-map', {
+        center: [lat, lng],
+        zoom: 13,
+        scrollWheelZoom: false
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(miniMap);
+
+    const marker = L.marker([lat, lng]).addTo(miniMap);
+    marker.bindPopup(`<strong>${currentCamping.name}</strong><br>${currentCamping.address || currentCamping.region || ''}`).openPopup();
+
+    // Fix Leaflet rendering in hidden/dynamic containers
+    setTimeout(() => { miniMap.invalidateSize(); }, 200);
+}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - HerbaLink</title>
+    <title>Sign Up - CaT Camping</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
@@ -17,63 +17,135 @@
 
         <div class="auth-form-container">
             <div class="auth-card">
-                <h2>Sign Up</h2>
-                <p class="subtitle">One account to get help or support your local community.</p>
+                <h2>Creeaza cont</h2>
+                <p class="subtitle">Un singur cont pentru a explora si rezerva campinguri din Romania.</p>
 
-                <form action="dashboard.html" method="GET" class="login-form">
+                <form id="register-form" class="login-form" novalidate>
 
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="username">Username</label>
                         <div class="input-wrapper">
-                            <input type="text" id="name" name="name" placeholder="e.g., John Doe" required>
-                            <span class="icon-eye" style="opacity: 0;"></span> </div>
+                            <input type="text" id="username" name="username" placeholder="e.g., ion_popescu" required minlength="3">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullname">Nume complet <span style="font-weight:400; color:#999;">(optional)</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullname" name="fullname" placeholder="e.g., Ion Popescu">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
                         <div class="input-wrapper">
-                            <input type="email" id="email" name="email" placeholder="e.g., name@example.com" required>
+                            <input type="email" id="email" name="email" placeholder="e.g., ion@example.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">Parola <span style="font-weight:400; color:#999;">(min. 8 caractere)</span></label>
                         <div class="input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="Create a password" required>
+                            <input type="password" id="password" name="password" placeholder="Creeaza o parola" required minlength="8">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
+                        <label for="confirm-password">Confirma parola</label>
                         <div class="input-wrapper">
-                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat password" required>
+                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeta parola" required>
                         </div>
                     </div>
 
                     <div class="terms-group">
                         <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">Agree with <a href="#">Term&Conditions</a></label>
+                        <label for="terms">Sunt de acord cu <a href="#">Termenii si Conditiile</a></label>
                     </div>
 
-<button type="button" class="btn-submit" onclick="window.location.href='dashboard.html'">Sign Up</button>                </form>
+                    <div id="register-error" style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;"></div>
+
+                    <button type="submit" class="btn-submit" id="register-btn">Creeaza cont</button>
+                </form>
 
                 <div class="divider">
-                    <span>Or</span>
+                    <span>Sau</span>
                 </div>
 
                 <div class="social-login">
                     <button class="btn-social" type="button">
-                        <img src="../assets/google-icon.png" alt="G" width="18"> Google
+                        <span>G</span> Google
                     </button>
                     <button class="btn-social" type="button">
-                        <img src="../assets/apple-icon.png" alt="A" width="18"> Apple
+                        <span>A</span> Apple
                     </button>
                 </div>
 
-                <p class="signup-link">Already have an account? <a href="auth.html">Sign In</a></p>
+                <p class="signup-link">Ai deja cont? <a href="auth.html">Sign In</a></p>
             </div>
         </div>
     </main>
 
+    <script src="../js/api.js"></script>
+    <script>
+        (function () {
+            if (localStorage.getItem('cat_token')) {
+                window.location.href = 'account/account.html';
+            }
+
+            document.getElementById('register-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = document.getElementById('register-btn');
+                const errEl = document.getElementById('register-error');
+
+                const username = document.getElementById('username').value.trim();
+                const fullname = document.getElementById('fullname').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const termsChecked = document.getElementById('terms').checked;
+
+                errEl.style.display = 'none';
+
+                if (username.length < 3) {
+                    errEl.textContent = 'Username-ul trebuie sa aiba minim 3 caractere.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                if (password.length < 8) {
+                    errEl.textContent = 'Parola trebuie sa aiba minim 8 caractere.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    errEl.textContent = 'Parolele nu se potrivesc.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                if (!termsChecked) {
+                    errEl.textContent = 'Trebuie sa accepti Termenii si Conditiile.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'Se creeaza contul...';
+
+                try {
+                    const body = { username, email, password };
+                    if (fullname) body.full_name = fullname;
+
+                    const data = await api.post('/api/auth/register', body);
+                    localStorage.setItem('cat_token', data.token);
+                    localStorage.setItem('cat_user', JSON.stringify(data.user));
+                    window.location.href = 'account/account.html';
+                } catch (err) {
+                    errEl.textContent = err.message || 'Eroare la inregistrare. Incearca din nou.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Creeaza cont';
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

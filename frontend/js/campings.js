@@ -62,7 +62,7 @@ async function loadCampings() {
         renderCampings(response);
     } catch (err) {
         console.error("Failed to load campings", err);
-        grid.innerHTML = `<p style="color: red;">Eroare la încărcarea datelor.</p>`;
+        grid.innerHTML = `<p style="color: red;">Eroare la incarcarea datelor.</p>`;
     }
 }
 
@@ -77,7 +77,7 @@ function renderCampings(data) {
     resultsCount.textContent = data.total || 0;
 
     if (!data.campings || data.campings.length === 0) {
-        grid.innerHTML = `<p>Nu s-au găsit campinguri conform filtrelor.</p>`;
+        grid.innerHTML = `<p>Nu s-au gasit campinguri conform filtrelor.</p>`;
     } else {
         data.campings.forEach(c => {
             const defaultImg = '../assets/About1.jpg'; // fallback image
@@ -90,7 +90,7 @@ function renderCampings(data) {
                 <div class="card-content">
                     <span class="card-type">${c.type}</span>
                     <h3 class="card-title">${c.name}</h3>
-                    <p class="card-region">📍 ${c.region || 'Locație necunoscută'}</p>
+                    <p class="card-region">${c.region || 'Locatie necunoscuta'}</p>
                     <div class="card-bottom">
                         <div class="card-price">${c.price_per_night} RON <span>/ noapte</span></div>
                         <div class="card-rating">${ratingStr}</div>

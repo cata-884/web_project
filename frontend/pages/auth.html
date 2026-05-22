@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - HerbaLink</title>
+    <title>Sign In - CaT Camping</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
@@ -18,47 +18,89 @@
         <div class="auth-form-container">
             <div class="auth-card">
                 <h2>Sign in</h2>
-                <p class="subtitle">Log in to request or offer local assistance.</p>
+                <p class="subtitle">Conecteaza-te pentru a vedea rezervarile si favoritele tale.</p>
 
-                <form action="dashboard.html" method="POST" class="login-form">
+                <form id="login-form" class="login-form" novalidate>
 
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email sau username</label>
                         <div class="input-wrapper">
-                            <input type="email" id="email" name="email" placeholder="e.g., name@example.com" required>
+                            <input type="text" id="email" name="email" placeholder="e.g., name@example.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">Parola</label>
                         <div class="input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="your password" required>
+                            <input type="password" id="password" name="password" placeholder="parola ta" required>
                         </div>
                     </div>
 
                     <div class="forgot-password">
-                        <a href="#">Forgot password?</a>
+                        <a href="#">Ai uitat parola?</a>
                     </div>
 
-<button type="button" class="btn-submit" onclick="window.location.href='dashboard.html'">Sign In</button>                </form>
+                    <div id="login-error" style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;"></div>
+
+                    <button type="submit" class="btn-submit" id="login-btn">Sign In</button>
+                </form>
 
                 <div class="divider">
-                    <span>Or</span>
+                    <span>Sau</span>
                 </div>
 
                 <div class="social-login">
                     <button class="btn-social" type="button">
-                        <img src="../assets/google-icon.png" alt="G" width="18"> Google
+                        <span>G</span> Google
                     </button>
                     <button class="btn-social" type="button">
-                        <img src="../assets/apple-icon.png" alt="A" width="18"> Apple
+                        <span>A</span> Apple
                     </button>
                 </div>
 
-                <p class="signup-link">Don't have an account? <a href="register.html">Create Account</a></p>
+                <p class="signup-link">Nu ai cont? <a href="register.html">Creeaza un cont</a></p>
             </div>
         </div>
     </main>
 
+    <script src="../js/api.js"></script>
+    <script>
+        (function () {
+            // Redirect daca e deja logat
+            if (localStorage.getItem('cat_token')) {
+                window.location.href = 'account/account.html';
+            }
+
+            document.getElementById('login-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = document.getElementById('login-btn');
+                const errEl = document.getElementById('login-error');
+                const identifier = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                errEl.style.display = 'none';
+                btn.disabled = true;
+                btn.textContent = 'Se conecteaza...';
+
+                try {
+                    const body = { password };
+                    if (identifier.includes('@')) {
+                        body.email = identifier;
+                    } else {
+                        body.username = identifier;
+                    }
+                    const data = await api.post('/api/auth/login', body);
+                    localStorage.setItem('cat_token', data.token);
+                    localStorage.setItem('cat_user', JSON.stringify(data.user));
+                    window.location.href = 'account/account.html';
+                } catch (err) {
+                    errEl.textContent = err.message || 'Eroare la autentificare. Incearca din nou.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Sign In';
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

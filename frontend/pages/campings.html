@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorează Campinguri - CaT</title>
+    <title>Exploreaza Campinguri - CaT</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/campings.css">
@@ -12,8 +12,9 @@
     <header class="top-header">
         <nav class="main-nav">
             <div class="nav-group">
-                <a href="../index.html">Acasă</a>
-                <a href="campings.html">Explorează</a>
+                <a href="../index.html">Acasa</a>
+                <a href="campings.html">Exploreaza</a>
+                <a href="map.html">Harta</a>
             </div>
             <div class="logo">CaT</div>
             <div class="nav-group">
@@ -27,8 +28,8 @@
         <aside class="filters-sidebar">
             <form id="filters-form">
                 <div class="filter-group">
-                    <h4>Căutare</h4>
-                    <input type="text" id="filter-search" placeholder="Caută după nume...">
+                    <h4>Cautare</h4>
+                    <input type="text" id="filter-search" placeholder="Cauta dupa nume...">
                 </div>
 
                 <div class="filter-group">
@@ -40,8 +41,8 @@
                         <option value="Dobrogea">Dobrogea</option>
                         <option value="Muntenia">Muntenia</option>
                         <option value="Banat">Banat</option>
-                        <option value="Crisana">Crișana</option>
-                        <option value="Maramures">Maramureș</option>
+                        <option value="Crisana">Crisana</option>
+                        <option value="Maramures">Maramures</option>
                         <option value="Bucovina">Bucovina</option>
                     </select>
                 </div>
@@ -49,14 +50,14 @@
                 <div class="filter-group">
                     <h4>Tip Camping</h4>
                     <label><input type="checkbox" name="type" value="tent"> Cort</label>
-                    <label><input type="checkbox" name="type" value="rv"> Autorulotă</label>
-                    <label><input type="checkbox" name="type" value="cabin"> Căsuță</label>
+                    <label><input type="checkbox" name="type" value="rv"> Autorulota</label>
+                    <label><input type="checkbox" name="type" value="cabin"> Casuta</label>
                     <label><input type="checkbox" name="type" value="glamping"> Glamping</label>
-                    <label><input type="checkbox" name="type" value="wild"> Sălbatic</label>
+                    <label><input type="checkbox" name="type" value="wild"> Salbatic</label>
                 </div>
 
                 <div class="filter-group">
-                    <h4>Preț / noapte</h4>
+                    <h4>Pret / noapte</h4>
                     <div class="price-inputs">
                         <input type="number" id="filter-min-price" placeholder="Min" min="0">
                         <span>-</span>
@@ -74,7 +75,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn-dark" style="width: 100%;">Aplică Filtre</button>
+                <button type="submit" class="btn-dark" style="width: 100%;">Aplica Filtre</button>
             </form>
         </aside>
 
@@ -96,9 +97,9 @@
             </div>
 
             <div class="pagination">
-                <button id="btn-prev" disabled>Înapoi</button>
+                <button id="btn-prev" disabled>Inapoi</button>
                 <span id="page-info">Pagina 1</span>
-                <button id="btn-next" disabled>Înainte</button>
+                <button id="btn-next" disabled>Inainte</button>
             </div>
         </section>
     </main>

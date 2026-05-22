@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harta Campinguri - CaT</title>
+    <meta name="description" content="Exploreaza campingurile din Romania pe harta interactiva. Filtreaza dupa tip, pret si rating.">
+
+    <!-- Global styles -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="">
+
+    <!-- MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../css/map.css">
+</head>
+<body>
+    <div class="map-page">
+
+        <!-- Mobile toggle -->
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+
+        <!-- Overlay for mobile -->
+        <div class="map-overlay" id="map-overlay"></div>
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="map-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">CaT</div>
+                <nav class="sidebar-nav">
+                    <a href="../index.html">Acasa</a>
+                    <a href="campings.html">Exploreaza</a>
+                    <a href="map.html" class="active-link">Harta</a>
+                    <a href="account/account.html">Cont</a>
+                </nav>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Filters -->
+                <div class="map-filters">
+                    <h3>Filtre</h3>
+
+                    <div class="filter-section">
+                        <h4>Tip camping</h4>
+                        <div class="type-checkboxes">
+                            <label>
+                                <input type="checkbox" value="tent">
+                                <span>Cort</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="wild">
+                                <span>Salbatic</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="rv">
+                                <span>Autorulota</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="cabin">
+                                <span>Casuta</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="glamping">
+                                <span>Glamping</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Pret maxim / noapte</h4>
+                        <div class="price-slider-group">
+                            <input type="range" id="price-slider" min="0" max="1000" value="1000" step="10">
+                            <div class="price-display" id="price-display">0 — 1000 RON</div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Rating minim</h4>
+                        <select class="rating-select" id="rating-filter">
+                            <option value="">Oricare</option>
+                            <option value="2">2+ ★</option>
+                            <option value="3">3+ ★</option>
+                            <option value="4">4+ ★</option>
+                            <option value="4.5">4.5+ ★</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Visible results list -->
+                <div class="results-header">
+                    <h3>Locatii in aceasta zona</h3>
+                    <span class="count-badge" id="visible-count">0</span>
+                </div>
+
+                <ul class="results-list" id="results-list">
+                    <div class="results-loading"></div>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- MAP -->
+        <div class="map-container">
+            <div id="map"></div>
+            <button class="locate-btn" id="locate-me" title="Localizeaza-ma">+</button>
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <!-- MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <!-- App scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/map.js"></script>
+</body>
+</html>

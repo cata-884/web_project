@@ -13,7 +13,7 @@
     border-radius: 12px;
     padding: 16px;
     gap: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     border-left: 6px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
@@ -21,7 +21,7 @@
 
 .wishlist-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
     background-color: var(--bg-main);
 }
 

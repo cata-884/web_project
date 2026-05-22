@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalii Rezervare - CaT</title>
 
+    <script src="../../js/auth-guard.js"></script>
+
     <link rel="stylesheet" href="../../css/global.css">
-   <link rel="stylesheet" href="../../css/account/booking-details.css">
     <link rel="stylesheet" href="../../css/account/booking-details.css">
     <link rel="stylesheet" href="../../css/account/account-layout.css">
 
@@ -56,12 +57,12 @@
             </header>
 
             <div class="booking-details-container">
-                <a href="account.html" class="back-link">← Înapoi la Istoric</a>
+                <a href="account.html" class="back-link">← Inapoi la Istoric</a>
 
                 <div class="bd-header">
                     <img id="bd-image" src="" alt="Imagine Camping" class="bd-img">
                     <div class="bd-title-area">
-                        <h1 id="bd-name">Încărcare...</h1>
+                        <h1 id="bd-name">Incarcare...</h1>
                         <p id="bd-dates">--</p>
                         <span id="bd-status" class="booking-status">--</span>
                     </div>
@@ -72,17 +73,17 @@
                         <h3>Detalii Check-in / Check-out</h3>
                         <p><strong>Check-in:</strong> de la ora 15:00</p>
                         <p><strong>Check-out:</strong> 08:00 - 11:30</p>
-                        <p><strong>Număr confirmare:</strong> 5813818980</p>
+                        <p><strong>Numar confirmare:</strong> 5813818980</p>
                     </div>
                     <div class="bd-card">
-                        <h3>Contactează proprietatea</h3>
+                        <h3>Contacteaza proprietatea</h3>
                         <p><strong>Telefon:</strong> +40 757 578 558</p>
                         <button class="btn-outline">Trimite un mesaj</button>
                     </div>
                 </div>
 
                 <section id="review-section" class="review-box">
-                    <h2>Cum a fost experiența ta?</h2>
+                    <h2>Cum a fost experienta ta?</h2>
 
                     <div class="star-rating">
                         <span>Alege nota:</span>
@@ -95,11 +96,11 @@
                         </div>
                     </div>
 
-                    <textarea class="review-textarea" placeholder="Scrie aici ce ți-a plăcut sau ce ar putea fi îmbunătățit..."></textarea>
+                    <textarea class="review-textarea" placeholder="Scrie aici ce ti-a placut sau ce ar putea fi imbunatatit..."></textarea>
 
                     <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
-                        <span class="upload-icon">📁</span>
-                        <p>Apasă aici pentru a adăuga poze sau videoclipuri</p>
+                        <span class="upload-icon">+</span>
+                        <p>Apasa aici pentru a adauga poze sau videoclipuri</p>
                         <input type="file" id="file-upload" multiple accept="image/*,video/*" style="display: none;">
                     </div>
 

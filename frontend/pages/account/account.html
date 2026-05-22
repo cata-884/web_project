@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account - CaT (Camping Info)</title>
 
+    <script src="../../js/auth-guard.js"></script>
+
     <link rel="stylesheet" href="../../css/global.css">
     <link rel="stylesheet" href="../../css/account/profile.css">
     <link rel="stylesheet" href="../../css/account/wishlist.css">
-        <link rel="stylesheet" href="../../css/account/history.css">
-           <link rel="stylesheet" href="../../css/account/booking-details.css">
+    <link rel="stylesheet" href="../../css/account/history.css">
+    <link rel="stylesheet" href="../../css/account/booking-details.css">
     <link rel="stylesheet" href="../../css/account/account-layout.css">
-        <link rel="stylesheet" href="../../css/components.css">
-                <link rel="stylesheet" href="../../css/account/settings.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/account/settings.css">
 
 
 
 
 </head>
+
 <body>
 
     <div class="account-layout">
@@ -34,7 +38,7 @@
                     <span>Home</span> <span class="arrow">↗</span>
                 </a>
                 <a href="../campings.html" class="nav-item">
-                    <span>Explorează Campinguri</span> <span class="arrow">↗</span>
+                    <span>Exploreaza Campinguri</span> <span class="arrow">↗</span>
                 </a>
 
                 <button class="nav-item" data-tab="history">
@@ -51,131 +55,147 @@
                 </button>
             </nav>
 
-            <button class="btn-logout" type="button" onclick="window.location.href='../auth.html'">Log Out</button>
+            <button class="btn-logout" type="button" id="logout-btn">Log Out</button>
         </aside>
 
         <main class="account-content">
-    <header class="account-header">
-    <button class="hamburger-btn" id="hamburger-btn">☰</button>
+            <header class="account-header">
+                <button class="hamburger-btn" id="hamburger-btn">☰</button>
 
-    <div class="header-logo">CaT</div>
+                <div class="header-logo">CaT</div>
 
-    <div class="user-pill">
-        <img src="../../assets/profil.jpg" alt="Avatar">
-        <div class="user-info">
-            <span class="user-name">Mihai Gigel</span>
-            <span class="user-email">mihai@gmail.com</span>
-        </div>
-    </div>
-</header>
+                <div class="user-pill">
+                    <img id="user-pill-avatar" src="../../assets/profil.jpg" alt="Avatar">
+                    <div class="user-info">
+                        <span class="user-name" id="user-pill-name">...</span>
+                        <span class="user-email" id="user-pill-email">...</span>
+                    </div>
+                </div>
+            </header>
 
             <div class="account-pages-wrapper">
                 <div id="profile" class="tab-section active-section">
-<div class="profile-split-layout">
+                    <div class="profile-split-layout">
 
-        <div class="profile-card-ui">
+                        <div class="profile-card-ui">
 
-            <div class="cover-photo-area" onclick="document.getElementById('cover-upload').click()" title="Apasă pentru a schimba imaginea de fundal">
-                </div>
-            <input type="file" id="cover-upload" accept="image/*" style="display: none;">
+                            <div class="cover-photo-area" onclick="document.getElementById('cover-upload').click()"
+                                title="Apasa pentru a schimba imaginea de fundal">
+                            </div>
+                            <input type="file" id="cover-upload" accept="image/*" style="display: none;">
 
-            <div class="avatar-container">
-                <img src="../../assets/profil.jpg" alt="Avatar" class="profile-photo-circle" onclick="document.getElementById('avatar-upload').click()" title="Apasă pentru a schimba poza de profil">
-                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-            </div>
+                            <div class="avatar-container">
+                                <img src="../../assets/profil.jpg" alt="Avatar" class="profile-photo-circle"
+                                    onclick="document.getElementById('avatar-upload').click()"
+                                    title="Apasa pentru a schimba poza de profil">
+                                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                            </div>
 
-            <div class="profile-form-box">
-                <div class="form-row split">
-                    <div class="input-group">
-                        <label>Last name</label>
-                        <input type="text" value="Mihai">
+                            <div class="profile-form-box">
+                                <div class="form-row split">
+                                    <div class="input-group">
+                                        <label>Username</label>
+                                        <input type="text" id="profile-username" placeholder="username">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Nume complet</label>
+                                        <input type="text" id="profile-fullname" placeholder="Prenume Nume">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>Email</label>
+                                        <input type="email" id="profile-email" placeholder="email@example.com" readonly
+                                            style="opacity:.6; cursor:not-allowed;">
+                                    </div>
+                                </div>
+                                <button class="btn-save-profile" id="save-profile-btn">Save Changes</button>
+                                <div id="profile-msg" style="display:none; margin-top:8px; font-size:13px;"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="profile-right">
+                            <h2>Your Profile</h2>
+                            <p class="profile-subtitle">This is your digital handshake with the neighborhood. A friendly
+                                photo, a short bio, and a clear list of your skills help build trust. Complete your
+                                profile so locals know exactly how you can lend a hand and make a real impact.</p>
+
+                            <div class="accordion-item">
+                                <button class="accordion-header">
+                                    Areas of Interest <span class="acc-icon">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <label class="check-row"><span>Off-Camping (Salbatic)</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Glamping (Lux in natura)</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Rulote si Autorulote</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Drumetii Montane</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Pescuit si Relaxare</span> <input
+                                            type="checkbox"></label>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <button class="accordion-header">
+                                    Travel Style <span class="acc-icon">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <label class="check-row"><span>Solo (Singur)</span> <input type="checkbox"></label>
+                                    <label class="check-row"><span>Cuplu</span> <input type="checkbox"></label>
+                                    <label class="check-row"><span>Familie cu copii</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Grup mare de prieteni</span> <input
+                                            type="checkbox"></label>
+                                    <label class="check-row"><span>Alaturi de animale de companie</span> <input
+                                            type="checkbox"></label>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <button class="accordion-header">
+                                    Preferred Zones <span class="acc-icon">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <label class="check-row"><span>Zona Montana</span> <input type="checkbox"></label>
+                                    <label class="check-row"><span>Litoral / Mare</span> <input type="checkbox"></label>
+                                    <label class="check-row"><span>Delta Dunarii</span> <input type="checkbox"></label>
+                                    <label class="check-row"><span>Paduri si Lacuri</span> <input
+                                            type="checkbox"></label>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>First Name</label>
-                        <input type="text" value="Gigel">
+                </div>
+
+
+                <div id="history" class="tab-section">
+                    <div class="history-header">
+                        <h2>Istoric Rezervari</h2>
+                        <div class="history-filters">
+                            <button class="filter-btn active" data-filter="all">Toate</button>
+                            <button class="filter-btn" data-filter="upcoming">Urmeaza</button>
+                            <button class="filter-btn" data-filter="completed">Finalizate</button>
+                            <button class="filter-btn" data-filter="cancelled">Anulate</button>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>About Me</label>
-                        <textarea placeholder="Hello! I'm a software developer...">Hello! I'm a software developer by day, but I know how frustrating a slow laptop or a disconnected Wi-Fi router can be. If you're struggling with basic tech issues, setting up a new TV, or installing software, drop a request. Happy to help keep the neighborhood online!</textarea>
-                    </div>
-                </div>
-                <button class="btn-save-profile">Save Changes</button>
-            </div>
-        </div>
 
-
-    <div class="profile-right">
-        <h2>Your Profile</h2>
-        <p class="profile-subtitle">This is your digital handshake with the neighborhood. A friendly photo, a short bio, and a clear list of your skills help build trust. Complete your profile so locals know exactly how you can lend a hand and make a real impact.</p>
-
-        <div class="accordion-item">
-            <button class="accordion-header">
-                Areas of Interest <span class="acc-icon">▼</span>
-            </button>
-            <div class="accordion-content">
-                <label class="check-row"><span>Off-Camping (Sălbatic)</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Glamping (Lux în natură)</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Rulote și Autorulote</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Drumeții Montane</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Pescuit și Relaxare</span> <input type="checkbox"></label>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <button class="accordion-header">
-                Travel Style <span class="acc-icon">▼</span>
-            </button>
-            <div class="accordion-content">
-                <label class="check-row"><span>Solo (Singur)</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Cuplu</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Familie cu copii</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Grup mare de prieteni</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Alături de animale de companie</span> <input type="checkbox"></label>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <button class="accordion-header">
-                Preferred Zones <span class="acc-icon">▼</span>
-            </button>
-            <div class="accordion-content">
-                <label class="check-row"><span>Zonă Montană</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Litoral / Mare</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Delta Dunării</span> <input type="checkbox"></label>
-                <label class="check-row"><span>Păduri și Lacuri</span> <input type="checkbox"></label>
-            </div>
-        </div>
-
-    </div>
-</div>
+                    <div class="history-list" id="bookings-container"></div>
                 </div>
 
 
-             <div id="history" class="tab-section">
-    <div class="history-header">
-        <h2>Istoric Rezervări</h2>
-        <div class="history-filters">
-            <button class="filter-btn active" data-filter="all">Toate</button>
-            <button class="filter-btn" data-filter="upcoming">Urmează</button>
-            <button class="filter-btn" data-filter="completed">Finalizate</button>
-            <button class="filter-btn" data-filter="cancelled">Anulate</button>
-        </div>
-    </div>
-
-    <div class="history-list" id="bookings-container"></div>
-</div>
-
-
-            <div id="booking-details" class="tab-section">
+                <div id="booking-details" class="tab-section">
                     <div class="booking-details-container">
-                        <a href="#" id="back-to-history" class="back-link">← Înapoi la Istoric</a>
+                        <a href="#" id="back-to-history" class="back-link">← Inapoi la Istoric</a>
 
                         <div class="bd-header">
                             <img id="bd-image" src="" alt="Imagine Camping" class="bd-img">
                             <div class="bd-title-area">
-                                <h1 id="bd-name">Încărcare...</h1>
+                                <h1 id="bd-name">Incarcare...</h1>
                                 <p id="bd-dates">--</p>
                                 <span id="bd-status" class="booking-status">--</span>
                             </div>
@@ -186,17 +206,17 @@
                                 <h3>Detalii Check-in / Check-out</h3>
                                 <p><strong>Check-in:</strong> de la ora 15:00</p>
                                 <p><strong>Check-out:</strong> 08:00 - 11:30</p>
-                                <p><strong>Număr confirmare:</strong> 5813818980</p>
+                                <p><strong>Numar confirmare:</strong> 5813818980</p>
                             </div>
                             <div class="bd-card">
-                                <h3>Contactează proprietatea</h3>
+                                <h3>Contacteaza proprietatea</h3>
                                 <p><strong>Telefon:</strong> +40 757 578 558</p>
                                 <button class="btn-outline">Trimite un mesaj</button>
                             </div>
                         </div>
 
                         <section id="review-section" class="review-box">
-                            <h2>Cum a fost experiența ta?</h2>
+                            <h2>Cum a fost experienta ta?</h2>
                             <div class="star-rating">
                                 <span>Alege nota:</span>
                                 <div class="stars" id="star-container">
@@ -207,11 +227,12 @@
                                     <span data-value="5">★</span>
                                 </div>
                             </div>
-                            <textarea class="review-textarea" placeholder="Scrie aici ce ți-a plăcut..."></textarea>
+                            <textarea class="review-textarea" placeholder="Scrie aici ce ti-a placut..."></textarea>
                             <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
-                                <span class="upload-icon">📁</span>
-                                <p>Apasă aici pentru a adăuga poze sau videoclipuri</p>
-                                <input type="file" id="file-upload" multiple accept="image/*,video/*" style="display: none;">
+                                <span class="upload-icon">+</span>
+                                <p>Apasa aici pentru a adauga poze sau videoclipuri</p>
+                                <input type="file" id="file-upload" multiple accept="image/*,video/*"
+                                    style="display: none;">
                             </div>
                             <button class="btn-submit-review">Trimite Recenzia</button>
                         </section>
@@ -221,68 +242,85 @@
 
 
                 <div id="settings" class="tab-section">
-    <div class="settings-container">
+                    <div class="settings-container">
 
-        <div class="settings-header-text">
-            <h2>Your Preferences</h2>
-            <p>Customize how you interact with the neighborhood. Update your private details, secure your account, and choose exactly how and when you want to be notified about local help requests.</p>
-        </div>
+                        <div class="settings-header-text">
+                            <h2>Your Preferences</h2>
+                            <p>Customize how you interact with the neighborhood. Update your private details, secure
+                                your account, and choose exactly how and when you want to be notified about local help
+                                requests.</p>
+                        </div>
 
-        <div class="settings-section">
-            <h3>Account Details</h3>
-            <div class="form-row split">
-                <div class="input-group-settings">
-                    <label>Email Address</label>
-                    <input type="email" value="mihai@gmail.com" placeholder="Emailul tau">
+                        <div class="settings-section">
+                            <h3>Account Details</h3>
+                            <div class="form-row split">
+                                <div class="input-group-settings">
+                                    <label>Email Address</label>
+                                    <input type="email" value="mihai@gmail.com" placeholder="Emailul tau">
+                                </div>
+                                <div class="input-group-settings">
+                                    <label>Your Id</label>
+                                    <input type="text" value="#12894" readonly
+                                        style="background-color: rgba(0,0,0,0.02); color: #666;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Notifications</h3>
+                            <div class="notifications-row">
+                                <div class="toggle-wrapper">
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="toggle-label">New Invites</span>
+                                </div>
+
+                                <div class="toggle-wrapper">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="toggle-label">Team Activity</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Security & Privacy</h3>
+                            <div class="form-row split align-end">
+                                <div class="input-group-settings relative-input">
+                                    <label>Actual Password</label>
+                                    <input type="password" value="secretpassword" placeholder=".....">
+                                    <span class="eye-icon" title="Arata parola">&#9679;</span>
+                                </div>
+                                <button class="btn-dark">Change Password</button>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete
+                            Account</button>
+
+                    </div>
                 </div>
-                <div class="input-group-settings">
-                    <label>Your Id</label>
-                    <input type="text" value="#12894" readonly style="background-color: rgba(0,0,0,0.02); color: #666;">
-                </div>
-            </div>
-        </div>
 
-        <div class="settings-section">
-            <h3>Notifications</h3>
-            <div class="notifications-row">
-                <div class="toggle-wrapper">
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                    <span class="toggle-label">New Invites</span>
+                <div id="wishlist" class="tab-section">
+                    <div class="history-header">
+                        <h2>Favorite</h2>
+                    </div>
+                    <div id="wishlist-container" class="wishlist-list">
+                        <p style="color:#666; font-style:italic;">Se incarca favoritele...</p>
+                    </div>
                 </div>
 
-                <div class="toggle-wrapper">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="toggle-label">Team Activity</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="settings-section">
-            <h3>Security & Privacy</h3>
-            <div class="form-row split align-end">
-                <div class="input-group-settings relative-input">
-                    <label>Actual Password</label>
-                    <input type="password" value="secretpassword" placeholder=".....">
-                    <span class="eye-icon" title="Arată parola">👁️</span>
-                </div>
-                <button class="btn-dark">Change Password</button>
-            </div>
-        </div>
-
-        <button class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete Account</button>
-
-    </div>
-</div>
+            </div><!-- /.account-pages-wrapper -->
         </main>
 
     </div>
 
+    <script src="../../js/api.js"></script>
     <script src="../../js/main.js"></script>
 </body>
+
 </html>

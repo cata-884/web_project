@@ -98,7 +98,7 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-min-height: 100vh;
+    min-height: 100vh;
     align-items: center;
 }
 
@@ -167,14 +167,24 @@ min-height: 100vh;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 .account-header,
 .account-pages-wrapper {
 
     width: clamp(280px, 100%, 1200px);
-}.hamburger-btn {
+}
+
+.hamburger-btn {
     display: none;
     background: transparent;
     border: none;
@@ -183,6 +193,7 @@ min-height: 100vh;
     cursor: pointer;
     padding: 0 10px 0 0;
 }
+
 @media (max-width: 700px) {
 
     .hamburger-btn {
@@ -190,10 +201,10 @@ min-height: 100vh;
     }
 
     .account-header {
-        flex-direction: row ;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        width:clamp(280px, 100%, 600px);
+        width: clamp(280px, 100%, 600px);
 
     }
 
@@ -236,37 +247,43 @@ min-height: 100vh;
         display: block;
         opacity: 1;
     }
-    .booking-arrow{
-    display: none;
+
+    .booking-arrow {
+        display: none;
     }
+
     .history-filters {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
+    /* Facem butoanele sa ocupe toata latimea celulei lor din grila */
     .filter-btn {
         width: 100%;
         padding: 10px 8px;
         text-align: center;
     }
-    .bd-header{
-    flex-direction: column;
-    gap:var(--gap-items);
+
+    .bd-header {
+        flex-direction: column;
+        gap: var(--gap-items);
     }
-    .bd-img{
-    width: 100%;
-    height: auto;
+
+    .bd-img {
+        width: 100%;
+        height: auto;
     }
-    .bd-title-area{
-    text-align: center;
-    width:100%;
-    height:auto;
+
+    .bd-title-area {
+        text-align: center;
+        width: 100%;
+        height: auto;
 
     }
-    .bd-grid
-{
-    grid-template-columns: 1fr;
-    gap: var(--gap-items);
-}
+
+    .bd-grid {
+        grid-template-columns: 1fr;
+        gap: var(--gap-items);
+    }
 }

@@ -6,6 +6,10 @@
     <title>Detalii Camping - CaT</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="">
+    <link rel="stylesheet" href="../css/map.css">
     <style>
         .camping-detail-layout {
             max-width: 1200px;
@@ -87,18 +91,6 @@
             white-space: pre-line;
         }
 
-        .map-placeholder {
-            width: 100%;
-            height: 300px;
-            background: #e0e0e0;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            margin-bottom: 40px;
-            font-weight: 600;
-        }
 
         /* Booking Card */
         .booking-card {
@@ -220,8 +212,9 @@
     <header class="top-header">
         <nav class="main-nav">
             <div class="nav-group">
-                <a href="../index.html">Acasă</a>
-                <a href="campings.html">Explorează</a>
+                <a href="../index.html">Acasa</a>
+                <a href="campings.html">Exploreaza</a>
+                <a href="map.html">Harta</a>
             </div>
             <div class="logo">CaT</div>
             <div class="nav-group">
@@ -232,9 +225,12 @@
     </header>
 
     <main class="camping-detail-layout" id="detail-main">
-        <div id="loading-indicator">Încărcare date...</div>
+        <div id="loading-indicator">Incarcare date...</div>
     </main>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
     <script src="../js/api.js"></script>
     <script src="../js/camping-detail.js"></script>
 </body>
