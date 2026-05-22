@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorează Campinguri - CaT</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/campings.css">
+</head>
+<body>
+    <header class="top-header">
+        <nav class="main-nav">
+            <div class="nav-group">
+                <a href="../index.html">Acasă</a>
+                <a href="campings.html">Explorează</a>
+            </div>
+            <div class="logo">CaT</div>
+            <div class="nav-group">
+                <a href="auth.html">Autentificare</a>
+                <a href="account/account.html">Contul Meu</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="campings-layout">
+        <aside class="filters-sidebar">
+            <form id="filters-form">
+                <div class="filter-group">
+                    <h4>Căutare</h4>
+                    <input type="text" id="filter-search" placeholder="Caută după nume...">
+                </div>
+
+                <div class="filter-group">
+                    <h4>Regiune</h4>
+                    <select id="filter-region">
+                        <option value="">Toate</option>
+                        <option value="Transilvania">Transilvania</option>
+                        <option value="Moldova">Moldova</option>
+                        <option value="Dobrogea">Dobrogea</option>
+                        <option value="Muntenia">Muntenia</option>
+                        <option value="Banat">Banat</option>
+                        <option value="Crisana">Crișana</option>
+                        <option value="Maramures">Maramureș</option>
+                        <option value="Bucovina">Bucovina</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Tip Camping</h4>
+                    <label><input type="checkbox" name="type" value="tent"> Cort</label>
+                    <label><input type="checkbox" name="type" value="rv"> Autorulotă</label>
+                    <label><input type="checkbox" name="type" value="cabin"> Căsuță</label>
+                    <label><input type="checkbox" name="type" value="glamping"> Glamping</label>
+                    <label><input type="checkbox" name="type" value="wild"> Sălbatic</label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Preț / noapte</h4>
+                    <div class="price-inputs">
+                        <input type="number" id="filter-min-price" placeholder="Min" min="0">
+                        <span>-</span>
+                        <input type="number" id="filter-max-price" placeholder="Max" min="0">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Rating Minim</h4>
+                    <select id="filter-min-rating">
+                        <option value="">Oricare</option>
+                        <option value="4">4+ Stele</option>
+                        <option value="3">3+ Stele</option>
+                        <option value="2">2+ Stele</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-dark" style="width: 100%;">Aplică Filtre</button>
+            </form>
+        </aside>
+
+        <section class="campings-main">
+            <div class="search-header">
+                <h2>Rezultate (<span id="results-count">0</span>)</h2>
+            </div>
+
+            <div class="campings-grid" id="campings-grid">
+                <!-- Skeleton Loader initially -->
+                <div class="camping-card skeleton">
+                    <div class="card-image skeleton"></div>
+                    <div class="card-content">
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text" style="width: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button id="btn-prev" disabled>Înapoi</button>
+                <span id="page-info">Pagina 1</span>
+                <button id="btn-next" disabled>Înainte</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/campings.js"></script>
+</body>
+</html>

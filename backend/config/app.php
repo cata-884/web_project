@@ -1,15 +1,12 @@
 <?php
-define('APP_NAME', 'DiH - Digital Herbarium');
-define('BASE_URL', '/dih/public'); // ajusteaza dupa cum e instalat
+define('APP_NAME', 'CaT Camping Info Web Tool');
+define('BASE_URL', '/cat/public');
 define('DEFAULT_LANG', 'ro');
 
-// Autoloader - cauta clasele in directoarele cunoscute
 spl_autoload_register(function (string $class): void {
     $dirs = [
         ROOT . SEP . 'app' . SEP . 'controllers',
         ROOT . SEP . 'app' . SEP . 'models',
-        ROOT . SEP . 'lib'  . SEP . 'exporters',
-        ROOT . SEP . 'lib'  . SEP . 'importers',
     ];
 
     foreach ($dirs as $dir) {

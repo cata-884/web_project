@@ -21,3 +21,11 @@ Ajusteaza `BASE_URL` din `config/app.php` daca calea difera
 Toate metodele din controllere sunt stub-uri cu `// TODO`.
 Modelele sunt goale — adauga query-uri dupa cum apare nevoia.
 View-urile nu exista inca — se vor crea pe masura ce se construieste UI-ul.
+
+## DEPENDECIES
+
+bash 
+``
+sudo pacman -S composer
+composer require --dev phpunit/phpunit
+``

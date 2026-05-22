@@ -1,4 +1,9 @@
 RewriteEngine On
+
+# Apache uneori strip-eaza headerul Authorization — il reintroduce explicit
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L]

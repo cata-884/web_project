@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==========================================
-    // 1. CARDS SLIDER (ABOUT US)
-    // ==========================================
     const cards = document.querySelectorAll('.about-cards-stack .feature-card');
     const sliderButtons = document.querySelectorAll('.about-cards-stack .card-btn');
     let positions = ['pos-0', 'pos-1', 'pos-2'];
@@ -17,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 2. TABS SWITCHER (ABOUT US - LUCIU/CATALIN)
-    // ==========================================
     const btnLuciu = document.getElementById('btn-luciu');
     const btnCatalin = document.getElementById('btn-catalin');
     const contentLuciu = document.getElementById('content-luciu');
@@ -41,9 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 3. THEME TOGGLE (DARK/WHITE)
-    // ==========================================
     const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
 
     if (themeButtons.length > 0) {
@@ -55,9 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 4. MAIN SIDEBAR NAVIGATION (ACCOUNT SPA)
-    // ==========================================
     const accountTabBtns = document.querySelectorAll('.account-tabs .nav-item[data-tab]');
     const accountSections = document.querySelectorAll('.tab-section');
 
@@ -78,9 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 5. MOCK DATA & RENDER SYSTEM (HISTORY)
-    // ==========================================
     const mockBookings = [
         {
             id: 1,
@@ -132,9 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderBookings(mockBookings);
 
-    // ==========================================
-    // 6. BOOKING FILTERS LOGIC
-    // ==========================================
     const filterBtns = document.querySelectorAll('.history-filters .filter-btn');
 
     if (filterBtns.length > 0) {
@@ -153,9 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 7. SPA DETAILS VIEW & NAVIGATION
-    // ==========================================
     window.openBookingDetails = function(id) {
         const currentBooking = mockBookings.find(b => b.id === id);
 
@@ -200,9 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // 8. INTERACTIVE STAR RATING SYSTEM
-    // ==========================================
     const stars = document.querySelectorAll('.stars span');
     let selectedRating = 0;
 
