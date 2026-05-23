@@ -62,6 +62,10 @@ $routes = [
     'post /api/organizers/(\d+)/approve'             => ['OrganizersController', 'approve'],
     'post /api/organizers/(\d+)/reject'              => ['OrganizersController', 'reject'],
 
+    // Contact API
+    'post /api/contact'           => ['ContactController', 'store'],
+    'get /api/admin/messages'     => ['ContactController', 'index'],
+
     // Admin API (gestionare useri + ban-uri)
     'get /api/admin/users'                           => ['AdminController', 'listUsers'],
     'post /api/admin/users/(\d+)/ban'                => ['AdminController', 'banUser'],

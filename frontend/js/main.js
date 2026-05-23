@@ -2,15 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CARD SLIDER (landing / about page)
     const cards = document.querySelectorAll('.about-cards-stack .feature-card');
-    const sliderButtons = document.querySelectorAll('.about-cards-stack .card-btn');
     let positions = ['pos-0', 'pos-1', 'pos-2'];
 
-    if (sliderButtons.length > 0) {
-        sliderButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                cards.forEach(card => card.classList.remove('pos-0', 'pos-1', 'pos-2'));
-                positions.unshift(positions.pop());
-                cards.forEach((card, index) => card.classList.add(positions[index]));
+    if (cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!card.classList.contains('pos-0')) {
+                    e.preventDefault();
+                    cards.forEach(c => c.classList.remove('pos-0', 'pos-1', 'pos-2'));
+                    positions.unshift(positions.pop());
+                    cards.forEach((c, i) => c.classList.add(positions[i]));
+                }
             });
         });
     }
@@ -473,6 +475,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     overlay.classList.remove('active');
                 }
             });
+        });
+    }
+
+    // CONTACT FORM
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const feedback = document.getElementById('contact-feedback');
+            const first = document.getElementById('contact-first').value.trim();
+            const last  = document.getElementById('contact-last').value.trim();
+            const name  = [last, first].filter(Boolean).join(' ');
+            const email = document.getElementById('contact-email').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+
+            btn.disabled = true;
+            btn.textContent = 'Se trimite...';
+            feedback.style.display = 'none';
+
+            try {
+                await api.post('/api/contact', { name, email, phone, message });
+                feedback.textContent = 'Mesaj trimis! Te vom contacta in curand.';
+                feedback.style.background = 'rgba(45,76,54,.1)';
+                feedback.style.color = '#2D4C36';
+                feedback.style.display = 'block';
+                contactForm.reset();
+            } catch (err) {
+                feedback.textContent = err.message || 'Eroare la trimitere. Incearca din nou.';
+                feedback.style.background = 'rgba(239,106,0,.08)';
+                feedback.style.color = '#EF6A00';
+                feedback.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Trimite';
+            }
         });
     }
 
