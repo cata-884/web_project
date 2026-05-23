@@ -218,4 +218,149 @@ class AuthController extends Controller
         $updated = $this->userModel->findById((int)$user['id']);
         $this->json(['user' => $updated]);
     }
+    
+    /**
+     * Start Google OAuth flow
+     * face redirect spre 
+     * 
+     * https://accounts.google.com/o/oauth2/v2/auth
+     *  ?client_id=...&redirect_uri=...&response_type=code&scope=email%20profile
+     * 
+     * GET /api/auth/oauth/google/start
+     */
+    #[NoReturn]
+    public function oauthGoogleStart(): void
+    {   
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $state = bin2hex(random_bytes(16));
+        $_SESSION['oauth_state'] = $state;
+
+        $googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth?client_id="
+            . urlencode(GOOGLE_CLIENT_ID)
+            . "&redirect_uri=" . urlencode(GOOGLE_REDIRECT_URI)
+            . "&response_type=code"
+            . "&scope=" . urlencode("openid email profile")
+            . "&state=" . urlencode($state)
+            . "&prompt=select_account";
+
+        header("Location: " . $googleAuthUrl);
+        exit();
+    }
+
+    /**
+     * GET /api/auth/oauth/google/callback?code=...&state=...
+     *
+     * primeste `?code=...`, face POST la `https://oauth2.googleapis.com/token`
+     *  pentru access_token, apoi GET la `https://www.googleapis.com/oauth2/v2/userinfo`
+     *  pentru date user. 
+     *  Cauta user dupa `oauth_id`, creeaza-l daca lipseste,
+     *   genereaza sesiune, redirect spre frontend cu tokenul in URL 
+     *  (sau seteaza cookie).
+     */
+    #[NoReturn]
+    public function oauthGoogleCallback(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Verifica state (CSRF protection)
+        $receivedState = $_GET['state'] ?? '';
+        $savedState    = $_SESSION['oauth_state'] ?? '';
+        unset($_SESSION['oauth_state']); 
+
+        if (!$receivedState || !hash_equals($savedState, $receivedState)) {
+            $this->redirectToAuthError('invalid_state');
+        }
+
+        // Userul a refuzat la Google, sau Google a returnat eroare
+        if (isset($_GET['error'])) {
+            $this->redirectToAuthError($_GET['error']);
+        }
+
+        // Verifica prezenta code-ului
+        if (empty($_GET['code'])) {
+            $this->redirectToAuthError('missing_code');
+        }
+        $code = $_GET['code'];
+
+        // Schimba code-ul pe access_token (POST server-to-server)
+        $tokenResponse = $this->httpPost('https://oauth2.googleapis.com/token', [
+            'code'          => $code,
+            'client_id'     => GOOGLE_CLIENT_ID,
+            'client_secret' => GOOGLE_CLIENT_SECRET,
+            'redirect_uri'  => GOOGLE_REDIRECT_URI,
+            'grant_type'    => 'authorization_code',
+        ]);
+
+        if (empty($tokenResponse['access_token'])) {
+            $this->redirectToAuthError('token_exchange_failed');
+        }
+
+        // Ia datele user-ului
+        $googleUser = $this->httpGet(
+            'https://www.googleapis.com/oauth2/v2/userinfo',
+            ['Authorization: Bearer ' . $tokenResponse['access_token']]
+        );
+
+        if (empty($googleUser['id']) || empty($googleUser['email'])) {
+            $this->redirectToAuthError('userinfo_failed');
+        }
+
+        if (empty($googleUser['verified_email'])) {
+            $this->redirectToAuthError('email_not_verified');
+        }
+
+        // Gaseste / creeaza userul in DB
+        $userId = $this->userModel->findOrCreateOauthUser(
+            'google',
+            $googleUser['id'],
+            $googleUser['email']
+        );
+
+        $token = $this->sessionModel->create($userId);
+
+        header('Location: http://localhost/pages/auth.html?token=' . urlencode($token));
+        exit();
+    }
+
+
+    #[NoReturn]
+private function redirectToAuthError(string $code): void
+{
+    header('Location: http://localhost/pages/auth.html?error=' . urlencode($code));
+    exit();
+}
+
+private function httpPost(string $url, array $data): array
+{
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query($data),
+        CURLOPT_HTTPHEADER     => ['Content-Type: application/x-www-form-urlencoded'],
+        CURLOPT_TIMEOUT        => 10,
+    ]);
+    $body = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($body, true) ?? [];
+}
+
+private function httpGet(string $url, array $headers = []): array
+{
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => $headers,
+        CURLOPT_TIMEOUT        => 10,
+    ]);
+    $body = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($body, true) ?? [];
+}
+
 }

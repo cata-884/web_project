@@ -15,11 +15,13 @@ if ($method === 'options') {
 
 $routes = [
     // Auth API
-    'post /api/auth/register'  => ['AuthController', 'register'],
-    'post /api/auth/login'     => ['AuthController', 'login'],
-    'post /api/auth/logout'    => ['AuthController', 'logout'],
-    'get /api/auth/me'         => ['AuthController', 'me'],
-    'patch /api/users/me'      => ['AuthController', 'updateMe'],
+    'post /api/auth/register'              => ['AuthController', 'register'],
+    'post /api/auth/login'                 => ['AuthController', 'login'],
+    'post /api/auth/logout'                => ['AuthController', 'logout'],
+    'get /api/auth/me'                     => ['AuthController', 'me'],
+    'patch /api/users/me'                  => ['AuthController', 'updateMe'],
+    'get /api/auth/oauth/google/start'     => ['AuthController', 'oauthGoogleStart'],
+    'get /api/auth/oauth/google/callback'  => ['AuthController', 'oauthGoogleCallback'],
 
     // Campings API
     // /map TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID

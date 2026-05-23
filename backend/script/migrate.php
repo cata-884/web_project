@@ -13,3 +13,4 @@ foreach ($files as $f) {
     $pdo->exec(file_get_contents($f));
 }
 echo "Done.\n";
+?>
