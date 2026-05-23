@@ -39,26 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // THEME TOGGLE
     const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
     if (themeButtons.length > 0) {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-        }
-        themeButtons.forEach(btn => {
-            if (btn.getAttribute('data-set-theme') === savedTheme) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
         themeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const selectedTheme = button.getAttribute('data-set-theme');
-                if (selectedTheme === 'dark') {
-                    document.body.setAttribute('data-theme', 'dark');
-                } else {
-                    document.body.removeAttribute('data-theme');
-                }
-                localStorage.setItem('theme', selectedTheme);
                 themeButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
             });
@@ -169,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // BOOKING DETAILS PANEL
     window.openBookingDetails = function (id) {
         const booking = allBookings.find(b => b.id === id);
-        booking.camping_name = undefined;
         if (!booking) return;
 
         const imgEl = document.getElementById('bd-image');
@@ -185,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
-            statusEl.textContent = STATUS_LABELS[booking.status] || booking.status;
+            const label = STATUS_LABELS[booking.status] || booking.status;
+            statusEl.textContent = label;
             statusEl.style.backgroundColor = '';
             statusEl.style.color = 'white';
             if (booking.status === 'pending') statusEl.style.backgroundColor = '#84AC00';
@@ -442,45 +424,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
 
-    if (themeButtons.length > 0) {
-        // citim tema salvata
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (themeButtons.length > 0) {
+            // citim tema salvata
+            const savedTheme = localStorage.getItem('theme') || 'light';
 
-        // aplicam tema imediat
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-        }
-
-        // actualizam vizual butonul activ
-        themeButtons.forEach(btn => {
-            if (btn.getAttribute('data-set-theme') === savedTheme) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+            // aplicam tema imediat
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
             }
-        });
 
-        // ascultam click pe butoane
-        themeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const selectedTheme = button.getAttribute('data-set-theme');
-
-                // aplicam tema pe body
-                if (selectedTheme === 'dark') {
-                    document.body.setAttribute('data-theme', 'dark');
+            // actualizam vizual butonul activ
+            themeButtons.forEach(btn => {
+                if (btn.getAttribute('data-set-theme') === savedTheme) {
+                    btn.classList.add('active');
                 } else {
-                    document.body.removeAttribute('data-theme');
+                    btn.classList.remove('active');
                 }
-
-                // salvam in memorie
-                localStorage.setItem('theme', selectedTheme);
-
-                // schimbam clasa active intre butoane
-                themeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
             });
-        });
-    }
+
+            // ascultam click pe butoane
+            themeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedTheme = button.getAttribute('data-set-theme');
+
+                    // aplicam tema pe body
+                    if (selectedTheme === 'dark') {
+                        document.body.setAttribute('data-theme', 'dark');
+                    } else {
+                        document.body.removeAttribute('data-theme');
+                    }
+
+                    // salvam in memorie
+                    localStorage.setItem('theme', selectedTheme);
+
+                    // schimbam clasa active intre butoane
+                    themeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+        }
         // 4. Click pe ORICE buton din meniu închide sidebar-ul
         // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
         const sidebarLinks = sidebar.querySelectorAll('.nav-item');

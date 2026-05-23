@@ -63,4 +63,4 @@ Imbunatatiri (non-critice)
 
    5. Schimbat formatul de calendar: american => european
 
-   6. Filtrele din pagina de search functioneaza in ciuda lipsei de atribute din schema bazei de date
+   6. Aplicarea filtrelor pentru cautarea locurilor de camping in search.html

@@ -15,13 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const query = slug ? `slug=${slug}` : `id=${id}`;
         // Temporarily handling GET with slug/id via search since backend is generic.
-        // Wait, backend has show(int $id). But we added findBySlug in Model. 
-        // We will just fetch all and find by slug if id is missing, or adjust backend.
-        // For simplicity, assuming backend supports ?search=slug or we use the specific endpoint.
-        // Actually, the easiest way for now without changing backend is fetching campings and matching if slug is used.
-        // Wait, the prompt asked for "camping.html?id=X sau ?slug=X". 
-        
-        // Let's see if we can just get it. If id exists:
         if (id) {
             const res = await api.get(`/api/campings/${id}`);
             currentCamping = res.camping;
@@ -29,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch list and find the one with the slug
             const res = await api.get(`/api/campings?limit=100`);
             currentCamping = res.campings.find(c => c.slug === slug);
-            if(currentCamping) {
+            if (currentCamping) {
                 // Fetch full details
                 const fullRes = await api.get(`/api/campings/${currentCamping.id}`);
                 currentCamping = fullRes.camping;
@@ -37,10 +30,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (!currentCamping) throw new Error("Camping not found");
-        
+
         currentPricePerNight = parseFloat(currentCamping.price_per_night);
         renderCampingDetails();
-        
+
         // Check if user has a completed booking to show review form
         checkReviewEligibility();
 
@@ -54,13 +47,13 @@ function renderCampingDetails() {
     const main = document.getElementById('detail-main');
     const media = currentCamping.media || [];
     const mainImg = media.length > 0 ? media[0].url : '../assets/About1.jpg';
-    
+
     let thumbnailsHTML = '';
     media.forEach((m, idx) => {
         thumbnailsHTML += `<img src="${m.url}" class="${idx === 0 ? 'active' : ''}" onclick="changeMainImage(this, '${m.url}')" alt="Thumbnail">`;
     });
 
-    if(thumbnailsHTML === '') {
+    if (thumbnailsHTML === '') {
         thumbnailsHTML = `<img src="../assets/About1.jpg" class="active" alt="Thumbnail">`;
     }
 
@@ -79,8 +72,8 @@ function renderCampingDetails() {
                 <h1>${currentCamping.name}</h1>
                 <div class="rating-location">
                     <span class="rating-badge">★ ${ratingStr}</span>
-                    <span>${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
-                    <span>Tip: ${currentCamping.type}</span>
+                    <span>📍 ${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
+                    <span>🏕️ Tip: ${currentCamping.type}</span>
                 </div>
 
                 <div class="camping-description">
@@ -153,7 +146,7 @@ function renderCampingDetails() {
     initMiniMap();
 }
 
-window.changeMainImage = function(thumbElement, url) {
+window.changeMainImage = function (thumbElement, url) {
     document.getElementById('main-gallery-img').src = url;
     document.querySelectorAll('.thumbnail-list img').forEach(img => img.classList.remove('active'));
     thumbElement.classList.add('active');
@@ -162,17 +155,17 @@ window.changeMainImage = function(thumbElement, url) {
 function calculatePrice() {
     const ci = document.getElementById('book-checkin').value;
     const co = document.getElementById('book-checkout').value;
-    
+
     if (ci && co) {
         const date1 = new Date(ci);
         const date2 = new Date(co);
         const diffTime = Math.abs(date2 - date1);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
         if (diffDays > 0 && date2 > date1) {
             document.getElementById('price-calc-display').style.display = 'block';
             document.getElementById('calc-nights').textContent = `${diffDays} nopti x ${currentPricePerNight} RON`;
-            
+
             const total = diffDays * currentPricePerNight;
             document.getElementById('calc-base-price').textContent = `${total} RON`;
             document.getElementById('calc-total-price').textContent = `${total} RON`;
@@ -190,7 +183,7 @@ async function handleBooking() {
         alert("Selecteaza datele!");
         return;
     }
-    
+
     if (new Date(ci) >= new Date(co)) {
         alert("Check-out trebuie sa fie dupa check-in!");
         return;
@@ -202,7 +195,7 @@ async function handleBooking() {
             check_in: ci,
             check_out: co,
             total_price: parseFloat(document.getElementById('calc-total-price').textContent),
-            guests_count: 2, // Hardcoded for now based on prompt/UI
+            guests_count: 2,
             special_requests: ""
         });
         alert("Rezervare creata cu succes!");
@@ -217,7 +210,7 @@ async function checkReviewEligibility() {
         const res = await api.get(`/api/bookings?camping_id=${currentCamping.id}`);
         // If the user has a completed booking for this camping
         const hasCompleted = res.bookings && res.bookings.some(b => b.status === 'completed');
-        
+
         if (hasCompleted) {
             document.getElementById('review-form-container').style.display = 'block';
         }
@@ -228,10 +221,9 @@ async function checkReviewEligibility() {
 
 async function loadReviews() {
     try {
-        // Fetch reviews (assuming backend supports it or we fetch and filter)
         const res = await api.get(`/api/reviews?camping_id=${currentCamping.id}`);
         const list = document.getElementById('reviews-list');
-        
+
         if (res.reviews && res.reviews.length > 0) {
             list.innerHTML = '';
             res.reviews.forEach(r => {
@@ -246,12 +238,12 @@ async function loadReviews() {
                 `;
             });
         }
-    } catch(e) {
+    } catch (e) {
         // Ignored or handle properly
     }
 }
 
-window.submitReview = async function() {
+window.submitReview = async function () {
     const rating = window.currentReviewRating;
     const comment = document.getElementById('review-text').value;
 

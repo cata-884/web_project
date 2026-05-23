@@ -3,11 +3,11 @@ class UserModel extends Model
 {
     protected string $table = 'users';
 
-    public function findByUsername(string $username): ?array //array or null
+    public function findByUsername(string $username): ?array
     {
         $stmt = $this->pdo->prepare(
             "SELECT id, username, email, password_hash, full_name, avatar_url,
-                    role, oauth_provider, oauth_id, created_at
+                    role, oauth_provider, oauth_id, created_at  
              FROM users WHERE username = :username"
         );
         $stmt->execute(['username' => $username]);
@@ -105,18 +105,15 @@ class UserModel extends Model
 
     public function findOrCreateOauthUser(string $provider, string $oauthId, string $email): int
     {
-        // a) Există deja user cu același oauth_id?
         $row = $this->findByOauthId($provider, $oauthId);
         if ($row) return (int) $row['id'];
 
-        // b) Există user cu același email? (account linking)
         $existing = $this->findByEmail($email);
         if ($existing) {
             $this->linkOauth((int) $existing['id'], $provider, $oauthId);
             return (int) $existing['id'];
         }
 
-        // c) User complet nou
         $username = $this->generateUniqueUsername($email);
         return $this->createOauthUser($email, $username, $provider, $oauthId);
     }

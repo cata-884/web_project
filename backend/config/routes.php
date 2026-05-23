@@ -15,13 +15,11 @@ if ($method === 'options') {
 
 $routes = [
     // Auth API
-    'post /api/auth/register'              => ['AuthController', 'register'],
-    'post /api/auth/login'                 => ['AuthController', 'login'],
-    'post /api/auth/logout'                => ['AuthController', 'logout'],
-    'get /api/auth/me'                     => ['AuthController', 'me'],
-    'patch /api/users/me'                  => ['AuthController', 'updateMe'],
-    'get /api/auth/oauth/google/start'     => ['AuthController', 'oauthGoogleStart'],
-    'get /api/auth/oauth/google/callback'  => ['AuthController', 'oauthGoogleCallback'],
+    'post /api/auth/register'  => ['AuthController', 'register'],
+    'post /api/auth/login'     => ['AuthController', 'login'],
+    'post /api/auth/logout'    => ['AuthController', 'logout'],
+    'get /api/auth/me'         => ['AuthController', 'me'],
+    'patch /api/users/me'      => ['AuthController', 'updateMe'],
 
     // Campings API
     // /map TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
@@ -69,6 +67,10 @@ $routes = [
     'post /api/admin/users/(\d+)/ban'                => ['AdminController', 'banUser'],
     'post /api/admin/users/(\d+)/unban'              => ['AdminController', 'unbanUser'],
     'get /api/admin/users/(\d+)/bans'                => ['AdminController', 'userBans'],
+
+    // OAuth Google
+    'get /api/auth/oauth/google'                     => ['AuthController', 'oauthGoogleStart'],
+    'get /api/auth/oauth/google/callback'            => ['AuthController', 'oauthGoogleCallback'],
 ];
 
 $matched = false;
