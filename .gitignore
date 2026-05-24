@@ -9,8 +9,5 @@ node_modules
 package-lock.json
 package.json
 .htmlhintrc
-.env
 
 backend/public/uploads/
-
-/opt/lampp/htdocs/web_project/backend/public/uploads/reviews
