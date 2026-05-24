@@ -328,10 +328,7 @@ async function loadReviews() {
                 const mediaHTML = (r.media || []).map(m => {
                     if (m.type === 'image') return `<img src="${m.url}" class="review-media-img" alt="media" data-url="${m.url}">`;
                     if (m.type === 'video') return `<div class="review-media-video-wrap"><video src="${m.url}" class="review-media-video" data-url="${m.url}" preload="metadata" muted></video></div>`;
-<<<<<<< HEAD
                     if (m.type === 'audio') return `<audio src="${m.url}" controls class="review-media-audio"></audio>`;
-=======
->>>>>>> c72ecef (feat: added camping reviews)
                     return '';
                 }).join('');
 
@@ -399,10 +396,7 @@ window.openEditReview = function (id) {
     const existingMediaHTML = d.media.map(m => {
         let preview = '';
         if (m.type === 'image') preview = `<img src="${m.url}" class="edit-media-thumb">`;
-<<<<<<< HEAD
         else if (m.type === 'audio') preview = `<audio controls src="${m.url}" class="edit-media-audio"></audio>`;
-=======
->>>>>>> c72ecef (feat: added camping reviews)
         else if (m.type === 'video') preview = `<video controls src="${m.url}" class="edit-media-video"></video>`;
         return `<div class="edit-media-item" id="edit-media-item-${m.id}">
             ${preview}
@@ -416,11 +410,7 @@ window.openEditReview = function (id) {
         ${d.media.length ? `<div class="edit-media-list" id="edit-media-list-${id}">${existingMediaHTML}</div>` : ''}
         <label class="review-media-label">
             Adauga fisiere noi
-<<<<<<< HEAD
             <input type="file" id="edit-files-${id}" multiple accept="image/*,audio/*,video/*">
-=======
-            <input type="file" id="edit-files-${id}" multiple accept="image/*,video/*">
->>>>>>> c72ecef (feat: added camping reviews)
         </label>
         <div class="edit-review-actions">
             <button class="btn-dark" id="edit-save-${id}">Salveaza</button>
