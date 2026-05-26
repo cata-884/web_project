@@ -1,0 +1,13 @@
+{
+    "name": "cat/camping-platform",
+    "require": {
+        "php": ">=8.2",
+        "dompdf/dompdf": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {}
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
