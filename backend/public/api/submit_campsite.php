@@ -2,24 +2,48 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// Datele de conexiune (luate exact din check_partner.php)
 $host = 'db';
 $dbname = 'web_project_db';
 $user = 'postgres';
 $pass = 'password';
 
 try {
-    // 1. Inițializăm conexiunea PDO direct aici
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    session_start();
-    // Aici preiei ID-ul utilizatorului logat. Punem 1 default pt testare.
-    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1;
+    // --- NOUA LOGICĂ DE AUTENTIFICARE CU TOKEN ---
+    $headers = apache_request_headers();
+    if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+
+    // Verificăm dacă token-ul a fost trimis de JavaScript
+    if (empty($headers['Authorization']) || !preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+        // Am schimbat mesajul de eroare ca să știm sigur că rulează codul nou!
+        echo json_encode(['success' => false, 'message' => 'Eroare: Nu ești logat! (Token lipsă din Header).']);
+        exit;
+    }
+
+    $token = $matches[1];
+
+// Căutăm tokenul în baza de date
+    $stmtUser = $pdo->prepare("SELECT user_id FROM sesiuni WHERE token = ? LIMIT 1");
+    $stmtUser->execute([$token]); // <--- TREBUIE NEAPĂRAT SĂ EEXECUȚI!
+    $userRow = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+    if (!$userRow) {
+        echo json_encode(['success' => false, 'message' => 'Eroare: Token invalid sau expirat în baza de date.']);
+        exit;
+    }
+
+    // Am găsit userul real!
+    $user_id = $userRow['user_id'];
+    // ----------------------------------------------
 
     // Pornim tranzacția SQL
     $pdo->beginTransaction();
 
+    // ... De aici în jos rămâne codul tău cu $address, $slug, INSERT INTO etc.
     // 2. Pregătim formatarea adreselor și a slug-ului
     $address = $_POST['street'] . ' nr. ' . $_POST['number'] . ', ' . $_POST['city'] . ', ' . $_POST['zip'];
     $region = $_POST['city']; // Momentan punem orașul ca regiune

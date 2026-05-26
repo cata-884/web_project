@@ -492,25 +492,16 @@
                             <p>Welcome to your command center! From here, you can manage all your properties registered on CaT. To add a new campsite, click the "Add Location" card below and fill in the details to start welcoming your future guests.</p>
                         </div>
 
-                        <div class="campsite-grid">
-                            <div class="card create-card" onclick="openCreateCampsiteForm()">
-                                <div class="create-icon">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <span>Add New Location</span>
-                            </div>
+                    <div class="campsite-grid" id="my-campsites-container">
 
-                            <div class="card campsite-card">
-                                <div class="card-image">
-                                    <img src="../../assets/images/camping-placeholder.jpg" alt="Campsite">
-                                    <span class="status-badge active">Active</span>
-                                </div>
-                                <div class="card-info">
-                                    <h3>Pine Valley Reserve</h3>
-                                    <p><i class="fas fa-map-marker-alt"></i> Brasov, Romania</p>
-                                </div>
-                            </div>
-                        </div>
+    <div class="card create-card" onclick="openCreateCampsiteForm()">
+        <div class="create-icon">
+            <i class="fas fa-plus"></i>
+        </div>
+        <span>Add New Location</span>
+    </div>
+
+</div>
                     </div>
                 </div>
 
@@ -774,22 +765,71 @@
     <script src="../../js/main.js"></script>
     <script src="../../js/partner-form.js"></script>
 <script>
+    // 1. Definim funcția GLOBALA (ca să o poată folosi toată pagina, fără erori)
+    function loadMyCampsites() {
+        const container = document.getElementById('my-campsites-container');
+        if (!container) return; // Siguranță
+
+        const token = localStorage.getItem('cat_token');
+
+        fetch('/cat/public/api/get_my_campsites.php', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(res => {
+            if (!res.success) {
+                console.error("Eroare la preluarea campingurilor:", res.message);
+                return;
+            }
+
+            const createCard = container.querySelector('.create-card');
+            container.innerHTML = '';
+            if (createCard) container.appendChild(createCard);
+
+            if (res.data.length === 0) return;
+
+            res.data.forEach(camping => {
+                const statusClass = camping.approval_status === 1 ? 'status-accepted' : 'status-pending';
+// Linia corectată:
+const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
+                // AM REPARAT AICI: this.onerror=null; previne bucla infinită!
+                const cardHTML = `
+                    <div class="cat-card ${statusClass}" data-id="${camping.id}">
+                        <div class="cat-card-img-wrapper">
+                            <img src="${coverImg}" alt="${camping.name}" onerror="this.onerror=null; this.src='../../assets/images/camping-placeholder.jpg';">
+                        </div>
+                        <div class="cat-card-content">
+                            <h3 class="cat-card-title">${camping.name}</h3>
+                            <p class="cat-card-detail"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> ${camping.region || 'România'}</p>
+                            <p class="cat-card-detail"><strong>Tip:</strong> ${camping.type}</p>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        })
+        .catch(err => console.error("Eroare rețea Fetch:", err));
+    }
+
+    // 2. Ce se întâmplă când se încarcă pagina prima oară
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Resetare vizuală pentru input-uri (bordură roșie)
+        // Resetare vizuală pentru input-uri
         document.querySelectorAll('input, textarea').forEach(el => {
             el.addEventListener('input', () => {
                 if (el.value.trim() !== '') el.style.borderColor = '#ccc';
             });
         });
 
-        // 2. Inițializare logică Harta (din codul tău anterior)
         initMapLogic();
+        loadMyCampsites(); // Apelăm funcția curat
     });
 
-    // --- MANAGER CLICK-URI UNIC ---
+    // 3. MANAGER CLICK-URI UNIC
     document.addEventListener('click', function(e) {
-
-        // A. Navigare NEXT (cu validare)
+        // A. Navigare NEXT
         if (e.target.classList.contains('campsite-next')) {
             const currentStepElement = e.target.closest('.campsite-step');
             if (!validateCurrentStep(currentStepElement)) {
@@ -798,76 +838,71 @@
             }
             const nextStep = e.target.getAttribute('data-next');
             document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
-            document.getElementById('c-step-' + nextStep).style.display = 'block';
+            const target = document.getElementById('c-step-' + nextStep);
+            if(target) target.style.display = 'block';
             updateCampsiteStepper(nextStep);
         }
 
-  // B. Butonul FINISH
-if (e.target.classList.contains('campsite-finish')) {
-    const currentStepElement = e.target.closest('.campsite-step');
+        // B. Butonul FINISH
+        if (e.target.classList.contains('campsite-finish')) {
+            e.preventDefault(); // Oprim orice refresh accidental al formularului
 
-    // Validăm ultimul pas
-    if (!validateCurrentStep(currentStepElement)) {
-        alert("Te rugăm să adaugi pozele obligatorii!");
-        return;
-    }
+            const currentStepElement = e.target.closest('.campsite-step');
+            if (!validateCurrentStep(currentStepElement)) {
+                alert("Te rugăm să adaugi pozele obligatorii!");
+                return;
+            }
 
-    // 1. Creăm pachetul de date (FormData acceptă și text și fișiere)
-    const formData = new FormData();
+            const formData = new FormData();
+            formData.append('name', document.getElementById('c-name').value);
+            formData.append('short_desc', document.getElementById('c-short-desc').value);
+            formData.append('full_desc', document.getElementById('c-full-desc').value);
+            formData.append('street', document.getElementById('c-street').value);
+            formData.append('number', document.getElementById('c-number').value);
+            formData.append('city', document.getElementById('c-city').value);
+            formData.append('zip', document.getElementById('c-zip').value);
+            formData.append('lat', document.getElementById('c-lat').value);
+            formData.append('lng', document.getElementById('c-lng').value);
 
-    // Adăugăm datele text
-    formData.append('name', document.getElementById('c-name').value);
-    formData.append('short_desc', document.getElementById('c-short-desc').value);
-    formData.append('full_desc', document.getElementById('c-full-desc').value);
-    formData.append('street', document.getElementById('c-street').value);
-    formData.append('number', document.getElementById('c-number').value);
-    formData.append('city', document.getElementById('c-city').value);
-    formData.append('zip', document.getElementById('c-zip').value);
-    formData.append('lat', document.getElementById('c-lat').value);
-    formData.append('lng', document.getElementById('c-lng').value);
+            document.querySelectorAll('input[name="environment"]:checked').forEach(el => formData.append('environments[]', el.value));
+            document.querySelectorAll('input[name="facility"]:checked').forEach(el => formData.append('facilities[]', el.value));
 
-    // Adăugăm checkbox-urile pentru Mediu (Environments)
-    document.querySelectorAll('input[name="environment"]:checked').forEach(el => {
-        formData.append('environments[]', el.value);
-    });
+            const coverInput = document.getElementById('c-cover-upload');
+            if(coverInput && coverInput.files.length > 0) formData.append('cover_photo', coverInput.files[0]);
 
-    // Adăugăm checkbox-urile pentru Facilități
-    document.querySelectorAll('input[name="facility"]:checked').forEach(el => {
-        formData.append('facilities[]', el.value);
-    });
+            const galleryInput = document.getElementById('c-gallery-upload');
+            if(galleryInput) {
+                for(let i = 0; i < galleryInput.files.length; i++) {
+                    formData.append('gallery_photos[]', galleryInput.files[i]);
+                }
+            }
 
-    // Adăugăm poza de Cover
-    const coverInput = document.getElementById('c-cover-upload');
-    if(coverInput.files.length > 0) {
-        formData.append('cover_photo', coverInput.files[0]);
-    }
+            const token = localStorage.getItem('cat_token');
 
-    // Adăugăm pozele din Galerie
-    const galleryInput = document.getElementById('c-gallery-upload');
-    for(let i = 0; i < galleryInput.files.length; i++) {
-        formData.append('gallery_photos[]', galleryInput.files[i]);
-    }
+            fetch('/cat/public/api/submit_campsite.php', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert("Success! Locația de camping a fost trimisă spre aprobare.");
+                    const form = document.getElementById('campsite-form');
+                    if(form) form.reset();
 
-    // 2. Trimitem totul către PHP
-// 2. Trimitem totul către PHP folosind calea corectă a serverului
-fetch('/cat/public/api/submit_campsite.php', {
-            method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            alert("Success! Locația de camping a fost trimisă spre aprobare.");
-            location.reload(); // Reîncărcăm pagina pentru a curăța formularul
-        } else {
-            alert("Eroare la salvare: " + data.message);
+                    document.getElementById('create-campsite-tab').style.display = 'none';
+                    document.getElementById('dashboard-tab').style.display = 'block';
+                    loadMyCampsites(); // Acum o găsește și funcționează perfect!
+                } else {
+                    alert("Eroare la salvare: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Eroare Fetch:', error);
+                alert("A apărut o problemă de conexiune cu serverul.");
+            });
         }
-    })
-    .catch(error => {
-        console.error('Eroare Fetch:', error);
-        alert("A apărut o problemă de conexiune cu serverul.");
-    });
-}
 
         // C. Navigare BULINE (Înapoi)
         const stepItem = e.target.closest('.campsite-stepper .step-item');
@@ -885,7 +920,7 @@ fetch('/cat/public/api/submit_campsite.php', {
         }
     });
 
-    // --- FUNCȚIILE TALE (Funcționalitățile vechi păstrate) ---
+    // Funcții ajutătoare (în afara oricărui bloc)
     function openCreateCampsiteForm() {
         document.getElementById('dashboard-tab').style.display = 'none';
         document.getElementById('create-campsite-tab').style.display = 'block';
@@ -894,7 +929,8 @@ fetch('/cat/public/api/submit_campsite.php', {
 
     function resetCampsiteForm() {
         document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
-        document.getElementById('c-step-1').style.display = 'block';
+        const s1 = document.getElementById('c-step-1');
+        if(s1) s1.style.display = 'block';
         updateCampsiteStepper(1);
     }
 
@@ -904,57 +940,56 @@ fetch('/cat/public/api/submit_campsite.php', {
         });
     }
 
-  function validateCurrentStep(stepElement) {
-    let isValid = true;
-
-    // 1. Validăm input-urile text normale (input type="text", textarea)
-    stepElement.querySelectorAll('input[type="text"][required], textarea[required]').forEach(input => {
-        if (input.value.trim() === '') {
-            input.style.borderColor = 'red';
-            isValid = false;
-        } else {
-            input.style.borderColor = '#ccc';
-        }
-    });
-
-    // 2. Validăm INPUT-URILE DE TIP FILE
-    stepElement.querySelectorAll('input[type="file"][required]').forEach(input => {
-        // .files.length ne spune câte fișiere sunt selectate
-        if (input.files.length === 0) {
-            // Dacă nu a ales nicio poză, dăm eroare vizuală pe cutia dash-ului
+    function validateCurrentStep(stepElement) {
+        if(!stepElement) return false;
+        let isValid = true;
+        stepElement.querySelectorAll('input[type="text"][required], textarea[required]').forEach(input => {
+            if (input.value.trim() === '') {
+                input.style.borderColor = 'red';
+                isValid = false;
+            } else {
+                input.style.borderColor = '#ccc';
+            }
+        });
+        stepElement.querySelectorAll('input[type="file"][required]').forEach(input => {
             const dashedBox = input.closest('.upload-dashed-box');
-            if (dashedBox) dashedBox.style.borderColor = 'red';
-            isValid = false;
-        } else {
-            const dashedBox = input.closest('.upload-dashed-box');
-            if (dashedBox) dashedBox.style.borderColor = '#ccc';
-        }
-    });
+            if (input.files.length === 0) {
+                if (dashedBox) dashedBox.style.borderColor = 'red';
+                isValid = false;
+            } else {
+                if (dashedBox) dashedBox.style.borderColor = '#ccc';
+            }
+        });
+        stepElement.querySelectorAll('.req-group').forEach(group => {
+            if (group.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
+                group.style.border = '1px solid red';
+                isValid = false;
+            } else {
+                group.style.border = 'none';
+            }
+        });
+        return isValid;
+    }
 
-    // 3. Validăm grupurile de checkbox-uri (facultativ, dacă mai ai nevoie)
-    stepElement.querySelectorAll('.req-group').forEach(group => {
-        if (group.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
-            group.style.border = '1px solid red';
-            isValid = false;
-        } else {
-            group.style.border = 'none';
-        }
-    });
+    // Feedback vizual (numărare)
+    const cCoverUpload = document.getElementById('c-cover-upload');
+    if (cCoverUpload) {
+        cCoverUpload.addEventListener('change', function() {
+            const count = this.files.length;
+            const label = document.getElementById('cover-filename');
+            if(label) label.textContent = count > 0 ? `${count} poză selectată` : '';
+        });
+    }
 
-    return isValid;
-}
+    const cGalleryUpload = document.getElementById('c-gallery-upload');
+    if (cGalleryUpload) {
+        cGalleryUpload.addEventListener('change', function() {
+            const count = this.files.length;
+            const label = document.getElementById('gallery-count');
+            if(label) label.textContent = count > 0 ? `${count} poze selectate` : '';
+        });
+    }
 
-// Feedback vizual (numărare)
-document.getElementById('c-cover-upload').addEventListener('change', function() {
-    const count = this.files.length;
-    document.getElementById('cover-filename').textContent = count > 0 ? `${count} poză selectată` : '';
-});
-
-document.getElementById('c-gallery-upload').addEventListener('change', function() {
-    const count = this.files.length;
-    document.getElementById('gallery-count').textContent = count > 0 ? `${count} poze selectate` : '';
-});
-    // --- LOGICA HARTA (Inclusă aici) ---
     function initMapLogic() {
         const btnPinMap = document.getElementById('btn-pin-map');
         const mapModal = document.getElementById('map-modal');
@@ -965,7 +1000,7 @@ document.getElementById('c-gallery-upload').addEventListener('change', function(
         const inputLng = document.getElementById('c-lng');
         let pickerMap = null, pickerMarker = null, tempLat = null, tempLng = null;
 
-        if (btnPinMap) {
+        if (btnPinMap && mapModal) {
             btnPinMap.addEventListener('click', () => {
                 mapModal.style.display = 'flex';
                 if (!pickerMap) {
@@ -976,18 +1011,20 @@ document.getElementById('c-gallery-upload').addEventListener('change', function(
                         tempLng = e.latlng.lng.toFixed(6);
                         if (pickerMarker) pickerMap.removeLayer(pickerMarker);
                         pickerMarker = L.marker([tempLat, tempLng]).addTo(pickerMap);
-                        coordsDisplay.textContent = `Coordonate: ${tempLat}, ${tempLng}`;
+                        if(coordsDisplay) coordsDisplay.textContent = `Coordonate: ${tempLat}, ${tempLng}`;
                     });
                 }
                 setTimeout(() => pickerMap.invalidateSize(), 200);
             });
-            closeMapBtn.addEventListener('click', () => mapModal.style.display = 'none');
-            confirmLocationBtn.addEventListener('click', () => {
-                if (tempLat && tempLng) {
-                    inputLat.value = tempLat; inputLng.value = tempLng;
-                    mapModal.style.display = 'none';
-                } else alert("Te rog dă click pe hartă!");
-            });
+            if(closeMapBtn) closeMapBtn.addEventListener('click', () => mapModal.style.display = 'none');
+            if(confirmLocationBtn) {
+                confirmLocationBtn.addEventListener('click', () => {
+                    if (tempLat && tempLng) {
+                        inputLat.value = tempLat; inputLng.value = tempLng;
+                        mapModal.style.display = 'none';
+                    } else alert("Te rog dă click pe hartă!");
+                });
+            }
         }
     }
 </script>

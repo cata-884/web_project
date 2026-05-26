@@ -610,3 +610,89 @@
     transition: border-color 0.3s ease;
     cursor: pointer;
 }
+
+
+
+/* --- Structura de bază a cardului --- */
+.cat-card {
+    background-color: #E3DDD1; /* Bejul cald din poza ta de referință */
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, opacity 0.3s ease;
+    cursor: pointer;
+    /* Înălțime fixă pentru a păstra grid-ul uniform */
+    height: 340px;
+}
+
+.cat-card:hover {
+    transform: translateY(-4px);
+}
+
+/* --- Partea vizuală (Imaginea) --- */
+.cat-card-img-wrapper {
+    height: 60%; /* Ocupă majoritatea cardului */
+    width: 100%;
+    position: relative;
+}
+
+.cat-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Taie poza frumos fără să o turtească */
+}
+
+/* --- Partea de text (Informațiile) --- */
+.cat-card-content {
+    padding: 12px 16px;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cat-card-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #6A5D54; /* Un gri-maroniu */
+}
+
+.cat-card-author img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.cat-card-title {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #2A1F18; /* Maro foarte închis/negru */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Pune "..." dacă numele e prea lung */
+}
+
+.cat-card-detail {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: #4A3C31;
+}
+
+/* --- STĂRILE (Logica UI) --- */
+
+/* 1. Aprobat (Normal) */
+.status-accepted {
+    border-bottom: 6px solid #2D4C36; /* Verdele închis pe care îl folosești deja în temă */
+    opacity: 1;
+}
+
+/* 2. În așteptare (Pending) */
+.status-pending {
+    border-bottom: 6px solid #F5A623; /* Portocaliu de warning */
+    opacity: 0.65; /* Transparența cerută */
+}
