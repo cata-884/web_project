@@ -123,6 +123,21 @@ CREATE TABLE camping_media (
 CREATE INDEX idx_camping_media_camping ON camping_media (camping_id
 	);
 
+-- FACILITIES & ENVIRONMENTS
+CREATE TABLE camping_facilities (
+    id          SERIAL PRIMARY KEY,
+    camping_id  INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE,
+    facility_name VARCHAR(100) NOT NULL,
+    UNIQUE (camping_id, facility_name)
+);
+
+CREATE TABLE camping_environments (
+    id               SERIAL PRIMARY KEY,
+    camping_id       INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE,
+    environment_name VARCHAR(100) NOT NULL,
+    UNIQUE (camping_id, environment_name)
+);
+
 -- BOOKINGS
 CREATE TABLE bookings (
 	id SERIAL PRIMARY KEY
