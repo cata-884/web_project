@@ -792,7 +792,7 @@
             if (res.data.length === 0) return;
 
             res.data.forEach(camping => {
-                const statusClass = camping.approval_status === 1 ? 'status-accepted' : 'status-pending';
+                const statusClass = camping.approval_status == 1 ? 'status-accepted' : 'status-pending';
 // Linia corectată:
 const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
                 // AM REPARAT AICI: this.onerror=null; previne bucla infinită!

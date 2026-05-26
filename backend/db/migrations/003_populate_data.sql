@@ -1,8 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Cleanup
+-- Cleanup (incluzând noile tabele)
 TRUNCATE
-    section_campings, user_sections, review_media, reviews, bookings,
+    organizer_verifications, camping_facilities, camping_environments, section_campings, user_sections, review_media, reviews, bookings,
     camping_media, campings, contact_messages, sesiuni, users
 RESTART IDENTITY CASCADE;
 
@@ -24,6 +24,12 @@ DECLARE
         'https://i.pravatar.cc/150?img=20',
         'https://i.pravatar.cc/150?img=33'
     ];
+
+    -- array uri pentru mediu și facilități
+    l_environments TEXT[] := ARRAY['pădure', 'munte', 'lângă râu', 'lângă lac', 'plajă', 'pășune alpină'];
+    l_facilities   TEXT[] := ARRAY['wi-fi', 'dușuri calde', 'toalete ecologice', 'electricitate', 'parcare', 'zonă foc de tabără', 'apă potabilă', 'restaurant'];
+    v_num_items    INT;
+    v_item_idx     INT;
 
     l_media_urls TEXT[] := ARRAY[
         'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800',
@@ -128,7 +134,7 @@ BEGIN
         v_user_ids := array_append(v_user_ids, v_temp_id);
     END LOOP;
 
-    -- User banat (pentru testare moderare la Commit 5)
+    -- User banat (pentru testare moderare)
     INSERT INTO users (username, email, password_hash, full_name, role)
     VALUES (
         'troll',
@@ -142,93 +148,93 @@ BEGIN
     -- campings (locatii din Romania, coordonate exacte)
     RAISE NOTICE 'Seeding campings...';
 
-    -- Transfagarasan (tent, Arges)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Transfagarasan (tent, Arges) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Valea Verde - Transfagarasan', 'valea-verde-transfagarasan', 'tent', 'Arges',
         'DN7C km 104, Cumpana, Arges', 45.60240, 24.61680,
         'Camping situat pe celebra sosea Transfagarasan, la altitudine de 2034m. Vedere spectaculoasa catre lacul Balea. Locuri pentru corturi si parcare pentru rulote.',
-        80.00, 4, TRUE)
+        80.00, 4, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Cheile Bicazului (glamping, Neamt)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Cheile Bicazului (glamping, Neamt) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Cheile Bicazului Glamping', 'cheile-bicazului-glamping', 'glamping', 'Neamt',
         'Bicazu Ardelean, Neamt', 46.81940, 25.85100,
         'Experienta de lux in natura. Corturi safari cu paturi, mobilier si electricitate. Acces direct la traseele de hiking. Mic dejun inclus.',
-        280.00, 2, TRUE)
+        280.00, 2, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Padis (wild, Bihor)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Padis (wild, Bihor) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Padis Wild Camp', 'padis-wild-camp', 'wild', 'Bihor',
         'Platoul Padis, Bihor', 46.55833, 22.71667,
         'Camping salbatic in muntii Apuseni. Doar pentru aventurieri experimentati. Fara facilitati, doar apa curenta dintr-un izvor.',
-        25.00, 10, TRUE)
+        25.00, 10, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Bucegi (rv, Prahova)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Bucegi (rv, Prahova) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Bucegi RV Park', 'bucegi-rv-park', 'rv', 'Prahova',
         'DN1 km 134, Busteni, Prahova', 45.41060, 25.53670,
         'Parc dedicat rulotelor si autorulotelor la poalele Bucegilor. Curent 220V, apa, evacuare ape uzate, WiFi. Aproape de telecabina Busteni.',
-        120.00, 6, TRUE)
+        120.00, 6, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Delta Dunarii (cabin, Tulcea)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Delta Dunarii (cabin, Tulcea) - Pending (0)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_delta, 'Delta Dunarii Eco Camp', 'delta-dunarii-eco-camp', 'cabin', 'Tulcea',
         'Crisan, Tulcea', 45.17500, 29.46500,
         'Casute pe stalpi in mijlocul deltei. Acces doar pe apa. Tururi cu barca incluse. Observatii de pasari, pescuit, liniste absoluta.',
-        200.00, 4, TRUE)
+        200.00, 4, TRUE, 0)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Vama Veche (tent, Constanta)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Vama Veche (tent, Constanta) - Respins cu feedback (2)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status, admin_feedback)
     VALUES (v_org_delta, 'Vama Veche Beach Camp', 'vama-veche-beach-camp', 'tent', 'Constanta',
         'Vama Veche, Constanta', 43.74800, 28.57600,
         'Camping pe plaja, la 50m de mare. Atmosfera boema, dusuri reci, terase apropiate. Perfect pentru vara.',
-        60.00, 4, TRUE)
+        60.00, 4, TRUE, 2, 'Te rugam sa atasezi autorizatia de functionare valabila pe acest an si poze clare cu dusurile.')
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Retezat (cabin, Hunedoara)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Retezat (cabin, Hunedoara) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Retezat Mountain Lodge', 'retezat-mountain-lodge', 'cabin', 'Hunedoara',
         'Carnic, Rau de Mori, Hunedoara', 45.36670, 22.85000,
         'Cabane montane la intrarea in Parcul National Retezat. Ideal ca tabara de baza pentru tururi de 2-5 zile.',
-        150.00, 8, TRUE)
+        150.00, 8, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Ceahlau (tent, Neamt)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Ceahlau (tent, Neamt) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Ceahlau Tent Site', 'ceahlau-tent-site', 'tent', 'Neamt',
         'Durau, Ceahlau, Neamt', 46.97800, 25.93400,
         'Loc de campare pentru corturi la baza Ceahlaului. Apa, toalete, foc de tabara permis in vatra special amenajata.',
-        40.00, 4, TRUE)
+        40.00, 4, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Cheile Turzii (tent, Cluj)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Cheile Turzii (tent, Cluj) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Cheile Turzii Adventure Camp', 'cheile-turzii-adventure-camp', 'tent', 'Cluj',
         'Petrestii de Jos, Cluj', 46.56700, 23.69200,
         'Camping pentru pasionati de catarare. Acces direct la rutele din Cheile Turzii. Echipament la inchiriere.',
-        55.00, 3, TRUE)
+        55.00, 3, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
-    -- Lacul Sfanta Ana (glamping, Harghita)
-    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published)
+    -- Lacul Sfanta Ana (glamping, Harghita) - Aprobat (1)
+    INSERT INTO campings (created_by, name, slug, type, region, address, latitude, longitude, description, price_per_night, capacity, is_published, approval_status)
     VALUES (v_org_carpati, 'Lacul Sfanta Ana Glamping', 'lacul-sfanta-ana-glamping', 'glamping', 'Harghita',
         'Tusnad, Harghita', 46.12500, 25.88800,
         'Yurturi si corturi safari in padurea de langa Lacul Sfanta Ana, singurul lac vulcanic din Romania. Sauna finlandeza disponibila.',
-        320.00, 2, TRUE)
+        320.00, 2, TRUE, 1)
     RETURNING id INTO v_temp_id;
     v_camping_ids := array_append(v_camping_ids, v_temp_id);
 
@@ -244,11 +250,32 @@ BEGIN
         END LOOP;
     END LOOP;
 
+    -- mediu și facilități
+    RAISE NOTICE 'Seeding environments and facilities...';
+
+    FOREACH v_camping_id IN ARRAY v_camping_ids LOOP
+        -- Mediu (1-2 aleatorii)
+        v_num_items := 1 + floor(random() * 2)::INT;
+        FOR i IN 1..v_num_items LOOP
+            v_idx := 1 + floor(random() * array_length(l_environments, 1))::INT;
+            BEGIN
+                INSERT INTO camping_environments (camping_id, environment_name)
+                VALUES (v_camping_id, l_environments[v_idx]);
+            EXCEPTION WHEN unique_violation THEN NULL; END;
+        END LOOP;
+
+        -- Facilități (2-5 aleatorii)
+        v_num_items := 2 + floor(random() * 4)::INT;
+        FOR i IN 1..v_num_items LOOP
+            v_idx := 1 + floor(random() * array_length(l_facilities, 1))::INT;
+            BEGIN
+                INSERT INTO camping_facilities (camping_id, facility_name)
+                VALUES (v_camping_id, l_facilities[v_idx]);
+            EXCEPTION WHEN unique_violation THEN NULL; END;
+        END LOOP;
+    END LOOP;
+
     -- bookinguri
-    -- in trecut -> vor primi recenzii
-    -- viitoare platite
-    -- viitoare neconfirmate
-    -- anulate
     RAISE NOTICE 'Seeding bookings...';
 
     -- in trecut
@@ -278,7 +305,7 @@ BEGIN
         (v_user_ids[3], v_camping_ids[9], '2026-06-05', '2026-06-07', 2, 110.00, 'pending'),
         (v_user_ids[5], v_camping_ids[7], '2026-08-22', '2026-08-25', 4, 450.00, 'pending');
 
-    -- bookinguri anulate 
+    -- bookinguri anulate
     INSERT INTO bookings (user_id, camping_id, check_in, check_out, guests, total_price, status) VALUES
         (v_user_ids[2], v_camping_ids[4], '2025-10-10', '2025-10-12', 2, 240.00, 'cancelled'),
         (v_user_ids[4], v_camping_ids[1], '2026-05-05', '2026-05-07', 2, 160.00, 'cancelled');
@@ -347,6 +374,23 @@ BEGIN
         (v_section_id, v_camping_ids[3]),
         (v_section_id, v_camping_ids[8]);
 
+    -- date formular organizatori
+    RAISE NOTICE 'Seeding organizer verifications...';
+
+    INSERT INTO organizer_verifications (
+        user_id, first_name, last_name, business_type, company_name, registration_number,
+        address_street, address_number, address_city, contact_phone, contact_email, status
+    ) VALUES (
+        v_org_carpati, 'Ionut', 'Carpati', 'SRL', 'Carpathian Camps SRL', 'RO123456',
+        'Str. Cumpana', '10', 'Curtea de Arges', '0722111222', 'org@carpati.ro', 'approved'
+    ), (
+        v_org_delta, 'Marin', 'Pescarul', 'PFA', 'Delta Adventures PFA', 'RO987654',
+        'Str. Dunarii', '4', 'Tulcea', '0733444555', 'org@delta.ro', 'approved'
+    ), (
+        v_user_ids[1], 'Mihai', 'Popescu', 'SRL', 'Mihai Camping Group', 'RO112233',
+        'Str. Eroilor', '50', 'Bucuresti', '0744999888', 'mihai@gmail.com', 'pending'
+    );
+
     -- mesaje de contact
     RAISE NOTICE 'Seeding contact messages...';
 
@@ -362,9 +406,11 @@ BEGIN
 END
 $seed$;
 
---recap la datele create
+--recap la datele create (actualizat)
 SELECT 'Users'             AS entity, COUNT(*) FROM users
 UNION ALL SELECT 'Campings',          COUNT(*) FROM campings
+UNION ALL SELECT 'Camping environments',COUNT(*) FROM camping_environments
+UNION ALL SELECT 'Camping facilities',  COUNT(*) FROM camping_facilities
 UNION ALL SELECT 'Camping media',     COUNT(*) FROM camping_media
 UNION ALL SELECT 'Bookings (total)',  COUNT(*) FROM bookings
 UNION ALL SELECT '  - completed',     COUNT(*) FROM bookings WHERE status = 'completed'
@@ -374,4 +420,5 @@ UNION ALL SELECT '  - cancelled',     COUNT(*) FROM bookings WHERE status = 'can
 UNION ALL SELECT 'Reviews',           COUNT(*) FROM reviews
 UNION ALL SELECT 'User sections',     COUNT(*) FROM user_sections
 UNION ALL SELECT 'Section campings',  COUNT(*) FROM section_campings
+UNION ALL SELECT 'Organizer verifications', COUNT(*) FROM organizer_verifications
 UNION ALL SELECT 'Contact messages',  COUNT(*) FROM contact_messages;
