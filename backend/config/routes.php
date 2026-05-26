@@ -78,6 +78,20 @@ $routes = [
     'post /api/admin/users/(\d+)/unban'              => ['AdminController', 'unbanUser'],
     'get /api/admin/users/(\d+)/bans'                => ['AdminController', 'userBans'],
 
+    // Admin API (gestionare cereri camping)
+    'get /api/admin/campings'                        => ['AdminController', 'listCampings'],
+    'post /api/admin/campings/(\d+)/approve'         => ['AdminController', 'approveCamping'],
+    'post /api/admin/campings/(\d+)/reject'          => ['AdminController', 'rejectCamping'],
+    'post /api/admin/campings/(\d+)/reject-feedback' => ['AdminController', 'rejectCampingFeedback'],
+
+    // Retrimitere cerere camping (user)
+    'post /api/campings/(\d+)/resubmit'              => ['CampingsController', 'resubmit'],
+
+    // Admin Stats API
+    'get /api/admin/stats/summary'   => ['StatsController', 'summary'],
+    'get /api/admin/stats/chart.svg' => ['StatsController', 'chartSvg'],
+    'get /api/admin/stats/report.pdf'=> ['StatsController', 'reportPdf'],
+
     // OAuth Google
     'get /api/auth/oauth/google'                     => ['AuthController', 'oauthGoogleStart'],
     'get /api/auth/oauth/google/callback'            => ['AuthController', 'oauthGoogleCallback'],
