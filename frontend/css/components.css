@@ -16,7 +16,7 @@
 
 .btn-primary:hover {
     transform: scale(1.05);
-    opacity: 0.9;
+    opacity: 90%;
 }
 
 /* card functionalitati */
@@ -27,7 +27,7 @@
     box-sizing: border-box;
     padding: clamp(16px, 5vw, 24px);
     border-radius: 24px;
-    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: -10px 10px 30px rgb(0 0 0 / 15%);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease;
 }
@@ -66,12 +66,12 @@
 }
 
 .btn-dark:hover {
-    opacity: 0.9;
+    opacity: 90%;
 }
 
 /* card recenzii cu efect de sticla */
 .review-card {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(255 255 255 / 10%);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
     border-radius: 20px;
@@ -100,22 +100,22 @@
     font-size: 0.9rem;
     line-height: 1.6;
     color: var(--text-light);
-    opacity: 0.85;
+    opacity: 85%;
 }
 
 /* statusuri card recenzii */
 .active-card {
     transform: scale(1.05);
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgb(255 255 255 / 15%);
     z-index: 2;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 30%);
     width: 100%;
     max-width: 350px;
 }
 
 .side-card {
     transform: scale(0.9);
-    opacity: 0.4;
+    opacity: 40%;
     z-index: 1;
     width: 100%;
     max-width: 350px;

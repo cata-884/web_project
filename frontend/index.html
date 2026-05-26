@@ -1,261 +1,283 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HerbaLink | Bring Nature Online</title>
+    <title>CaT | Camping Info Web Tool</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/landing.css">
-     <link rel="stylesheet" href="pages/auth.html">
 </head>
+
 <body>
 
     <header class="top-header">
-    <nav class="main-nav">
-        <div class="nav-group">
-            <a href="#about">About App</a>
-            <a href="#reviews">Reviews</a>
-        </div>
+        <nav class="main-nav">
+            <div class="nav-group">
+                <a href="#about">Despre aplicatie</a>
+                <a href="#reviews">Recenzii</a>
+                <a href="pages/campings.html">Exploreaza Campinguri</a>
+            </div>
 
-        <div class="logo">HerbaLink</div>
+            <div class="logo">CaT</div>
 
-        <div class="nav-group">
-            <a href="pages/campings.html">Exploreaza Campinguri</a>
-            <a href="pages/map.html">Harta</a>
-            <a href="#team">Our Team</a>
-            <a href="#contact">Contact Us</a>
-        </div>
-        <button class="hamburger-menu">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-</button>
-    </nav>
-</header>
+            <div class="nav-group">
+                <a href="pages/map.html">Harta</a>
+                <a href="#team">Echipa noastra</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="hamburger-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
 
     <main>
         <section class="hero-section">
             <div class="hero-content">
-                <h1>Bring Nature Online</h1>
-                <p>Transform traditional plant pressing into an interactive, collaborative digital experience. Catalog, filter, and share your botanical knowledge seamlessly.</p>
-<a href="pages/auth.html" class="btn-primary">Get Started</a>            </div>
+                <h1>Descopera cele mai bune campinguri</h1>
+                <p>Gaseste, rezerva si recenzeaza campinguri din toata tara. O platforma centralizata pentru iubitorii
+                    de natura, cu harta interactiva, recenzii reale si rezervari simple.</p>
+                <a href="pages/auth.html" class="btn-primary">Incepe acum</a>
+            </div>
 
             <div class="stats-grid">
                 <article>
-                    <h2>10K+</h2>
-                    <p>Plants Documented</p>
+                    <h2>500+</h2>
+                    <p>Locatii de camping</p>
                 </article>
                 <article>
-                    <h2>850+</h2>
-                    <p>Unique Species</p>
+                    <h2>1.2K+</h2>
+                    <p>Recenzii</p>
                 </article>
                 <article>
-                    <h2>1200+</h2>
-                    <p>Audio Records</p>
+                    <h2>800+</h2>
+                    <p>Rezervari</p>
                 </article>
                 <article>
-                    <h2>1200+</h2>
-                    <p>Public Projects</p>
+                    <h2>2K+</h2>
+                    <p>Utilizatori activi</p>
                 </article>
             </div>
         </section>
-<section class="about-section" id="about">
+        <section class="about-section" id="about">
 
-    <div class="about-visual">
-        <div class="visual-content">
-            <h2>Everything You Need<br>to Curate Nature</h2>
-            <p>Say goodbye to scattered notes and lost photos. We provide a centralized, interactive workspace where preserving, organizing, and exploring your plant data is faster and more intuitive than ever.</p>
-        </div>
-    </div>
-
-   <div class="about-cards-stack">
-        <article class="feature-card pos-0">
-            <h3>Comprehensive Cataloging</h3>
-            <p>Easily document every detail. Add scientific names, geographic origins, images, and specific traits. Organize your findings in structured, easy-to-manage private or public workspaces.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Cataloging Image">
-            </div>
-            <button type="button" class="btn-dark card-btn">Discovery Team &gt;</button>
-        </article>
-
-        <article class="feature-card pos-1">
-            <h3>Advanced Search</h3>
-            <p>Instantly find exactly what you need using multi-criteria search—like filtering by soil type, origin, and benefits. Seamlessly export your entire database in open JSON and XML formats.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Search Image">
-            </div>
-            <button type="button" class="btn-dark card-btn">Discovery Team &gt;</button>
-        </article>
-
-        <article class="feature-card pos-2">
-            <h3>Collaborative Workspaces</h3>
-            <p>Invite friends and colleagues to contribute to your herbaria. Assign strict Editor or Viewer roles to build vast collections together while keeping full control over your data.</p>
-            <div class="card-img">
-                <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Collaboration Image">
-            </div>
-            <button type="button" class="btn-dark card-btn">Discovery Team &gt;</button>
-        </article>
-    </div>
-</section>
-<section class="reviews-section" id="reviews">
-    <div class="reviews-header">
-        <h2>Loved by the Botanical Community</h2>
-        <p>Dont just take our word for it. Discover how students, researchers, and nature lovers are using our platform to organize their findings, collaborate seamlessly, and share their botanical passion with the world.</p>
-    </div>
-
-    <div class="reviews-interactive-container">
-    <input type="radio" name="review_slider" id="rev1" checked>
-    <input type="radio" name="review_slider" id="rev2">
-    <input type="radio" name="review_slider" id="rev3">
-
-    <div class="carousel-wrapper">
-        <div class="reviews-carousel">
-            <!-- Review 1 -->
-            <article class="review-card" id="review1">
-                <h4>Emily Carter 1</h4>
-                <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
-                <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. The ability to assign editor roles and build a shared herbarium in real time is fantastic.</p>
-            </article>
-
-            <!-- Review 2 -->
-            <article class="review-card" id="review2">
-                <h4>Emily Carter 2</h4>
-                <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
-                <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. Plus, exporting our data straight to JSON makes submitting our research a breeze.</p>
-            </article>
-
-            <!-- Review 3 -->
-            <article class="review-card" id="review3">
-                <h4>Emily Carter 3</h4>
-                <img src="assets/Review.jpg" alt="Emily Carter" class="avatar">
-                <p>As a botany student, organizing plant samples with my lab partners used to be a nightmare of scattered notes. This platform changed everything. The ability to assign editor roles and build a shared herbarium in real time is fantastic.</p>
-            </article>
-
-
-        </div>
-    </div>
-
-    <div class="carousel-controls">
-        <label for="rev3" class="arrow left-arrow" id="left-for-1">&lt;</label>
-        <label for="rev1" class="arrow left-arrow" id="left-for-2">&lt;</label>
-        <label for="rev2" class="arrow left-arrow" id="left-for-3">&lt;</label>
-
-        <label for="rev1" class="dot" id="dot1"></label>
-        <label for="rev2" class="dot" id="dot2"></label>
-        <label for="rev3" class="dot" id="dot3"></label>
-
-        <label for="rev2" class="arrow right-arrow" id="right-for-1">&gt;</label>
-        <label for="rev3" class="arrow right-arrow" id="right-for-2">&gt;</label>
-        <label for="rev1" class="arrow right-arrow" id="right-for-3">&gt;</label>
-    </div>
-</div>
-</section>
-<section class="story-section" id="team">
-    <div class="story-container">
-
-        <div class="story-left">
-            <h2>Rooted in Passion,<br>Built for Discovery.</h2>
-            <div class="story-image-box">
-                <img src="assets/About1.jpg" alt="Passion and nature" class="img-large">
-            </div>
-        </div>
-
-        <div class="story-right">
-            <p>We built this platform out of a shared frustration traditional herbaria are beautiful but they are fragile hard to share and easily lost. We wanted to bridge the gap between our love for nature and modern web technologies. Our mission is simple to give students researchers and hobbyists a secure collaborative digital home where botanical knowledge can be preserved organized and shared globally without limits.</p>
-            <a href="pages/aboutUs.html" class="btn-dark">Discovery Team </a>
-            <div class="story-image-box">
-                <img  class="img-small" src="assets/About2.jpg" alt="Team running in nature">
-            </div>
-        </div>
-
-    </div>
-</section>
-<section class="contact-section" id="contact">
-    <div class="contact-container">
-
-        <div class="contact-visual-card">
-            <div class="visual-content">
-                <h2>Get in Touch</h2>
-                <p>Have a question about how the platform works need technical support or want to share your feedback Reach out to our team we would love to hear from you</p>
-
-                <div class="contact-info">
-                    <h3>Email Us</h3>
-                    <p>Drop us a message for general inquiries or support</p>
-                    <a href="mailto:hello@yourplatform.com">hello@yourplatform.com</a>
-                </div>
-
-                <div class="contact-info">
-                    <h3>Call Us</h3>
-                    <p>Need immediate assistance with your account Give us a call</p>
-                    <a href="tel:+40123456">+40 000 123 456</a>
+            <div class="about-visual">
+                <div class="visual-content">
+                    <h2>Tot ce ai nevoie<br>pentru aventura ta</h2>
+                    <p>Uita de cautari interminabile pe zeci de site-uri. CaT iti ofera un spatiu centralizat unde
+                        gasesti, compari si rezervi campinguri rapid, cu informatii reale de la alti camperi.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="contact-form-card">
-            <form class="contact-form">
-                <div class="form-row-split">
-                    <div class="form-group">
-                        <label>Last name</label>
-                        <input type="text" placeholder="Mihai">
+            <div class="about-cards-stack">
+                <article class="feature-card pos-0">
+                    <h3>Catalog de campinguri</h3>
+                    <p>Rasfoieste sute de locatii cu toate detaliile importante: facilitati, pret, capacitate, reguli si
+                        imagini. Salveaza-ti favoritele in colectii personale pentru acces rapid.</p>
+                    <div class="card-img">
+                        <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Catalog campinguri">
                     </div>
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" placeholder="Gigel">
+                    <a href="#" class="btn-dark card-btn">In curand &gt;</a>
+                </article>
+
+                <article class="feature-card pos-1">
+                    <h3>Harta interactiva</h3>
+                    <p>Vizualizeaza toate campingurile pe harta si filtreaza dupa zona, facilitati sau rating. Gaseste
+                        exact locatia potrivita pentru urmatoarea ta escapada in natura.</p>
+                    <div class="card-img">
+                        <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Harta interactiva">
+                    </div>
+                    <a href="pages/map.html" class="btn-dark card-btn">Deschide harta &gt;</a>
+                </article>
+
+                <article class="feature-card pos-2">
+                    <h3>Rezervari si recenzii</h3>
+                    <p>Rezerva locul direct din platforma si lasa o recenzie dupa experienta ta. Opiniile reale ale
+                        altor camperi te ajuta sa faci alegerea potrivita de fiecare data.</p>
+                    <div class="card-img">
+                        <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Rezervari si recenzii">
+                    </div>
+                    <a href="pages/campings.html" class="btn-dark card-btn">Rezerva acum &gt;</a>
+                </article>
+            </div>
+        </section>
+        <section class="reviews-section" id="reviews">
+            <div class="reviews-header">
+                <h2>Ce spun camperii nostri</h2>
+                <p>Nu ne crede pe cuvant. Descopera cum studenti, familii si aventurieri folosesc CaT pentru a gasi
+                    locurile perfecte, a planifica escapade si a impartasi experientele lor cu comunitatea.</p>
+            </div>
+
+            <div class="reviews-interactive-container">
+                <input type="radio" name="review_slider" id="rev1" checked>
+                <input type="radio" name="review_slider" id="rev2">
+                <input type="radio" name="review_slider" id="rev3">
+
+                <div class="carousel-wrapper">
+                    <div class="reviews-carousel">
+                        <article class="review-card" id="review1">
+                            <h4>Andrei Ionescu</h4>
+                            <img src="assets/Review.jpg" alt="Andrei Ionescu" class="avatar">
+                            <p>Am gasit campingul perfect pentru weekend-ul de vara prin CaT. Filtrele dupa facilitati
+                                m-au ajutat enorm — stiam exact la ce sa ma astept cand am ajuns. Rezervarea a durat
+                                doua minute.</p>
+                        </article>
+
+                        <article class="review-card" id="review2">
+                            <h4>Maria Popescu</h4>
+                            <img src="assets/Review.jpg" alt="Maria Popescu" class="avatar">
+                            <p>Ca mama cu doi copii mici, siguranta si facilitatile conteaza enorm. Recenziile de pe CaT
+                                sunt reale si detaliate. Am gasit un camping cu loc de joaca si dusuri calde exact cum
+                                aveam nevoie.</p>
+                        </article>
+
+                        <article class="review-card" id="review3">
+                            <h4>Bogdan Muresan</h4>
+                            <img src="assets/Review.jpg" alt="Bogdan Muresan" class="avatar">
+                            <p>Harta interactiva e o minune. Am planificat un traseu de o saptamana prin Apuseni si am
+                                identificat campinguri la fiecare etapa. Nu mai pot pleca in natura fara CaT.</p>
+                        </article>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Phone number</label>
-                    <input type="tel" placeholder="e.g. +4076 123 456">
+                <div class="carousel-controls">
+                    <label for="rev3" class="arrow left-arrow" id="left-for-1">&lt;</label>
+                    <label for="rev1" class="arrow left-arrow" id="left-for-2">&lt;</label>
+                    <label for="rev2" class="arrow left-arrow" id="left-for-3">&lt;</label>
+
+                    <label for="rev1" class="dot" id="dot1"></label>
+                    <label for="rev2" class="dot" id="dot2"></label>
+                    <label for="rev3" class="dot" id="dot3"></label>
+
+                    <label for="rev2" class="arrow right-arrow" id="right-for-1">&gt;</label>
+                    <label for="rev3" class="arrow right-arrow" id="right-for-2">&gt;</label>
+                    <label for="rev1" class="arrow right-arrow" id="right-for-3">&gt;</label>
+                </div>
+            </div>
+        </section>
+        <section class="story-section" id="team">
+            <div class="story-container">
+
+                <div class="story-left">
+                    <h2>Nascuti din dragoste<br>pentru natura.</h2>
+                    <div class="story-image-box">
+                        <img src="assets/About1.jpg" alt="Natura si camping" class="img-large">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>How can we hepl you?</label>
-                    <textarea placeholder="Your message..."></textarea>
+                <div class="story-right">
+                    <p>Am construit CaT dintr-o frustrare comuna: informatiile despre campinguri erau imprastiate pe
+                        zeci de site-uri, recensziile erau false sau invechite, iar rezervarile se faceau prin telefon.
+                        Ne-am dorit o platforma moderna unde comunitatea de camperi sa poata gasi, evalua si rezerva
+                        locatii de incredere. Misiunea noastra e simpla: sa facem natura mai accesibila pentru toata
+                        lumea.</p>
+                    <a href="pages/aboutUs.html" class="btn-dark">Echipa noastra </a>
+                    <div class="story-image-box">
+                        <img class="img-small" src="assets/About2.jpg" alt="Echipa in natura">
+                    </div>
                 </div>
 
-                <button type="button" class="btn-dark">Send</button>
-            </form>
-        </div>
+            </div>
+        </section>
+        <section class="contact-section" id="contact">
+            <div class="contact-container">
 
-    </div>
-</section>
+                <div class="contact-visual-card">
+                    <div class="visual-content">
+                        <h2>Ia legatura cu noi</h2>
+                        <p>Ai o intrebare despre platforma, vrei sa raportezi un camping sau sa ne dai feedback? Echipa
+                            noastra e mereu disponibila.</p>
 
-        </main>
-<footer class="main_footer">
-    <div class="footer_wave">
-            <h2 class="footer_heading">We make health a lifestyle.</h2>
-                        <p class="footer_copy">All rights are reserved. Metamorphose 2025.</p>
+                        <div class="contact-info">
+                            <h3>Email</h3>
+                            <p>Scrie-ne pentru intrebari generale sau suport tehnic</p>
+                            <a href="mailto:contact@cat-camping.ro">contact@cat-camping.ro</a>
+                        </div>
 
-    </div>
-    <div class="footer_grid">
-        <div class="footer_col">
-            <h3 class="footer_logo">HerbaLink</h3>
-            <p class="footer_label">Adress:</p>
-            <p class="footer_text">2464 Royal Ln. Mesa<br>New Jersey 45463</p>
+                        <div class="contact-info">
+                            <h3>Telefon</h3>
+                            <p>Ai nevoie de ajutor urgent cu contul tau? Suna-ne</p>
+                            <a href="tel:+40123456">+40 000 123 456</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-card">
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-row-split">
+                            <div class="form-group">
+                                <label>Nume</label>
+                                <input type="text" id="contact-last" placeholder="Popescu">
+                            </div>
+                            <div class="form-group">
+                                <label>Prenume</label>
+                                <input type="text" id="contact-first" placeholder="Mihai">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Numar de telefon</label>
+                            <input type="tel" id="contact-phone" placeholder="e.g. +4076 123 456">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="contact-email" placeholder="email@exemplu.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Cum te putem ajuta?</label>
+                            <textarea id="contact-message" placeholder="Mesajul tau..."></textarea>
+                        </div>
+
+                        <div id="contact-feedback" style="display:none; font-size:14px; margin-bottom:8px; padding:8px 12px; border-radius:6px;"></div>
+
+                        <button type="submit" class="btn-dark" id="contact-btn">Trimite</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    <footer class="main_footer">
+        <div class="footer_wave">
+            <h2 class="footer_heading">Natura la un click distanta.</h2>
+            <p class="footer_copy">Toate drepturile rezervate. CaT 2025.</p>
+
         </div>
-        <div class="footer_col">
-            <p class="footer_label">Phone:</p>
-            <p class="footer_text">+1(383) 555 0105</p>
-        </div>
-        <div class="footer_col">
-            <p class="footer_label">Links:</p>
-            <a href="#about" class="footer_link">About App</a>
-            <a href="#contact" class="footer_link">Contact Us</a>
-            <a href="#reviews" class="footer_link">Reviews</a>
-            <a href="#team" class="footer_link">About us</a>
-        </div>
-        <div class="footer_col">
-            <p class="footer_label">Social networks:</p>
-            <div class="social_icons">
-                <div class="icon_placeholder">f</div>
-                <div class="icon_placeholder">ig</div>
+        <div class="footer_grid">
+            <div class="footer_col">
+                <h3 class="footer_logo">CaT</h3>
+                <p class="footer_label">Adresa:</p>
+                <p class="footer_text">Romania</p>
+            </div>
+            <div class="footer_col">
+                <p class="footer_label">Telefon:</p>
+                <p class="footer_text">+40 000 123 456</p>
+            </div>
+            <div class="footer_col">
+                <p class="footer_label">Linkuri:</p>
+                <a href="#about" class="footer_link">Despre aplicatie</a>
+                <a href="#contact" class="footer_link">Contact</a>
+                <a href="#reviews" class="footer_link">Recenzii</a>
+                <a href="#team" class="footer_link">Echipa</a>
+            </div>
+            <div class="footer_col">
+                <p class="footer_label">Retele sociale:</p>
+                <div class="social_icons">
+                    <div class="icon_placeholder">f</div>
+                    <div class="icon_placeholder">ig</div>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
-<script src="js/main.js"></script>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>

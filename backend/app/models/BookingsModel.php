@@ -14,10 +14,17 @@ class BookingsModel extends Model
     /**
      * Rezervarile unui user (cu detalii camping), ordonate descrescator.
      */
-    public function findByUserId(int $userId, int $limit = 50, int $offset = 0): array
+    public function findByUserId(int $userId, int $limit = 50, int $offset = 0, ?int $campingId = null): array
     {
         $limit  = min(100, max(1, $limit));
         $offset = max(0, $offset);
+
+        $where  = 'b.user_id = :user_id';
+        $params = ['user_id' => $userId];
+        if ($campingId !== null) {
+            $where .= ' AND b.camping_id = :camping_id';
+            $params['camping_id'] = $campingId;
+        }
 
         $stmt = $this->pdo->prepare(
             "SELECT b.*,
@@ -26,32 +33,11 @@ class BookingsModel extends Model
                     c.latitude, c.longitude
              FROM bookings b
              JOIN campings c ON c.id = b.camping_id
-             WHERE b.user_id = :user_id
+             WHERE $where
              ORDER BY b.created_at DESC
              LIMIT $limit OFFSET $offset"
         );
-        $stmt->execute(['user_id' => $userId]);
-        return $stmt->fetchAll();
-    }
-
-    /**
-     * Rezervarile pentru un camping (vizibil pentru owner/admin).
-     */
-    public function findByCampingId(int $campingId, int $limit = 50, int $offset = 0): array
-    {
-        $limit  = min(100, max(1, $limit));
-        $offset = max(0, $offset);
-
-        $stmt = $this->pdo->prepare(
-            "SELECT b.*,
-                    u.username, u.email, u.full_name
-             FROM bookings b
-             JOIN users u ON u.id = b.user_id
-             WHERE b.camping_id = :camping_id
-             ORDER BY b.check_in DESC
-             LIMIT $limit OFFSET $offset"
-        );
-        $stmt->execute(['camping_id' => $campingId]);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
@@ -173,16 +159,22 @@ class BookingsModel extends Model
     {
         $nights = (int)(new DateTime($checkIn))->diff(new DateTime($checkOut))->days;
         if ($nights < 1) $nights = 1;
-        return round($pricePerNight * $nights, 2);
+        return round($pricePerNight * $nights * $guests, 2);
     }
 
     /**
      * Numarul total de rezervari ale unui user (pentru paginare).
      */
-    public function countByUserId(int $userId): int
+    public function countByUserId(int $userId, ?int $campingId = null): int
     {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM bookings WHERE user_id = :user_id");
-        $stmt->execute(['user_id' => $userId]);
+        $where  = 'user_id = :user_id';
+        $params = ['user_id' => $userId];
+        if ($campingId !== null) {
+            $where .= ' AND camping_id = :camping_id';
+            $params['camping_id'] = $campingId;
+        }
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM bookings WHERE $where");
+        $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 }

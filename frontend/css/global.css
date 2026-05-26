@@ -8,13 +8,11 @@
     --color-teal: #00a93b;
     --color-primary: #0b572f;
     --color-brown: #6F4A39;
-
     --bg-main: #F4F7F4;
-    --bg-card: #FFFFFF;
+    --bg-card: #FFF;
     --text-main: #2D2D2D;
-    --text-light: #FFFFFF;
+    --text-light: #FFF;
     --border-color: #C8D4C9;
-
     --font-family-main: 'Inter', sans-serif;
     --font-family-headings: 'Roboto', sans-serif;
     --font-body: 1rem;
@@ -23,7 +21,6 @@
     --font-h2: clamp(1.5rem, 4vw + 0.5rem, 3rem);
     --font-h3: clamp(1.125rem, 3vw + 0.5rem, 2rem);
     --font-h4: 1.5rem;
-
     --spacing-form: clamp(16px, 3vw, 24px);
     --spacing-section: clamp(40px, 8vw, 80px);
     --gap-layout: clamp(12px, 3vw, 40px);
@@ -34,12 +31,9 @@
 [data-theme="dark"] {
     --bg-main: #0C1410;
     --bg-card: #15241B;
-
     --text-main: var(--color-light);
-    --text-light: #FFFFFF;
-
+    --text-light: #FFF;
     --border-color: #243B2D;
-
     --color-primary: #285A48;
     --color-teal: #408A71;;
 }

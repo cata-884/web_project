@@ -17,12 +17,13 @@ class BookingsController extends Controller
     #[NoReturn]
     public function index(): void
     {
-        $user   = $this->requireAuth();
-        $limit  = (int)($_GET['limit']  ?? 20);
-        $offset = (int)($_GET['offset'] ?? 0);
+        $user      = $this->requireAuth();
+        $limit     = (int)($_GET['limit']      ?? 20);
+        $offset    = (int)($_GET['offset']     ?? 0);
+        $campingId = isset($_GET['camping_id']) ? (int)$_GET['camping_id'] : null;
 
-        $bookings = $this->model->findByUserId((int)$user['id'], $limit, $offset);
-        $total    = $this->model->countByUserId((int)$user['id']);
+        $bookings = $this->model->findByUserId((int)$user['id'], $limit, $offset, $campingId);
+        $total    = $this->model->countByUserId((int)$user['id'], $campingId);
 
         $this->json([
             'bookings' => $bookings,

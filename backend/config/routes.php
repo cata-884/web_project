@@ -62,11 +62,25 @@ $routes = [
     'post /api/organizers/(\d+)/approve'             => ['OrganizersController', 'approve'],
     'post /api/organizers/(\d+)/reject'              => ['OrganizersController', 'reject'],
 
+    // Media API
+    'post /api/campings/(\d+)/media'  => ['MediaController', 'uploadCampingMedia'],
+    'post /api/reviews/(\d+)/media'   => ['MediaController', 'uploadReviewMedia'],
+    'delete /api/media/camping/(\d+)' => ['MediaController', 'destroyCampingMedia'],
+    'delete /api/media/review/(\d+)'  => ['MediaController', 'destroyReviewMedia'],
+
+    // Contact API
+    'post /api/contact'           => ['ContactController', 'store'],
+    'get /api/admin/messages'     => ['ContactController', 'index'],
+
     // Admin API (gestionare useri + ban-uri)
     'get /api/admin/users'                           => ['AdminController', 'listUsers'],
     'post /api/admin/users/(\d+)/ban'                => ['AdminController', 'banUser'],
     'post /api/admin/users/(\d+)/unban'              => ['AdminController', 'unbanUser'],
     'get /api/admin/users/(\d+)/bans'                => ['AdminController', 'userBans'],
+
+    // OAuth Google
+    'get /api/auth/oauth/google'                     => ['AuthController', 'oauthGoogleStart'],
+    'get /api/auth/oauth/google/callback'            => ['AuthController', 'oauthGoogleCallback'],
 ];
 
 $matched = false;

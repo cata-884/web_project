@@ -45,7 +45,7 @@
     transition: all 0.3s ease;
     background-color: transparent;
     color: var(--text-light);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgb(255 255 255 / 40%);
 }
 
 .btn-tab.active {
@@ -85,12 +85,12 @@
 /* animatie */
 @keyframes fadeIn {
     from {
-        opacity: 0;
+        opacity: 0%;
         transform: translateY(10px);
     }
 
     to {
-        opacity: 1;
+        opacity: 100%;
         transform: translateY(0);
     }
 }

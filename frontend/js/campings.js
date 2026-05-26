@@ -1,16 +1,29 @@
 let currentPage = 1;
 const limit = 12;
 
+function debounce(fn, delay) {
+    let timer;
+    return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const filtersForm = document.getElementById('filters-form');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
+    const searchInput = document.getElementById('filter-search');
 
     filtersForm.addEventListener('submit', (e) => {
         e.preventDefault();
         currentPage = 1;
         loadCampings();
     });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => {
+            currentPage = 1;
+            loadCampings();
+        }, 400));
+    }
 
     btnPrev.addEventListener('click', () => {
         if (currentPage > 1) {
@@ -41,7 +54,7 @@ async function loadCampings() {
     const minPrice = document.getElementById('filter-min-price').value;
     const maxPrice = document.getElementById('filter-max-price').value;
     const minRating = document.getElementById('filter-min-rating').value;
-    
+
     // Checkboxes for type
     const types = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(el => el.value);
 
@@ -55,14 +68,14 @@ async function loadCampings() {
     if (minPrice) params.append('min_price', minPrice);
     if (maxPrice) params.append('max_price', maxPrice);
     if (minRating) params.append('min_rating', minRating);
-    if (types.length === 1) params.append('type', types[0]); // Current backend only supports one type. We will just pass the first one selected for now.
+    if (types.length === 1) params.append('type', types[0]);
 
     try {
         const response = await api.get(`/api/campings?${params.toString()}`);
         renderCampings(response);
     } catch (err) {
         console.error("Failed to load campings", err);
-        grid.innerHTML = `<p style="color: red;">Eroare la incarcarea datelor.</p>`;
+        grid.innerHTML = `<p style="color: red;">Eroare la încărcarea datelor.</p>`;
     }
 }
 
@@ -77,7 +90,7 @@ function renderCampings(data) {
     resultsCount.textContent = data.total || 0;
 
     if (!data.campings || data.campings.length === 0) {
-        grid.innerHTML = `<p>Nu s-au gasit campinguri conform filtrelor.</p>`;
+        grid.innerHTML = `<p>Nu s-au găsit campinguri conform filtrelor.</p>`;
     } else {
         data.campings.forEach(c => {
             const defaultImg = '../assets/About1.jpg'; // fallback image
@@ -90,7 +103,7 @@ function renderCampings(data) {
                 <div class="card-content">
                     <span class="card-type">${c.type}</span>
                     <h3 class="card-title">${c.name}</h3>
-                    <p class="card-region">${c.region || 'Locatie necunoscuta'}</p>
+                    <p class="card-region">📍 ${c.region || 'Locație necunoscută'}</p>
                     <div class="card-bottom">
                         <div class="card-price">${c.price_per_night} RON <span>/ noapte</span></div>
                         <div class="card-rating">${ratingStr}</div>

@@ -8,18 +8,6 @@ class MediaModel extends Model
 {
     protected string $table = 'camping_media';
 
-    public function findById(int $id): ?array
-    {
-        $stmt = $this->pdo->prepare(
-            "SELECT * FROM camping_media WHERE id = :id
-             UNION ALL
-             SELECT * FROM review_media WHERE id = :id
-             LIMIT 1"
-        );
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch() ?: null;
-    }
-
     public function findByCampingId(int $campingId): array
     {
         $stmt = $this->pdo->prepare(

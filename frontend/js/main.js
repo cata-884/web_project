@@ -2,15 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CARD SLIDER (landing / about page)
     const cards = document.querySelectorAll('.about-cards-stack .feature-card');
-    const sliderButtons = document.querySelectorAll('.about-cards-stack .card-btn');
     let positions = ['pos-0', 'pos-1', 'pos-2'];
 
-    if (sliderButtons.length > 0) {
-        sliderButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                cards.forEach(card => card.classList.remove('pos-0', 'pos-1', 'pos-2'));
-                positions.unshift(positions.pop());
-                cards.forEach((card, index) => card.classList.add(positions[index]));
+    if (cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!card.classList.contains('pos-0')) {
+                    e.preventDefault();
+                    cards.forEach(c => c.classList.remove('pos-0', 'pos-1', 'pos-2'));
+                    positions.unshift(positions.pop());
+                    cards.forEach((c, i) => c.classList.add(positions[i]));
+                }
             });
         });
     }
@@ -39,49 +41,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // THEME TOGGLE
     const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
     if (themeButtons.length > 0) {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-        }
-        themeButtons.forEach(btn => {
-            if (btn.getAttribute('data-set-theme') === savedTheme) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
         themeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const selectedTheme = button.getAttribute('data-set-theme');
-                if (selectedTheme === 'dark') {
-                    document.body.setAttribute('data-theme', 'dark');
-                } else {
-                    document.body.removeAttribute('data-theme');
-                }
-                localStorage.setItem('theme', selectedTheme);
                 themeButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
             });
         });
     }
 
-    // TAB SYSTEM (account page)
+ // TAB SYSTEM (account page)
     const accountTabBtns = document.querySelectorAll('.account-tabs .nav-item[data-tab]');
     const accountSections = document.querySelectorAll('.tab-section');
 
     if (accountTabBtns.length > 0 && accountSections.length > 0) {
         accountTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                // 1. Mutăm clasa 'active' pe butonul apăsat
                 accountTabBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                accountSections.forEach(section => section.classList.remove('active-section'));
+
+                // 2. ASCUNDEM FORȚAT absolut toate secțiunile
+                accountSections.forEach(section => {
+                    section.classList.remove('active-section');
+                    section.style.display = 'none';
+                });
+
+                // 3. AFIȘĂM FORȚAT doar secțiunea de care avem nevoie
                 const targetId = btn.getAttribute('data-tab');
                 const targetElement = document.getElementById(targetId);
-                if (targetElement) targetElement.classList.add('active-section');
+                if (targetElement) {
+                    targetElement.classList.add('active-section');
+                    targetElement.style.display = 'block'; // Aici e cheia!
+                }
             });
         });
     }
-
     // BOOKINGS (real API)
     let allBookings = [];
 
@@ -169,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // BOOKING DETAILS PANEL
     window.openBookingDetails = function (id) {
         const booking = allBookings.find(b => b.id === id);
-        booking.camping_name = undefined;
         if (!booking) return;
 
         const imgEl = document.getElementById('bd-image');
@@ -185,7 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
-            statusEl.textContent = STATUS_LABELS[booking.status] || booking.status;
+            const label = STATUS_LABELS[booking.status] || booking.status;
+            statusEl.textContent = label;
             statusEl.style.backgroundColor = '';
             statusEl.style.color = 'white';
             if (booking.status === 'pending') statusEl.style.backgroundColor = '#84AC00';
@@ -304,10 +298,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // USER PILL + PROFILE FORM (real API)
     function populateUserPill(user) {
-        const nameEl = document.getElementById('user-pill-name');
-        const emailEl = document.getElementById('user-pill-email');
-        if (nameEl) nameEl.textContent = user.full_name || user.username || '—';
-        if (emailEl) emailEl.textContent = user.email || '';
+        const nameEl   = document.getElementById('user-pill-name');
+        const emailEl  = document.getElementById('user-pill-email');
+        const avatarEl = document.getElementById('user-pill-avatar');
+        if (nameEl)   nameEl.textContent = user.full_name || user.username || '—';
+        if (emailEl)  emailEl.textContent = user.email || '';
+        if (avatarEl && user.avatar_url) avatarEl.src = user.avatar_url;
     }
 
     function populateProfileForm(user) {
@@ -442,45 +438,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const themeButtons = document.querySelectorAll('.theme-toggle .toggle-btn');
 
-    if (themeButtons.length > 0) {
-        // citim tema salvata
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (themeButtons.length > 0) {
+            // citim tema salvata
+            const savedTheme = localStorage.getItem('theme') || 'light';
 
-        // aplicam tema imediat
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-        }
-
-        // actualizam vizual butonul activ
-        themeButtons.forEach(btn => {
-            if (btn.getAttribute('data-set-theme') === savedTheme) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+            // aplicam tema imediat
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
             }
-        });
 
-        // ascultam click pe butoane
-        themeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const selectedTheme = button.getAttribute('data-set-theme');
-
-                // aplicam tema pe body
-                if (selectedTheme === 'dark') {
-                    document.body.setAttribute('data-theme', 'dark');
+            // actualizam vizual butonul activ
+            themeButtons.forEach(btn => {
+                if (btn.getAttribute('data-set-theme') === savedTheme) {
+                    btn.classList.add('active');
                 } else {
-                    document.body.removeAttribute('data-theme');
+                    btn.classList.remove('active');
                 }
-
-                // salvam in memorie
-                localStorage.setItem('theme', selectedTheme);
-
-                // schimbam clasa active intre butoane
-                themeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
             });
-        });
-    }
+
+            // ascultam click pe butoane
+            themeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedTheme = button.getAttribute('data-set-theme');
+
+                    // aplicam tema pe body
+                    if (selectedTheme === 'dark') {
+                        document.body.setAttribute('data-theme', 'dark');
+                    } else {
+                        document.body.removeAttribute('data-theme');
+                    }
+
+                    // salvam in memorie
+                    localStorage.setItem('theme', selectedTheme);
+
+                    // schimbam clasa active intre butoane
+                    themeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+        }
         // 4. Click pe ORICE buton din meniu închide sidebar-ul
         // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
         const sidebarLinks = sidebar.querySelectorAll('.nav-item');
@@ -494,10 +490,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // CONTACT FORM
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const feedback = document.getElementById('contact-feedback');
+            const first = document.getElementById('contact-first').value.trim();
+            const last  = document.getElementById('contact-last').value.trim();
+            const name  = [last, first].filter(Boolean).join(' ');
+            const email = document.getElementById('contact-email').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+
+            btn.disabled = true;
+            btn.textContent = 'Se trimite...';
+            feedback.style.display = 'none';
+
+            try {
+                await api.post('/api/contact', { name, email, phone, message });
+                feedback.textContent = 'Mesaj trimis! Te vom contacta in curand.';
+                feedback.style.background = 'rgba(45,76,54,.1)';
+                feedback.style.color = '#2D4C36';
+                feedback.style.display = 'block';
+                contactForm.reset();
+            } catch (err) {
+                feedback.textContent = err.message || 'Eroare la trimitere. Incearca din nou.';
+                feedback.style.background = 'rgba(239,106,0,.08)';
+                feedback.style.color = '#EF6A00';
+                feedback.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Trimite';
+            }
+        });
+    }
+
     // INIT (Incarcare date API)
     if (typeof api !== 'undefined') {
         loadUser();
         loadBookings();
         loadWishlist();
     }
+
+
+
 });

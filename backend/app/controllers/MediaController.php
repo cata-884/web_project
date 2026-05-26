@@ -12,15 +12,23 @@ class MediaController extends Controller
 
     private const ALLOWED_TYPES = [
         'image' => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-        'audio' => ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp4'],
-        'video' => ['video/mp4', 'video/webm', 'video/ogg'],
+        'audio' => [
+            'audio/mpeg', 'audio/mp3', 'audio/ogg', 'audio/x-ogg',
+            'audio/wav', 'audio/x-wav', 'audio/wave',
+            'audio/mp4', 'audio/x-m4a', 'audio/m4a',
+            'audio/webm', 'audio/aac',
+        ],
+        'video' => ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime',
+                    'video/x-msvideo', 'video/x-matroska'],
     ];
 
     private const MAX_SIZES = [
-        'image' => 10 * 1024 * 1024,   // 10 MB
-        'audio' => 5  * 1024 * 1024,   // 5 MB
-        'video' => 50 * 1024 * 1024,   // 50 MB
+        'image' => 10 * 1024 * 1024,
+        'audio' => 20 * 1024 * 1024,
+        'video' => 50 * 1024 * 1024,
     ];
+
+    private const AUDIO_EXTENSIONS = ['mp3', 'ogg', 'wav', 'm4a', 'aac', 'webm'];
 
     /**
      * POST /api/campings/{campingId}/media
@@ -40,11 +48,10 @@ class MediaController extends Controller
             $this->json(['error' => 'Nu ai drepturi pe acest camping'], 403);
         }
 
-        $file = $this->validateUpload();
+        [$file, $mediaType] = $this->validateUpload();
 
-        $mediaType = $this->detectMediaType($file['type']);
-        $filename  = $this->saveFile($file, 'campings', $campingId);
-        $url       = '/' . self::UPLOAD_DIR . '/campings/' . $campingId . '/' . $filename;
+        $filename = $this->saveFile($file, 'campings', $campingId);
+        $url      = '/cat/public/' . self::UPLOAD_DIR . '/campings/' . $campingId . '/' . $filename;
 
         $sortOrder = $this->model->nextSortOrder($campingId);
         $id = $this->model->createForCamping($campingId, $mediaType, $url, $sortOrder);
@@ -76,11 +83,10 @@ class MediaController extends Controller
             $this->json(['error' => 'Nu ai drepturi pe aceasta recenzie'], 403);
         }
 
-        $file = $this->validateUpload();
+        [$file, $mediaType] = $this->validateUpload();
 
-        $mediaType = $this->detectMediaType($file['type']);
-        $filename  = $this->saveFile($file, 'reviews', $reviewId);
-        $url       = '/' . self::UPLOAD_DIR . '/reviews/' . $reviewId . '/' . $filename;
+        $filename = $this->saveFile($file, 'reviews', $reviewId);
+        $url      = '/cat/public/' . self::UPLOAD_DIR . '/reviews/' . $reviewId . '/' . $filename;
 
         $id = $this->model->createForReview($reviewId, $mediaType, $url);
 
@@ -136,7 +142,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Valideaza fisierul uploadat din $_FILES['file']
+     * Valideaza fisierul uploadat. Returneaza [$file, $mediaType].
      */
     private function validateUpload(): array
     {
@@ -145,12 +151,20 @@ class MediaController extends Controller
         }
 
         $file = $_FILES['file'];
-        $mime = $file['type'];
+        $mime = $this->detectRealMime($file['tmp_name']);
 
         $mediaType = $this->detectMediaType($mime);
+
+        if (!$mediaType) {
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (in_array($ext, self::AUDIO_EXTENSIONS, true)) {
+                $mediaType = 'audio';
+            }
+        }
+
         if (!$mediaType) {
             $this->json([
-                'error' => 'Tip fisier nepermis. Acceptate: JPEG, PNG, WebP, GIF, MP3, OGG, WAV, MP4, WebM'
+                'error' => 'Tip fisier nepermis (' . $mime . '). Acceptate: JPEG, PNG, WebP, GIF, MP3, OGG, WAV, MP4, WebM'
             ], 400);
         }
 
@@ -161,7 +175,18 @@ class MediaController extends Controller
             ], 400);
         }
 
-        return $file;
+        return [$file, $mediaType];
+    }
+
+    private function detectRealMime(string $tmpPath): string
+    {
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime  = finfo_file($finfo, $tmpPath);
+            finfo_close($finfo);
+            if ($mime) return $mime;
+        }
+        return mime_content_type($tmpPath) ?: '';
     }
 
     /**

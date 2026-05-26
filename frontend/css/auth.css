@@ -38,20 +38,20 @@
     background-color: var(--bg-card);
     border-radius: 24px;
     padding: 40px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 20%);
     box-sizing: border-box;
 }
 
 .auth-card h2 {
     font-size: var(--font-h2);
     color: var(--text-main);
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
 }
 
 .auth-card .subtitle {
     font-size: var(--font-body);
     color: var(--text-main);
-    opacity: 0.8;
+    opacity: 80%;
     margin-bottom: var(--spacing-form);
 }
 
@@ -101,7 +101,7 @@
     transform: translateY(-50%);
     cursor: pointer;
     color: var(--text-main);
-    opacity: 0.5;
+    opacity: 50%;
 }
 
 /* parola uitata */
@@ -159,7 +159,7 @@
 }
 
 .btn-submit:hover {
-    opacity: 0.9;
+    opacity: 90%;
 }
 
 /* divider or */
@@ -169,7 +169,7 @@
     text-align: center;
     margin: var(--spacing-form) 0;
     color: var(--text-main);
-    opacity: 0.8;
+    opacity: 80%;
     font-size: var(--font-body);
     font-weight: 500;
 }

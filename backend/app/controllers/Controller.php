@@ -7,8 +7,7 @@ abstract class Controller
     protected mixed $model        = null;
     protected ?array $currentUser = null;
     protected ?string $currentToken = null;
-    protected ?string $bannedReason = null;  // Motivul ban-ului activ, daca exista
-    protected string $viewPath    = '';
+    protected ?string $bannedReason = null;
 
     public function __construct()
     {
@@ -16,9 +15,6 @@ abstract class Controller
         if (class_exists($modelName)) {
             $this->model = new $modelName();
         }
-
-        $folder = strtolower(str_replace('Controller', '', static::class));
-        $this->viewPath = ROOT . SEP . 'app' . SEP . 'views' . SEP . $folder . SEP;
 
         $this->resolveCurrentUser();
     }
@@ -129,27 +125,4 @@ abstract class Controller
         return $user;
     }
 
-    protected function render(string $view, array $data = [], ?string $layout = 'main'): void
-    {
-        $viewFile = $this->viewPath . $view . '.php';
-        if (!file_exists($viewFile)) {
-            $this->json(['error' => "View negasit: $view"], 500);
-        }
-        extract($data);
-        if ($layout === null) {
-            include $viewFile;
-            return;
-        }
-        ob_start();
-        include $viewFile;
-        $content = ob_get_clean();
-        include ROOT . SEP . 'app' . SEP . 'views' . SEP . 'layouts' . SEP . $layout . '.php';
-    }
-
-    #[NoReturn]
-    protected function redirect(string $path): void
-    {
-        header('Location: ' . BASE_URL . $path);
-        exit();
-    }
 }

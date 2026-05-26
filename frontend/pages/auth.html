@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
+
 <body>
 
     <main class="auth-layout">
@@ -40,7 +42,9 @@
                         <a href="#">Ai uitat parola?</a>
                     </div>
 
-                    <div id="login-error" style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;"></div>
+                    <div id="login-error"
+                        style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;">
+                    </div>
 
                     <button type="submit" class="btn-submit" id="login-btn">Sign In</button>
                 </form>
@@ -50,14 +54,10 @@
                 </div>
 
                 <div class="social-login">
-                    <button class="btn-social" type="button">
+                    <a href="/cat/public/api/auth/oauth/google" class="btn-social">
                         <span>G</span> Google
-                    </button>
-                    <button class="btn-social" type="button">
-                        <span>A</span> Apple
-                    </button>
+                    </a>
                 </div>
-
                 <p class="signup-link">Nu ai cont? <a href="register.html">Creeaza un cont</a></p>
             </div>
         </div>
@@ -66,6 +66,23 @@
     <script src="../js/api.js"></script>
     <script>
         (function () {
+            // Preia tokenul din URL dupa OAuth callback (?token=...)
+            const urlParams = new URLSearchParams(window.location.search);
+            const oauthToken = urlParams.get('token');
+            if (oauthToken) {
+                localStorage.setItem('cat_token', oauthToken);
+                window.history.replaceState({}, '', window.location.pathname);
+                window.location.href = 'account/account.html';
+                return;
+            }
+
+            const oauthError = urlParams.get('error');
+            if (oauthError) {
+                const errEl = document.getElementById('login-error');
+                errEl.textContent = 'Eroare Google OAuth: ' + oauthError;
+                errEl.style.display = 'block';
+            }
+
             // Redirect daca e deja logat
             if (localStorage.getItem('cat_token')) {
                 window.location.href = 'account/account.html';
@@ -103,4 +120,5 @@
         })();
     </script>
 </body>
+
 </html>

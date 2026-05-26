@@ -5,7 +5,7 @@
 
 .history-header h2 {
     color: var(--color-teal);
-    margin: 0 0 16px 0;
+    margin: 0 0 16px;
 }
 
 .history-filters {
@@ -50,7 +50,7 @@
     border-radius: 12px;
     padding: 16px;
     gap: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     border-left: 6px solid transparent;
@@ -58,7 +58,7 @@
 
 .booking-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgb(0 0 0 / 8%);
     background-color: var(--bg-main);
 }
 
@@ -87,7 +87,7 @@
     margin: 0;
     font-size: 14px;
     color: var(--text-main);
-    opacity: 0.8; /* o usoara transparenta in loc de gri fix */
+    opacity: 80%; /* o usoara transparenta in loc de gri fix */
 }
 
 .booking-status {
@@ -112,6 +112,7 @@
 }
 
 /* culori pentru statusuri */
+
 /* verde pentru viitoare */
 .status-upcoming {
     border-left-color: var(--color-primary);
@@ -131,7 +132,7 @@
 /* portocaliu pentru anulate */
 .status-cancelled {
     border-left-color: var(--color-accent);
-    opacity: 0.7;
+    opacity: 70%;
 }
 .status-cancelled .booking-status {
     color: var(--color-accent);

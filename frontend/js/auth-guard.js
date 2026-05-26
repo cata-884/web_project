@@ -6,7 +6,7 @@
             // Calculeaza prefixul relativ dinamic catre pages/auth.html bazat pe adancimea URL-ului
             const parts = path.split('/').filter(Boolean);
             const frontendIdx = parts.indexOf('frontend');
-            
+
             let prefix = '';
             if (frontendIdx !== -1) {
                 const depth = parts.length - frontendIdx - 1;
@@ -15,7 +15,7 @@
                 // Fallback safe in caz ca structura e atipica (de exemplu rulat direct sub index)
                 prefix = '../';
             }
-            
+
             window.location.href = `${prefix}pages/auth.html`;
         }
     }

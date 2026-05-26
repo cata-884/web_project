@@ -2,6 +2,9 @@ FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql
+
+RUN echo "upload_max_filesize = 50M\npost_max_size = 50M" \
+    > /usr/local/etc/php/conf.d/uploads.ini
 RUN a2enmod rewrite
 
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \

@@ -217,9 +217,10 @@ CREATE TABLE organizer_verifications (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     legal_name VARCHAR(200) NOT NULL,
-    cui VARCHAR(50) NOT NULL,
-    phone VARCHAR(50) NOT NULL,
-    document_url TEXT,                 -- URL document incarcat
+    cui VARCHAR(50),
+    id_card_url TEXT,
+    authorization_url TEXT,
+    contract_url TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     admin_notes TEXT,
     reviewed_by INT REFERENCES users(id),

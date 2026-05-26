@@ -28,7 +28,7 @@ class CampingsModel extends Model
             $params['max_price'] = $filters['max_price'];
         }
         if (!empty($filters['min_rating'])) {
-            $conditions[] = 'rating_avg >= :min_rating';
+            $conditions[] = 'rating_avg >= :min_rating AND rating_avg IS NOT NULL';
             $params['min_rating'] = $filters['min_rating'];
         }
         if (!empty($filters['search'])) {
@@ -74,7 +74,7 @@ class CampingsModel extends Model
             $params['max_price'] = $filters['max_price'];
         }
         if (!empty($filters['min_rating'])) {
-            $conditions[] = 'rating_avg >= :min_rating';
+            $conditions[] = 'rating_avg >= :min_rating AND rating_avg IS NOT NULL';
             $params['min_rating'] = $filters['min_rating'];
         }
         if (!empty($filters['search'])) {
@@ -232,8 +232,8 @@ class CampingsModel extends Model
     {
         $slug = strtolower($name);
         $slug = strtr($slug, [
-            'a'=>'a','a'=>'a','i'=>'i','s'=>'s','t'=>'t',
-            'A'=>'a','A'=>'a','I'=>'i','S'=>'s','T'=>'t',
+            'ă'=>'a','â'=>'a','î'=>'i','ș'=>'s','ş'=>'s','ț'=>'t','ţ'=>'t',
+            'Ă'=>'a','Â'=>'a','Î'=>'i','Ș'=>'s','Ş'=>'s','Ț'=>'t','Ţ'=>'t',
         ]);
         $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
         $slug = preg_replace('/[\s-]+/', '-', $slug);
