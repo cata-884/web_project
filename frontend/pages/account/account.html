@@ -635,15 +635,15 @@
                 <div class="accordion-content show req-group">
                     <label class="check-row-between">
                         <span>Tent Pitches:</span>
-                        <input type="checkbox" value="tent">
+                        <input type="checkbox" name="environment" value="tent">
                     </label>
                     <label class="check-row-between">
                         <span>RV/Campervan Spots:</span>
-                        <input type="checkbox" value="rv">
+                        <input type="checkbox" name="environment" value="rv">
                     </label>
                     <label class="check-row-between">
                         <span>Cabins/Glamping:</span>
-                        <input type="checkbox" value="cabin">
+                        <input type="checkbox" name="environment" value="cabin">
                     </label>
                 </div>
             </div>
@@ -655,31 +655,31 @@
                 <div class="accordion-content show req-group">
                     <label class="check-row-between">
                         <span>Electric Hookup</span>
-                        <input type="checkbox" value="electric">
+                        <input type="checkbox" name="facility" value="electric">
                     </label>
                     <label class="check-row-between">
                         <span>Drinking Water</span>
-                        <input type="checkbox" value="water">
+                        <input type="checkbox" name="facility" value="water">
                     </label>
                     <label class="check-row-between">
                         <span>Hot Showers</span>
-                        <input type="checkbox" value="showers">
+                        <input type="checkbox" name="facility" value="showers">
                     </label>
                     <label class="check-row-between">
                         <span>Toilets</span>
-                        <input type="checkbox" value="toilets">
+                        <input type="checkbox" name="facility" value="toilets">
                     </label>
                     <label class="check-row-between">
                         <span>Wi-Fi</span>
-                        <input type="checkbox" value="wifi">
+                        <input type="checkbox" name="facility" value="wifi">
                     </label>
                     <label class="check-row-between">
                         <span>BBQ/Cooking Area</span>
-                        <input type="checkbox" value="bbq">
+                        <input type="checkbox" name="facility" value="bbq">
                     </label>
                     <label class="check-row-between">
                         <span>Pet Friendly</span>
-                        <input type="checkbox" value="pets">
+                        <input type="checkbox" name="facility" value="pets">
                     </label>
                 </div>
             </div>
@@ -802,18 +802,71 @@
             updateCampsiteStepper(nextStep);
         }
 
-      // B. Butonul FINISH (acum cu validare!)
+  // B. Butonul FINISH
 if (e.target.classList.contains('campsite-finish')) {
     const currentStepElement = e.target.closest('.campsite-step');
 
-    // Validăm pasul 4 înainte de a lăsa utilizatorul să dea "Send"
+    // Validăm ultimul pas
     if (!validateCurrentStep(currentStepElement)) {
         alert("Te rugăm să adaugi pozele obligatorii!");
-        return; // Oprește trimiterea dacă nu sunt poze
+        return;
     }
 
-    alert("Success! Locația de camping a fost creată.");
-    // Aici va veni codul de trimitere prin AJAX
+    // 1. Creăm pachetul de date (FormData acceptă și text și fișiere)
+    const formData = new FormData();
+
+    // Adăugăm datele text
+    formData.append('name', document.getElementById('c-name').value);
+    formData.append('short_desc', document.getElementById('c-short-desc').value);
+    formData.append('full_desc', document.getElementById('c-full-desc').value);
+    formData.append('street', document.getElementById('c-street').value);
+    formData.append('number', document.getElementById('c-number').value);
+    formData.append('city', document.getElementById('c-city').value);
+    formData.append('zip', document.getElementById('c-zip').value);
+    formData.append('lat', document.getElementById('c-lat').value);
+    formData.append('lng', document.getElementById('c-lng').value);
+
+    // Adăugăm checkbox-urile pentru Mediu (Environments)
+    document.querySelectorAll('input[name="environment"]:checked').forEach(el => {
+        formData.append('environments[]', el.value);
+    });
+
+    // Adăugăm checkbox-urile pentru Facilități
+    document.querySelectorAll('input[name="facility"]:checked').forEach(el => {
+        formData.append('facilities[]', el.value);
+    });
+
+    // Adăugăm poza de Cover
+    const coverInput = document.getElementById('c-cover-upload');
+    if(coverInput.files.length > 0) {
+        formData.append('cover_photo', coverInput.files[0]);
+    }
+
+    // Adăugăm pozele din Galerie
+    const galleryInput = document.getElementById('c-gallery-upload');
+    for(let i = 0; i < galleryInput.files.length; i++) {
+        formData.append('gallery_photos[]', galleryInput.files[i]);
+    }
+
+    // 2. Trimitem totul către PHP
+// 2. Trimitem totul către PHP folosind calea corectă a serverului
+fetch('/cat/public/api/submit_campsite.php', {
+            method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert("Success! Locația de camping a fost trimisă spre aprobare.");
+            location.reload(); // Reîncărcăm pagina pentru a curăța formularul
+        } else {
+            alert("Eroare la salvare: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Eroare Fetch:', error);
+        alert("A apărut o problemă de conexiune cu serverul.");
+    });
 }
 
         // C. Navigare BULINE (Înapoi)
