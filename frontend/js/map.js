@@ -233,7 +233,7 @@ function initLocateMe() {
 
     btn.addEventListener('click', () => {
         if (!navigator.geolocation) {
-            alert('Geolocația nu este suportată de browser.');
+            showToast('Geolocația nu este suportată de browser.', 'warning');
             return;
         }
 
@@ -244,7 +244,7 @@ function initLocateMe() {
                 btn.textContent = '📍';
             },
             () => {
-                alert('Nu s-a putut obține locația.');
+                showToast('Nu s-a putut obține locația.', 'error');
                 btn.textContent = '📍';
             },
             { enableHighAccuracy: true, timeout: 8000 }

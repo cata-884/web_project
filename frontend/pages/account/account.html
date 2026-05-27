@@ -18,20 +18,17 @@
     <link rel="stylesheet" href="../../css/account/booking-details.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/account/settings.css">
-        <link rel="stylesheet" href="../../css/account/account-layout.css">
-        <link rel="stylesheet" href="../../css/account/CaT-partner.css">
-        <link rel="stylesheet" href="../../css/account/create-campsite.css">
-
-
-
-
+    <link rel="stylesheet" href="../../css/account/account-layout.css">
+    <link rel="stylesheet" href="../../css/account/CaT-partner.css">
+    <link rel="stylesheet" href="../../css/account/create-campsite.css">
+    <link rel="stylesheet" href="../../css/account/admin.css">
 
 </head>
 
 <body>
 
     <div class="account-layout">
-<aside class="account-sidebar">
+        <aside class="account-sidebar">
 
             <div class="theme-toggle">
                 <button class="toggle-btn" type="button" data-set-theme="dark">Dark ☾</button>
@@ -55,6 +52,11 @@
 
                 <button class="nav-item" data-tab="partner">
                     <span>CaT Partner</span> <span class="arrow">↗</span>
+                </button>
+
+                <button class="nav-item" data-tab="admin-tab" id="admin-nav-btn"
+                    style="display:none; background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.3); color: #DC2626;">
+                    <span>Admin Panel</span> <span class="arrow">↗</span>
                 </button>
 
                 <button class="nav-item active" data-tab="profile">
@@ -124,7 +126,6 @@
                             </div>
                         </div>
 
-
                         <div class="profile-right">
                             <h2>Your Profile</h2>
                             <p class="profile-subtitle">This is your digital handshake with the neighborhood. A friendly
@@ -182,7 +183,6 @@
                     </div>
                 </div>
 
-
                 <div id="history" class="tab-section">
                     <div class="history-header">
                         <h2>Istoric Rezervari</h2>
@@ -196,7 +196,6 @@
 
                     <div class="history-list" id="bookings-container"></div>
                 </div>
-
 
                 <div id="booking-details" class="tab-section">
                     <div class="booking-details-container">
@@ -248,8 +247,6 @@
                         </section>
                     </div>
                 </div>
-
-
 
                 <div id="settings" class="tab-section">
                     <div class="settings-container">
@@ -315,9 +312,7 @@
                     </div>
                 </div>
 
-
-
-<div id="partner" class="tab-section">
+                <div id="partner" class="tab-section">
                     <div class="partner-form-wrapper">
 
                         <div class="partner-step" id="step-1">
@@ -325,7 +320,8 @@
                                 <span class="doc-icon">📄</span>
                                 <h2>Legal Representative Details</h2>
                             </div>
-                            <p class="step-subtitle">We need these details to know who will be responsible for managing the account.</p>
+                            <p class="step-subtitle">We need these details to know who will be responsible for managing
+                                the account.</p>
 
                             <div class="form-row split">
                                 <div class="input-group">
@@ -339,11 +335,14 @@
                             </div>
 
                             <div class="input-group upload-group">
-                                <label for="partner-id-upload"><strong>ID Upload</strong> - Upload a copy of your ID for identity verification. Accepted formats: JPG, PNG, PDF (Max 5MB)</label>
-                                <div class="upload-dashed-box" onclick="document.getElementById('partner-id-upload').click()">
+                                <label for="partner-id-upload"><strong>ID Upload</strong> - Upload a copy of your ID for
+                                    identity verification. Accepted formats: JPG, PNG, PDF (Max 5MB)</label>
+                                <div class="upload-dashed-box"
+                                    onclick="document.getElementById('partner-id-upload').click()">
                                     <span class="upload-arrow">⇪</span>
                                     <p><span class="browse-text">Browse Files</span> to upload</p>
-                                    <input type="file" id="partner-id-upload" accept="image/*,.pdf" style="display: none;">
+                                    <input type="file" id="partner-id-upload" accept="image/*,.pdf"
+                                        style="display: none;">
                                 </div>
                             </div>
 
@@ -354,7 +353,8 @@
                         <div class="partner-step" id="step-2" style="display: none;">
                             <div class="step-header">
                                 <h3>Business / Legal Entity Details</h3>
-                                <p class="step-subtitle">The CaT platform works with verified entities. Please enter your business details.</p>
+                                <p class="step-subtitle">The CaT platform works with verified entities. Please enter
+                                    your business details.</p>
                             </div>
 
                             <div class="business-type-selector">
@@ -382,7 +382,7 @@
                                 </div>
                                 <div class="input-group">
                                     <label for="partner-reg-number">Company Registration Number</label>
-                                    <input type="text" id="partner-reg-number" placeholder="Gigel">
+                                    <input type="text" id="partner-reg-number" placeholder="ex: RO12345A">
                                 </div>
                             </div>
 
@@ -400,20 +400,23 @@
                             <div class="form-row split">
                                 <div class="input-group">
                                     <label for="partner-city">City</label>
-                                    <input type="text" id="partner-city" placeholder="Mihai">
+                                    <input type="text" id="partner-city" placeholder="Iasi">
                                 </div>
                                 <div class="input-group">
-                                    <label for="partner-zip">Zip Code</label>
-                                    <input type="text" id="partner-zip" placeholder="Gigel">
+                                    <label for="partner-zip">Cod Postal</label>
+                                    <input type="number" id="partner-zip" placeholder="700400">
                                 </div>
                             </div>
 
                             <div class="upload-section">
-                                <p class="upload-label"><strong>Registration Document</strong> - Upload a copy of your Business Registration Certificate. Accepted formats: PDF, JPG.</p>
-                                <div class="upload-dashed-box" onclick="document.getElementById('partner-reg-upload').click()">
+                                <p class="upload-label"><strong>Registration Document</strong> - Upload a copy of your
+                                    Business Registration Certificate. Accepted formats: PDF, JPG.</p>
+                                <div class="upload-dashed-box"
+                                    onclick="document.getElementById('partner-reg-upload').click()">
                                     <input type="file" id="partner-reg-upload" hidden accept=".pdf,.jpg,.jpeg">
                                     <div class="upload-content">
-                                        <span class="upload-icon">↑</span> <p><span class="browse-text">Browse</span> Files to upload</p>
+                                        <span class="upload-icon">↑</span>
+                                        <p><span class="browse-text">Browse</span> Files to upload</p>
                                     </div>
                                 </div>
                             </div>
@@ -434,7 +437,7 @@
                             <div class="form-row split">
                                 <div class="input-group">
                                     <label for="partner-phone">Phone Number</label>
-                                    <input type="text" id="partner-phone" placeholder="07xx xxx xxx">
+                                    <input type="text" id="partner-phone" placeholder="07xxxxxxxx sau +407xxxxxxxx">
                                 </div>
                                 <div class="input-group">
                                     <label for="partner-email">Business E-mail</label>
@@ -445,23 +448,31 @@
                             <div class="agreements-section">
                                 <label class="agreement-checkbox">
                                     <input type="checkbox" id="agree-terms">
-                                    <span>I agree to the <strong>[Terms and Conditions]</strong> of the CaT platform and the Privacy Policy (GDPR).</span>
+                                    <span>I agree to the <strong>[Terms and Conditions]</strong> of the CaT platform and
+                                        the Privacy Policy (GDPR).</span>
                                 </label>
                                 <label class="agreement-checkbox">
                                     <input type="checkbox" id="declare-truth">
-                                    <span>I declare on my own responsibility that the provided information is accurate and that I have the legal right to represent this entity.</span>
+                                    <span>I declare on my own responsibility that the provided information is accurate
+                                        and that I have the legal right to represent this entity.</span>
                                 </label>
                             </div>
 
                             <button type="submit" class="btn-dark btn-submit">Finish</button>
                         </div>
 
-                        <div class="partner-step" id="step-4" style="display: none; background-color: #fdf1f1; padding: 100px 40px; text-align: center; border-radius: 12px; min-height: 400px; flex-direction: column; justify-content: center; align-items: center;">
-                            <h1 style="font-size: 42px; font-weight: 800; color: #000; margin-bottom: 24px; line-height: 1.2;">
+                        <div class="partner-step" id="step-4"
+                            style="display: none; background-color: #fdf1f1; padding: 100px 40px; text-align: center; border-radius: 12px; min-height: 400px; flex-direction: column; justify-content: center; align-items: center;">
+                            <h1
+                                style="font-size: 42px; font-weight: 800; color: #000; margin-bottom: 24px; line-height: 1.2;">
                                 Application Submitted<br>Successfully!
                             </h1>
-                            <p style="font-size: 18px; color: #333; line-height: 1.6; max-width: 700px; margin: 0 auto;">
-                                Thank you for applying to become a CaT Partner. Our team will carefully review your submission to verify your business details. You will receive an email notification regarding the status of your application within the next 24-48 hours. We look forward to having you on board!
+                            <p
+                                style="font-size: 18px; color: #333; line-height: 1.6; max-width: 700px; margin: 0 auto;">
+                                Thank you for applying to become a CaT Partner. Our team will carefully review your
+                                submission to verify your business details. You will receive an email notification
+                                regarding the status of your application within the next 24-48 hours. We look forward to
+                                having you on board!
                             </p>
                         </div>
 
@@ -485,296 +496,316 @@
                     </div>
                 </div>
 
-                <div id="dashboard-tab" class="tab-section" >
+                <div id="dashboard-tab" class="tab-section">
                     <div class="dashboard-container">
                         <div class="dashboard-header">
                             <h1>Your Campsites</h1>
-                            <p>Welcome to your command center! From here, you can manage all your properties registered on CaT. To add a new campsite, click the "Add Location" card below and fill in the details to start welcoming your future guests.</p>
+                            <p>Welcome to your command center! From here, you can manage all your properties registered
+                                on CaT. To add a new campsite, click the "Add Location" card below and fill in the
+                                details to start welcoming your future guests.</p>
                         </div>
 
-                    <div class="campsite-grid" id="my-campsites-container">
+                        <div class="campsite-grid" id="my-campsites-container">
 
-    <div class="card create-card" onclick="openCreateCampsiteForm()">
-        <div class="create-icon">
-            <i class="fas fa-plus"></i>
-        </div>
-        <span>Add New Location</span>
-    </div>
+                            <div class="card create-card" onclick="openCreateCampsiteForm()">
+                                <div class="create-icon">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <span>Add New Location</span>
+                            </div>
 
-</div>
+                        </div>
                     </div>
                 </div>
 
 
                 <div id="create-campsite-tab" class="tab-section" style="display: none;">
-    <div class="partner-form-wrapper">
+                    <div class="partner-form-wrapper">
 
-        <div class="campsite-step" id="c-step-1">
-            <div class="step-header">
-                <div class="step-title-row">
-                    <span class="doc-icon">📄</span>
-                    <h3>Basic Information</h3>
-                </div>
-                <p class="step-subtitle">Let's start with the essentials. How will users identify your camping spot?</p>
-            </div>
+                        <div class="campsite-step" id="c-step-1">
+                            <div class="step-header">
+                                <div class="step-title-row">
+                                    <span class="doc-icon">📄</span>
+                                    <h3>Basic Information</h3>
+                                </div>
+                                <p class="step-subtitle">Let's start with the essentials. How will users identify your
+                                    camping spot?</p>
+                            </div>
 
-            <div class="form-row split">
-                <div class="input-group">
-                    <label>Camping Name</label>
-                    <input type="text" id="c-name" placeholder="Camping Name" required>
-                </div>
+                            <div class="form-row split">
+                                <div class="input-group">
+                                    <label>Camping Name</label>
+                                    <input type="text" id="c-name" placeholder="Numele locației" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="c-owner" placeholder="Prenume proprietar" required>
+                                </div>
+                            </div>
 
-            </div>
+                            <div class="input-group">
+                                <label>Short Description</label>
+                                <textarea id="c-short-desc" rows="3"
+                                    placeholder="Briefly describe what makes your location special... (Max 500 characters)"
+                                    required></textarea>
+                            </div>
 
-            <div class="input-group">
-                <label>Short Description</label>
-                <textarea id="c-short-desc" rows="3" placeholder="Briefly describe what makes your location special... (Max 500 characters)" required></textarea>
-            </div>
+                            <div class="input-group">
+                                <label>Full Description - Provide all the details about the experience, rules, and
+                                    surroundings. This will be the main text on your generated page.</label>
+                                <textarea id="c-full-desc" rows="6"
+                                    placeholder="Hello! I'm a software developer by day, but I know how frustrating..."
+                                    required></textarea>
+                            </div>
 
-            <div class="input-group">
-                <label>Full Description - Provide all the details about the experience, rules, and surroundings. This will be the main text on your generated page.</label>
-                <textarea id="c-full-desc" rows="6" placeholder="Hello! I'm a software developer by day, but I know how frustrating..." required></textarea>
-            </div>
+                            <button type="button" class="btn-dark campsite-next" data-next="2">Next</button>
+                        </div>
 
-            <button class="btn-dark campsite-next" data-next="2">Next</button>
-        </div>
+                        <div class="campsite-step" id="c-step-2" style="display: none;">
+                            <div class="step-header">
+                                <div class="step-title-row">
+                                    <span class="doc-icon">📄</span>
+                                    <h3>Location & Mapping</h3>
+                                </div>
+                                <p class="step-subtitle">Pinpoint your exact location so campers can easily find you and
+                                    compare spots on the map.</p>
+                            </div>
 
-        <div class="campsite-step" id="c-step-2" style="display: none;">
-            <div class="step-header">
-                <div class="step-title-row">
-                    <span class="doc-icon">📄</span>
-                    <h3>Location & Mapping</h3>
-                </div>
-                <p class="step-subtitle">Pinpoint your exact location so campers can easily find you and compare spots on the map.</p>
-            </div>
+                            <h4 class="section-title"
+                                style="margin-top: 20px; font-weight: 800; font-size: 16px; color: #000;">Full Physical
+                                Address</h4>
 
-            <h4 class="section-title" style="margin-top: 20px; font-weight: 800; font-size: 16px; color: #000;">Full Physical Address</h4>
+                            <div class="form-row split">
+                                <div class="input-group">
+                                    <label>Street</label>
+                                    <input type="text" id="c-street" placeholder="Strada" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>Number</label>
+                                    <input type="text" id="c-number" placeholder="Număr" required>
+                                </div>
+                            </div>
 
-            <div class="form-row split">
-                <div class="input-group">
-                    <label>Street</label>
-                    <input type="text" id="c-street" placeholder="Street" required>
-                </div>
-                <div class="input-group">
-                    <label>Number</label>
-                    <input type="text" id="c-number" placeholder="Number" required>
-                </div>
-            </div>
+                            <div class="form-row split">
+                                <div class="input-group">
+                                    <label>City</label>
+                                    <input type="text" id="c-city" placeholder="Oraș/Localitate" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>Zip Code</label>
+                                    <input type="text" id="c-zip" placeholder="Cod poștal" required>
+                                </div>
+                            </div>
 
-            <div class="form-row split">
-                <div class="input-group">
-                    <label>City</label>
-                    <input type="text" id="c-city" placeholder="City" required>
-                </div>
-                <div class="input-group">
-                    <label>Zip Code</label>
-                    <input type="text" id="c-zip" placeholder="70000" required>
-                </div>
-            </div>
+                            <button type="button" class="btn-dark" id="btn-pin-map"
+                                style="width: 100%; margin: 20px 0;">
+                                Pin on map
+                            </button>
 
-            <button type="button" class="btn-dark" id="btn-pin-map" style="width: 100%; margin: 20px 0;">
-                Pin on map
-            </button>
+                            <div class="form-row split">
+                                <div class="input-group">
+                                    <input type="text" id="c-lat" placeholder="Latitude" required readonly>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" id="c-lng" placeholder="Longitude" required readonly>
+                                </div>
+                            </div>
 
-            <div class="form-row split">
-                <div class="input-group">
-                    <input type="text" id="c-lat" placeholder="Latitude" required readonly>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="c-lng" placeholder="Longitude" required readonly>
-                </div>
-            </div>
+                            <div class="accordion-item" style="margin-top: 20px;">
+                                <button type="button" class="accordion-header dark-acc-header">
+                                    Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                </button>
+                                <div class="accordion-content show req-group">
+                                    <label class="check-row-between">
+                                        <span>Mountains</span>
+                                        <input type="checkbox" name="environment" value="mountains">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Seaside</span>
+                                        <input type="checkbox" name="environment" value="seaside">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Forest</span>
+                                        <input type="checkbox" name="environment" value="forest">
+                                    </label>
+                                </div>
+                            </div>
 
-            <div class="accordion-item" style="margin-top: 20px;">
-                <button type="button" class="accordion-header dark-acc-header">
-                    Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
-                </button>
-                <div class="accordion-content show req-group">
-                    <label class="check-row-between">
-                        <span>Mountains</span>
-                        <input type="checkbox" name="environment" value="mountains">
-                    </label>
-                    <label class="check-row-between">
-                        <span>Seaside</span>
-                        <input type="checkbox" name="environment" value="seaside">
-                    </label>
-                    <label class="check-row-between">
-                        <span>Forest</span>
-                        <input type="checkbox" name="environment" value="forest">
-                    </label>
-                </div>
-            </div>
+                            <button type="button" class="btn-dark campsite-next" data-next="3" style="width: 100%; margin-top: 30px;">Next</button>
+                        </div>
 
-            <button type="button" class="btn-dark campsite-next" data-next="3" style="width: 100%; margin-top: 30px;">Next</button>
-        </div>
-       <div class="campsite-step" id="c-step-3" style="display: none;">
-    <div class="step-header">
-        <div class="step-title-row">
-            <span class="doc-icon">📄</span>
-            <h3>Capacity & Facilities</h3>
-        </div>
-        <p class="step-subtitle">What kind of setups can you accommodate, and what amenities do you offer?</p>
-    </div>
+                        <div class="campsite-step" id="c-step-3" style="display: none;">
+                            <div class="step-header">
+                                <div class="step-title-row">
+                                    <span class="doc-icon">📄</span>
+                                    <h3>Capacity & Facilities</h3>
+                                </div>
+                                <p class="step-subtitle">What kind of setups can you accommodate, and what amenities do you offer?</p>
+                            </div>
 
-    <div class="accordion-item" style="margin-bottom: 20px;">
-        <button type="button" class="accordion-header dark-acc-header">
-            Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
-        </button>
-        <div class="accordion-content show req-group">
-            <label class="check-row-between">
-                <span>Tent Pitches:</span>
-                <input type="checkbox" name="environment" value="tent">
-            </label>
-            <label class="check-row-between">
-                <span>RV/Campervan Spots:</span>
-                <input type="checkbox" name="environment" value="rv">
-            </label>
-            <label class="check-row-between">
-                <span>Cabins/Glamping:</span>
-                <input type="checkbox" name="environment" value="cabin">
-            </label>
-        </div>
-    </div>
+                            <div class="accordion-item" style="margin-bottom: 20px;">
+                                <button type="button" class="accordion-header dark-acc-header">
+                                    Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                </button>
+                                <div class="accordion-content show req-group">
+                                    <label class="check-row-between">
+                                        <span>Tent Pitches:</span>
+                                        <input type="checkbox" name="environment" value="tent">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>RV/Campervan Spots:</span>
+                                        <input type="checkbox" name="environment" value="rv">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Cabins/Glamping:</span>
+                                        <input type="checkbox" name="environment" value="cabin">
+                                    </label>
+                                </div>
+                            </div>
 
-    <div class="accordion-item" style="margin-bottom: 20px;">
-        <button type="button" class="accordion-header dark-acc-header">
-            Facilities <span class="acc-icon" style="margin-left: 8px;">^</span>
-        </button>
-        <div class="accordion-content show req-group">
-            <label class="check-row-between">
-                <span>Electric Hookup</span>
-                <input type="checkbox" name="facility" value="electric">
-            </label>
-            <label class="check-row-between">
-                <span>Drinking Water</span>
-                <input type="checkbox" name="facility" value="water">
-            </label>
-            <label class="check-row-between">
-                <span>Hot Showers</span>
-                <input type="checkbox" name="facility" value="showers">
-            </label>
-            <label class="check-row-between">
-                <span>Toilets</span>
-                <input type="checkbox" name="facility" value="toilets">
-            </label>
-            <label class="check-row-between">
-                <span>Wi-Fi</span>
-                <input type="checkbox" name="facility" value="wifi">
-            </label>
-            <label class="check-row-between">
-                <span>BBQ/Cooking Area</span>
-                <input type="checkbox" name="facility" value="bbq">
-            </label>
-            <label class="check-row-between">
-                <span>Pet Friendly</span>
-                <input type="checkbox" name="facility" value="pets">
-            </label>
-        </div>
-    </div>
+                            <div class="accordion-item" style="margin-bottom: 20px;">
+                                <button type="button" class="accordion-header dark-acc-header">
+                                    Facilities <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                </button>
+                                <div class="accordion-content show req-group">
+                                    <label class="check-row-between">
+                                        <span>Electric Hookup</span>
+                                        <input type="checkbox" name="facility" value="electric">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Drinking Water</span>
+                                        <input type="checkbox" name="facility" value="water">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Hot Showers</span>
+                                        <input type="checkbox" name="facility" value="showers">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Toilets</span>
+                                        <input type="checkbox" name="facility" value="toilets">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Wi-Fi</span>
+                                        <input type="checkbox" name="facility" value="wifi">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>BBQ/Cooking Area</span>
+                                        <input type="checkbox" name="facility" value="bbq">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Pet Friendly</span>
+                                        <input type="checkbox" name="facility" value="pets">
+                                    </label>
+                                </div>
+                            </div>
 
-    <div class="accordion-item" style="margin-bottom: 20px;">
-        <button type="button" class="accordion-header dark-acc-header">
-            Capacity <span class="acc-icon" style="margin-left: 8px;">^</span>
-        </button>
-        <div class="accordion-content show req-group" style="padding: 15px;">
-            <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Maximum guests/spots:</label>
-            <select name="capacity" id="campsite-capacity" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; color: #333; font-size: 14px;">
-                <option value="">Select capacity...</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="10+">10+</option>
-            </select>
-        </div>
-    </div>
+                            <div class="accordion-item" style="margin-bottom: 20px;">
+                                <button type="button" class="accordion-header dark-acc-header">
+                                    Capacity <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                </button>
+                                <div class="accordion-content show req-group" style="padding: 15px;">
+                                    <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Maximum guests/spots:</label>
+                                    <select name="capacity" id="campsite-capacity" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; color: #333; font-size: 14px;">
+                                        <option value="">Select capacity...</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="10+">10+</option>
+                                    </select>
+                                </div>
+                            </div>
 
-    <div class="accordion-item" style="margin-bottom: 30px;">
-        <button type="button" class="accordion-header dark-acc-header">
-            Pricing <span class="acc-icon" style="margin-left: 8px;">^</span>
-        </button>
-        <div class="accordion-content show req-group" style="padding: 15px;">
-            <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Price per night (RON):</label>
-            <input type="number" name="price_per_night" id="campsite-price" placeholder="Ex: 150" min="0" step="1" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; font-size: 14px; box-sizing: border-box;">
-        </div>
-    </div>
+                            <div class="accordion-item" style="margin-bottom: 30px;">
+                                <button type="button" class="accordion-header dark-acc-header">
+                                    Pricing <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                </button>
+                                <div class="accordion-content show req-group" style="padding: 15px;">
+                                    <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Price per night (RON):</label>
+                                    <input type="number" name="price_per_night" id="campsite-price" placeholder="Ex: 150" min="0" step="1" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; font-size: 14px; box-sizing: border-box;">
+                                </div>
+                            </div>
 
-    <button type="button" class="btn-dark campsite-next" data-next="4" style="width: 100%;">Next</button>
-</div>
-<div class="campsite-step" id="c-step-4" style="display: none;">
-            <div class="step-header">
-                <div class="step-title-row">
-                    <span class="doc-icon">📄</span>
-                    <h3>Multimedia Uploads</h3>
-                </div>
-                <p class="step-subtitle">Showcase your camping spot. High-quality media attracts more campers.</p>
-            </div>
+                            <button type="button" class="btn-dark campsite-next" data-next="4" style="width: 100%;">Next</button>
+                        </div>
 
-            <div class="upload-section" style="margin-bottom: 30px;">
-                <p class="upload-label"><strong>Main Cover Photo</strong> - Choose one high-quality image.</p>
-                <div class="upload-dashed-box" onclick="document.getElementById('c-cover-upload').click()">
-                    <input type="file" id="c-cover-upload" hidden accept="image/* " required>
-                    <div class="upload-content">
-                        <span class="upload-icon">↑</span>
-                        <p><span class="browse-text">Browse</span> Files to upload</p>
+                        <div class="campsite-step" id="c-step-4" style="display: none;">
+                            <div class="step-header">
+                                <div class="step-title-row">
+                                    <span class="doc-icon">📄</span>
+                                    <h3>Multimedia Uploads</h3>
+                                </div>
+                                <p class="step-subtitle">Showcase your camping spot. High-quality media attracts more campers.</p>
+                            </div>
+
+                            <div class="upload-section" style="margin-bottom: 30px;">
+                                <p class="upload-label"><strong>Main Cover Photo</strong> - Choose one high-quality image.</p>
+                                <div class="upload-dashed-box" onclick="document.getElementById('c-cover-upload').click()">
+                                    <input type="file" id="c-cover-upload" hidden accept="image/*" required>
+                                    <div class="upload-content">
+                                        <span class="upload-icon">↑</span>
+                                        <p><span class="browse-text">Browse</span> Files to upload</p>
+                                    </div>
+                                </div>
+                                <div id="cover-filename" style="margin-top: 5px; font-size: 12px; color: #555;"></div>
+                            </div>
+
+                            <div class="upload-section" style="margin-bottom: 40px;">
+                                <p class="upload-label"><strong>Photo Gallery</strong> - Upload multiple photos.</p>
+                                <div class="upload-dashed-box" onclick="document.getElementById('c-gallery-upload').click()">
+                                    <input type="file" id="c-gallery-upload" hidden accept="image/*" multiple required>
+                                    <div class="upload-content">
+                                        <span class="upload-icon">↑</span>
+                                        <p><span class="browse-text">Browse</span> Files to upload</p>
+                                    </div>
+                                </div>
+                                <div id="gallery-count" style="margin-top: 5px; font-size: 12px; color: #555;"></div>
+                            </div>
+
+                            <button type="button" class="btn-dark campsite-finish" style="width: 100%;">Send</button>
+                        </div>
+
+                        <div class="campsite-stepper stepper-wrapper" style="margin-top: 40px; display: flex; justify-content: center;">
+                            <div class="step-item active" data-c-step="1" style="cursor: pointer;">
+                                <div class="step-circle">1</div>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-item" data-c-step="2" style="cursor: pointer;">
+                                <div class="step-circle">2</div>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-item" data-c-step="3" style="cursor: pointer;">
+                                <div class="step-circle">3</div>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-item" data-c-step="4" style="cursor: pointer;">
+                                <div class="step-circle">4</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="map-modal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close-modal" id="close-map-modal">&times;</span>
+                            <h3 style="margin-bottom: 10px; color: #2D4C36;">Selectează locația pe hartă</h3>
+                            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Dă click exact pe locul dorit
+                                pentru a plasa pin-ul, apoi confirmă.</p>
+
+                            <div id="picker-map" style="height: 350px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+
+                            <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                                <span id="selected-coords" style="font-weight: 500; font-size: 14px;">Coordonate: -</span>
+                                <button type="button" class="btn-dark" id="confirm-location-btn" style="padding: 10px 20px;">Confirmă Locația</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="cover-filename" style="margin-top: 5px; font-size: 12px; color: #555;"></div>
-            </div>
-
-            <div class="upload-section" style="margin-bottom: 40px;">
-                <p class="upload-label"><strong>Photo Gallery</strong> - Upload multiple photos.</p>
-                <div class="upload-dashed-box" onclick="document.getElementById('c-gallery-upload').click()">
-                    <input type="file" id="c-gallery-upload" hidden accept="image/*" multiple required>
-                    <div class="upload-content">
-                        <span class="upload-icon">↑</span>
-                        <p><span class="browse-text">Browse</span> Files to upload</p>
-                    </div>
-                </div>
-                <div id="gallery-count" style="margin-top: 5px; font-size: 12px; color: #555;"></div>
-            </div>
-
-            <button class="btn-dark campsite-finish" style="width: 100%;">Send</button>
-        </div>
-        <div class="campsite-stepper stepper-wrapper" style="margin-top: 40px; display: flex; justify-content: center;">
-            <div class="step-item active" data-c-step="1" style="cursor: pointer;">
-                <div class="step-circle">1</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item" data-c-step="2" style="cursor: pointer;">
-                <div class="step-circle">2</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item" data-c-step="3" style="cursor: pointer;">
-                <div class="step-circle">3</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item" data-c-step="4" style="cursor: pointer;">
-                <div class="step-circle">4</div>
-            </div>
-        </div>
-
-    </div>
-    <div id="map-modal" class="modal-overlay" style="display: none;">
-            <div class="modal-content">
-                <span class="close-modal" id="close-map-modal">&times;</span>
-                <h3 style="margin-bottom: 10px; color: #2D4C36;">Selectează locația pe hartă</h3>
-                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Dă click exact pe locul dorit pentru a plasa pin-ul, apoi confirmă.</p>
-
-                <div id="picker-map" style="height: 350px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
-
-                <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                    <span id="selected-coords" style="font-weight: 500; font-size: 14px;">Coordonate: -</span>
-                    <button type="button" class="btn-dark" id="confirm-location-btn" style="padding: 10px 20px;">Confirmă Locația</button>
-                </div>
-            </div>
-        </div>
-</div>
 
                 <div id="wishlist" class="tab-section">
                     <div class="history-header">
@@ -785,475 +816,589 @@
                     </div>
                 </div>
 
-                <div id="campsite-details-view" style="display: none;" class="campsite-details-layout">
-
-    <div class="details-header">
-        <button id="btn-back-to-grid" class="btn-secondary">
-            <i class="fas fa-arrow-left"></i> Înapoi la locații
-        </button>
-        <div class="details-actions">
-            <span id="detail-status-badge" class="status-badge"></span>
-
-            <button id="btn-toggle-publish" class="btn-outline">Ascunde</button>
-            <button id="btn-edit-campsite" class="btn-primary">Editează</button>
-            <button id="btn-delete-campsite" class="btn-danger">Șterge</button>
-        </div>
-    </div>
-
-    <div id="admin-feedback-alert" class="alert-danger" style="display: none;">
-        <strong>Motiv respingere:</strong> <span id="feedback-text"></span>
-    </div>
-
-    <div class="details-gallery">
-        <div class="hero-image-wrapper">
-            <img id="detail-hero-img" src="../../assets/images/camping-placeholder.jpg" alt="Cover">
-        </div>
-        <div id="detail-thumbnails" class="thumbnails-container">
-            </div>
-    </div>
-
-    <div class="details-content-grid">
-
-        <div class="details-main-info">
-            <h1 id="detail-title">Nume Camping</h1>
-            <p class="detail-location"><i class="fas fa-map-marker-alt"></i> <span id="detail-address"></span></p>
-
-            <div class="tags-section">
-                <h3>Facilități</h3>
-                <div id="detail-facilities" class="tags-container">
+                <div id="campsite-details-view" style="display: none;" class="campsite-details-layout tab-section">
+                    <div class="details-header">
+                        <button id="btn-back-to-grid" class="btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Înapoi la locații
+                        </button>
+                        <div class="details-actions">
+                            <span id="detail-status-badge" class="status-badge"></span>
+                            <button id="btn-toggle-publish" class="btn-outline">Ascunde</button>
+                            <button id="btn-edit-campsite" class="btn-primary">Editează</button>
+                            <button id="btn-delete-campsite" class="btn-danger">Șterge</button>
+                        </div>
                     </div>
 
-                <h3>Mediu</h3>
-                <div id="detail-environments" class="tags-container">
+                    <div id="admin-feedback-alert" class="alert-danger" style="display: none;">
+                        <strong>Motiv respingere:</strong> <span id="feedback-text"></span>
                     </div>
-            </div>
 
-            <div class="description-section">
-                <h3>Descriere</h3>
-                <p id="detail-description">Descrierea va fi incarcata aici...</p>
-            </div>
-        </div>
+                    <div class="details-gallery">
+                        <div class="hero-image-wrapper">
+                            <img id="detail-hero-img" src="../../assets/images/camping-placeholder.jpg" alt="Cover">
+                        </div>
+                        <div id="detail-thumbnails" class="thumbnails-container"></div>
+                    </div>
 
-        <div class="details-sidebar-info">
-            <div class="stats-card">
-                <div class="stat-item">
-                    <span class="stat-label">Tip:</span>
-                    <strong id="detail-type">Tent</strong>
+                    <div class="details-content-grid">
+                        <div class="details-main-info">
+                            <h1 id="detail-title">Nume Camping</h1>
+                            <p class="detail-location"><i class="fas fa-map-marker-alt"></i> <span id="detail-address"></span></p>
+
+                            <div class="tags-section">
+                                <h3>Facilități</h3>
+                                <div id="detail-facilities" class="tags-container"></div>
+                                <h3>Mediu</h3>
+                                <div id="detail-environments" class="tags-container"></div>
+                            </div>
+
+                            <div class="description-section">
+                                <h3>Descriere</h3>
+                                <p id="detail-description">Descrierea va fi incarcata aici...</p>
+                            </div>
+                        </div>
+
+                        <div class="details-sidebar-info">
+                            <div class="stats-card">
+                                <div class="stat-item">
+                                    <span class="stat-label">Tip:</span>
+                                    <strong id="detail-type">Tent</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Preț / Noapte:</span>
+                                    <strong id="detail-price">0 RON</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Capacitate:</span>
+                                    <strong id="detail-capacity">0 pers.</strong>
+                                </div>
+                            </div>
+
+                            <div class="map-container">
+                                <div id="campsite-map" style="height: 250px; border-radius: 8px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-reviews-section">
+                        <h3>Recenzii (<span id="reviews-count">0</span>)</h3>
+                        <div id="reviews-container" class="reviews-list"></div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Preț / Noapte:</span>
-                    <strong id="detail-price">0 RON</strong>
+
+                <div id="admin-tab" class="tab-section">
+                    <div class="admin-panel-nav">
+                        <button class="admin-panel-tab active" data-panel="campings">Cereri Camping</button>
+                        <button class="admin-panel-tab" data-panel="users">Utilizatori</button>
+                        <button class="admin-panel-tab" data-panel="stats">Statistici</button>
+                    </div>
+
+                    <div id="admin-panel-campings" class="admin-panel">
+                        <div class="admin-toolbar">
+                            <h2>Cereri CaT Partner</h2>
+                            <div class="admin-status-filters">
+                                <button class="status-filter active" data-status="">Toate</button>
+                                <button class="status-filter" data-status="0">In Asteptare</button>
+                                <button class="status-filter" data-status="1">Aprobate</button>
+                                <button class="status-filter" data-status="-1">Respinse</button>
+                                <button class="status-filter" data-status="2">Cu Feedback</button>
+                            </div>
+                        </div>
+                        <div id="admin-campings-grid" class="admin-cards-grid">
+                            <p class="admin-loading">Deschide tab-ul pentru a incarca datele.</p>
+                        </div>
+                    </div>
+
+                    <div id="admin-panel-users" class="admin-panel" style="display:none;">
+                        <div class="admin-toolbar">
+                            <h2>Administrare Utilizatori</h2>
+                            <div class="admin-search-bar">
+                                <input type="text" id="admin-user-search" placeholder="Cauta username sau email...">
+                                <select id="admin-user-filter">
+                                    <option value="">Toti utilizatorii</option>
+                                    <option value="true">Banati</option>
+                                    <option value="false">Activi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="admin-users-grid" class="admin-cards-grid">
+                            <p class="admin-loading">Selecteaza tab-ul Utilizatori pentru a incarca.</p>
+                        </div>
+                    </div>
+
+                    <div id="admin-panel-stats" class="admin-panel" style="display:none;">
+                        <div class="admin-toolbar">
+                            <h2>Statistici Platforma</h2>
+                            <div class="admin-stats-actions">
+                                <button class="btn-stats-pdf" onclick="adminDownloadPdf()">↓ Descarca Raport PDF</button>
+                            </div>
+                        </div>
+
+                        <div id="admin-stats-summary" class="admin-stat-cards">
+                            <p class="admin-loading">Se incarca...</p>
+                        </div>
+
+                        <div class="admin-charts-row">
+                            <div class="admin-chart-box">
+                                <div class="admin-chart-toolbar">
+                                    <span class="admin-chart-title">Grafic</span>
+                                    <select id="admin-chart-type" onchange="loadAdminChart()">
+                                        <option value="bookings_per_month">Rezervari / luna</option>
+                                        <option value="top_regions">Campinguri pe regiune</option>
+                                        <option value="revenue_per_month">Venituri / luna</option>
+                                    </select>
+                                </div>
+                                <div id="admin-chart-container">
+                                    <p class="admin-loading">Se incarca graficul...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><div id="admin-feedback-modal" class="admin-modal-overlay" style="display:none;">
+                    <div class="admin-modal-box">
+                        <h3>Respinge cu Feedback</h3>
+                        <p>Mesajul tau va fi vizibil utilizatorului. Explica clar ce trebuie corectat pentru a putea
+                            retrimite cererea.</p>
+                        <label class="admin-modal-label">Mesaj feedback *</label>
+                        <textarea id="admin-feedback-text" rows="5"
+                            placeholder="Ex: Documentele furnizate sunt incomplete. Te rugam sa atasezi autorizatia de functionare valabila..."></textarea>
+                        <div class="modal-btn-row">
+                            <button class="btn-mc" id="admin-feedback-cancel">Anuleaza</button>
+                            <button class="btn-md" id="admin-feedback-confirm">Trimite Feedback</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Capacitate:</span>
-                    <strong id="detail-capacity">0 pers.</strong>
+
+                <div id="admin-ban-modal" class="admin-modal-overlay" style="display:none;">
+                    <div class="admin-modal-box">
+                        <h3>Baneaza Utilizator</h3>
+                        <p>Userul va fi deconectat imediat si nu va mai putea accesa campinguri sau lasa recenzii.</p>
+                        <label class="admin-modal-label">Motiv ban *</label>
+                        <textarea id="admin-ban-reason" rows="3" placeholder="Descrie motivul banarii..."></textarea>
+                        <label class="admin-modal-label">Durata in zile (gol = permanent)</label>
+                        <input type="number" id="admin-ban-days" min="1"
+                            placeholder="Ex: 30 — lasa gol pentru ban permanent">
+                        <div class="modal-btn-row">
+                            <button class="btn-mc" id="admin-ban-cancel">Anuleaza</button>
+                            <button class="btn-md" id="admin-ban-confirm">Aplica Ban</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="map-container">
-                <div id="campsite-map" style="height: 250px; border-radius: 8px;"></div>
             </div>
-        </div>
-    </div>
-
-    <div class="details-reviews-section">
-        <h3>Recenzii (<span id="reviews-count">0</span>)</h3>
-        <div id="reviews-container" class="reviews-list">
-            </div>
-    </div>
-</div>
-
-            </div><!-- /.account-pages-wrapper -->
         </main>
 
     </div>
 
-   <script src="../../js/api.js"></script>
+    <script src="../../js/api.js"></script>
     <script src="../../js/main.js"></script>
     <script src="../../js/partner-form.js"></script>
-<script>
-    // 1. Definim funcția GLOBALA (ca să o poată folosi toată pagina, fără erori)
-  function loadMyCampsites() {
-    const container = document.getElementById('my-campsites-container');
-    if (!container) return; // Siguranță
+    <script src="../../js/admin.js"></script>
 
-    const token = localStorage.getItem('cat_token');
-
-    fetch('/cat/public/api/get_my_campsites.php', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => response.json())
-    .then(res => {
-        if (!res.success) {
-            console.error("Eroare la preluarea campingurilor:", res.message);
-            return;
-        }
-
-        const createCard = container.querySelector('.create-card');
-        container.innerHTML = '';
-        if (createCard) container.appendChild(createCard);
-
-        if (res.data.length === 0) return;
-
-        res.data.forEach(camping => {
-            const statusClass = camping.approval_status == 1 ? 'status-accepted' : 'status-pending';
-            const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
-
-            // 1. Pregătim descrierea
-            const descText = camping.description || 'Fără descriere disponibilă.';
-
-            // 2. Combinăm inteligent regiunea și adresa
-            let locationText = 'România';
-            if (camping.region && camping.address) {
-                locationText = `${camping.region}, ${camping.address}`;
-            } else if (camping.address) {
-                locationText = camping.address;
-            } else if (camping.region) {
-                locationText = camping.region;
-            }
-
-            // 3. Generăm cardul cu noua structură
-            const cardHTML = `
-                <div class="cat-card ${statusClass}" data-id="${camping.id}">
-                    <div class="cat-card-img-wrapper">
-                        <img src="${coverImg}" alt="${camping.name}" onerror="this.onerror=null; this.src='../../assets/images/camping-placeholder.jpg';">
-                    </div>
-                    <div class="cat-card-content">
-                        <h3 class="cat-card-title">${camping.name}</h3>
-
-                        <p class="cat-card-desc" title="${descText}">${descText}</p>
-
-                        <p class="cat-card-detail">
-                            <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> ${locationText}
-                        </p>
-
-                        <p class="cat-card-detail"><strong>Tip:</strong> ${camping.type}</p>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
-        });
-    })
-    .catch(err => console.error("Eroare rețea Fetch:", err));
-}
-    // 2. Ce se întâmplă când se încarcă pagina prima oară
-    document.addEventListener('DOMContentLoaded', () => {
-        // Resetare vizuală pentru input-uri
-        document.querySelectorAll('input, textarea').forEach(el => {
-            el.addEventListener('input', () => {
-                if (el.value.trim() !== '') el.style.borderColor = '#ccc';
-            });
-        });
-
-        initMapLogic();
-        loadMyCampsites(); // Apelăm funcția curat
-    });
-
-    // 3. MANAGER CLICK-URI UNIC
-    document.addEventListener('click', function(e) {
-        // A. Navigare NEXT
-        if (e.target.classList.contains('campsite-next')) {
-            const currentStepElement = e.target.closest('.campsite-step');
-            if (!validateCurrentStep(currentStepElement)) {
-                alert("Te rugăm să completezi toate câmpurile obligatorii!");
-                return;
-            }
-            const nextStep = e.target.getAttribute('data-next');
-            document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
-            const target = document.getElementById('c-step-' + nextStep);
-            if(target) target.style.display = 'block';
-            updateCampsiteStepper(nextStep);
-        }
-
-        // B. Butonul FINISH
-        if (e.target.classList.contains('campsite-finish')) {
-            e.preventDefault(); // Oprim orice refresh accidental al formularului
-
-            const currentStepElement = e.target.closest('.campsite-step');
-            if (!validateCurrentStep(currentStepElement)) {
-                alert("Te rugăm să adaugi pozele obligatorii!");
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('name', document.getElementById('c-name').value);
-            formData.append('short_desc', document.getElementById('c-short-desc').value);
-            formData.append('full_desc', document.getElementById('c-full-desc').value);
-            formData.append('street', document.getElementById('c-street').value);
-            formData.append('number', document.getElementById('c-number').value);
-            formData.append('city', document.getElementById('c-city').value);
-            formData.append('zip', document.getElementById('c-zip').value);
-            formData.append('lat', document.getElementById('c-lat').value);
-            formData.append('lng', document.getElementById('c-lng').value);
-            formData.append('capacity', document.getElementById('campsite-capacity').value);
-formData.append('price_per_night', document.getElementById('campsite-price').value);
-
-            document.querySelectorAll('input[name="environment"]:checked').forEach(el => formData.append('environments[]', el.value));
-            document.querySelectorAll('input[name="facility"]:checked').forEach(el => formData.append('facilities[]', el.value));
-
-            const coverInput = document.getElementById('c-cover-upload');
-            if(coverInput && coverInput.files.length > 0) formData.append('cover_photo', coverInput.files[0]);
-
-            const galleryInput = document.getElementById('c-gallery-upload');
-            if(galleryInput) {
-                for(let i = 0; i < galleryInput.files.length; i++) {
-                    formData.append('gallery_photos[]', galleryInput.files[i]);
-                }
-            }
+    <script>
+        // 1. Definim funcția GLOBALA îmbinată
+        function loadMyCampsites() {
+            const container = document.getElementById('my-campsites-container');
+            if (!container) return;
 
             const token = localStorage.getItem('cat_token');
 
-            fetch('/cat/public/api/submit_campsite.php', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
+            fetch('/cat/public/api/get_my_campsites.php', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
             })
             .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    alert("Success! Locația de camping a fost trimisă spre aprobare.");
-                    const form = document.getElementById('campsite-form');
-                    if(form) form.reset();
-
-                    document.getElementById('create-campsite-tab').style.display = 'none';
-                    document.getElementById('dashboard-tab').style.display = 'block';
-                    loadMyCampsites(); // Acum o găsește și funcționează perfect!
-                } else {
-                    alert("Eroare la salvare: " + data.message);
+            .then(res => {
+                if (!res.success) {
+                    console.error("Eroare la preluarea campingurilor:", res.message);
+                    return;
                 }
+
+                const createCard = container.querySelector('.create-card');
+                container.innerHTML = '';
+                if (createCard) container.appendChild(createCard);
+
+                if (res.data.length === 0) return;
+
+                res.data.forEach(camping => {
+                    // Logica colegului pentru badge-uri status
+                    const st = { '-1': ['cs--1', 'Respins'], '0': ['cs-0', 'In Asteptare'], '1': ['cs-1', 'Aprobat'], '2': ['cs-2', 'Respins cu Feedback'] };
+                    const [badgeCls, badgeLabel] = st[String(camping.approval_status)] ?? ['cs-0', 'In Asteptare'];
+                    const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
+                    const canResubmit = camping.approval_status == -1 || camping.approval_status == 2;
+                    const feedbackMsg = (camping.approval_status == 2 && camping.admin_feedback) ? `<p class="camping-admin-feedback">${camping.admin_feedback}</p>` : '';
+
+                    // Buton resubmit adăugat cu event.stopPropagation() ca să nu declanșeze și deschiderea detaliilor
+                    const resubmitBtn = canResubmit ? `<button class="btn-resubmit" onclick="event.stopPropagation(); resubmitCamping(${camping.id})">Retrimite spre aprobare</button>` : '';
+
+                    // Logica noastră de text
+                    const descText = camping.description || 'Fără descriere disponibilă.';
+                    let locationText = 'România';
+                    if (camping.region && camping.address) locationText = `${camping.region}, ${camping.address}`;
+                    else if (camping.address) locationText = camping.address;
+                    else if (camping.region) locationText = camping.region;
+
+                    // Designul nostru de card combinat cu butoanele colegului
+                    const cardHTML = `
+                        <div class="cat-card" data-id="${camping.id}">
+                            <div class="cat-card-img-wrapper">
+                                <img src="${coverImg}" alt="${camping.name}" onerror="this.onerror=null; this.src='../../assets/images/camping-placeholder.jpg';">
+                            </div>
+                            <div class="cat-card-content">
+                                <h3 class="cat-card-title">${camping.name}</h3>
+                                <p class="cat-card-desc" title="${descText}">${descText}</p>
+                                <p class="cat-card-detail"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> ${locationText}</p>
+                                <p class="cat-card-detail"><strong>Tip:</strong> ${camping.type}</p>
+                                <span class="campsite-status-badge ${badgeCls}">${badgeLabel}</span>
+                                ${feedbackMsg}
+                                ${resubmitBtn}
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                });
             })
-            .catch(error => {
-                console.error('Eroare Fetch:', error);
-                alert("A apărut o problemă de conexiune cu serverul.");
-            });
+            .catch(err => console.error("Eroare rețea Fetch:", err));
         }
 
-        // C. Navigare BULINE (Înapoi)
-        const stepItem = e.target.closest('.campsite-stepper .step-item');
-        if (stepItem) {
-            const targetStepId = parseInt(stepItem.getAttribute('data-c-step'));
-            const activeStep = document.querySelector('.campsite-step[style*="block"]');
-            if (activeStep) {
-                let currentStepId = parseInt(activeStep.id.replace('c-step-', ''));
-                if (targetStepId < currentStepId) {
-                    document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
-                    document.getElementById('c-step-' + targetStepId).style.display = 'block';
-                    updateCampsiteStepper(targetStepId);
-                }
-            }
-        }
-    });
-
-    // Funcții ajutătoare (în afara oricărui bloc)
-    function openCreateCampsiteForm() {
-        document.getElementById('dashboard-tab').style.display = 'none';
-        document.getElementById('create-campsite-tab').style.display = 'block';
-        resetCampsiteForm();
-    }
-
-    function resetCampsiteForm() {
-        document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
-        const s1 = document.getElementById('c-step-1');
-        if(s1) s1.style.display = 'block';
-        updateCampsiteStepper(1);
-    }
-
-    function updateCampsiteStepper(stepNumber) {
-        document.querySelectorAll('.campsite-stepper .step-item').forEach(item => {
-            item.classList.toggle('active', parseInt(item.getAttribute('data-c-step')) <= stepNumber);
-        });
-    }
-
-    function validateCurrentStep(stepElement) {
-        if(!stepElement) return false;
-        let isValid = true;
-        stepElement.querySelectorAll('input[type="text"][required], textarea[required]').forEach(input => {
-            if (input.value.trim() === '') {
-                input.style.borderColor = 'red';
-                isValid = false;
-            } else {
-                input.style.borderColor = '#ccc';
-            }
-        });
-        stepElement.querySelectorAll('input[type="file"][required]').forEach(input => {
-            const dashedBox = input.closest('.upload-dashed-box');
-            if (input.files.length === 0) {
-                if (dashedBox) dashedBox.style.borderColor = 'red';
-                isValid = false;
-            } else {
-                if (dashedBox) dashedBox.style.borderColor = '#ccc';
-            }
-        });
-        stepElement.querySelectorAll('.req-group').forEach(group => {
-            if (group.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
-                group.style.border = '1px solid red';
-                isValid = false;
-            } else {
-                group.style.border = 'none';
-            }
-        });
-        return isValid;
-    }
-
-    // Feedback vizual (numărare)
-    const cCoverUpload = document.getElementById('c-cover-upload');
-    if (cCoverUpload) {
-        cCoverUpload.addEventListener('change', function() {
-            const count = this.files.length;
-            const label = document.getElementById('cover-filename');
-            if(label) label.textContent = count > 0 ? `${count} poză selectată` : '';
-        });
-    }
-
-    const cGalleryUpload = document.getElementById('c-gallery-upload');
-    if (cGalleryUpload) {
-        cGalleryUpload.addEventListener('change', function() {
-            const count = this.files.length;
-            const label = document.getElementById('gallery-count');
-            if(label) label.textContent = count > 0 ? `${count} poze selectate` : '';
-        });
-    }
-
-    function initMapLogic() {
-        const btnPinMap = document.getElementById('btn-pin-map');
-        const mapModal = document.getElementById('map-modal');
-        const closeMapBtn = document.getElementById('close-map-modal');
-        const confirmLocationBtn = document.getElementById('confirm-location-btn');
-        const coordsDisplay = document.getElementById('selected-coords');
-        const inputLat = document.getElementById('c-lat');
-        const inputLng = document.getElementById('c-lng');
-        let pickerMap = null, pickerMarker = null, tempLat = null, tempLng = null;
-
-        if (btnPinMap && mapModal) {
-            btnPinMap.addEventListener('click', () => {
-                mapModal.style.display = 'flex';
-                if (!pickerMap) {
-                    pickerMap = L.map('picker-map').setView([45.9432, 24.9668], 6);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(pickerMap);
-                    pickerMap.on('click', function(e) {
-                        tempLat = e.latlng.lat.toFixed(6);
-                        tempLng = e.latlng.lng.toFixed(6);
-                        if (pickerMarker) pickerMap.removeLayer(pickerMarker);
-                        pickerMarker = L.marker([tempLat, tempLng]).addTo(pickerMap);
-                        if(coordsDisplay) coordsDisplay.textContent = `Coordonate: ${tempLat}, ${tempLng}`;
-                    });
-                }
-                setTimeout(() => pickerMap.invalidateSize(), 200);
+        // 2. Apelăm la DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('input', () => {
+                    if (el.value.trim() !== '') el.style.borderColor = '#ccc';
+                });
             });
-            if(closeMapBtn) closeMapBtn.addEventListener('click', () => mapModal.style.display = 'none');
-            if(confirmLocationBtn) {
-                confirmLocationBtn.addEventListener('click', () => {
-                    if (tempLat && tempLng) {
-                        inputLat.value = tempLat; inputLng.value = tempLng;
-                        mapModal.style.display = 'none';
-                    } else alert("Te rog dă click pe hartă!");
+
+            initMapLogic();
+            loadMyCampsites();
+        });
+
+        // 3. Manager Global Click-uri
+        document.addEventListener('click', function (e) {
+
+            // A. Click pe un card pentru deschiderea detaliilor
+            const card = e.target.closest('.cat-card');
+            // Daca apasa pe butonul de retrimite, nu deschidem detaliile
+            if (card && !e.target.closest('.btn-resubmit')) {
+                const campsiteId = card.getAttribute('data-id');
+                openCampsiteDetails(campsiteId);
+            }
+
+            // B. Navigare NEXT (Stepper Formular)
+            if (e.target.classList.contains('campsite-next')) {
+                const currentStepElement = e.target.closest('.campsite-step');
+                if (!validateCurrentStep(currentStepElement)) {
+                    alert("Te rugăm să completezi toate câmpurile obligatorii!");
+                    return;
+                }
+                const nextStep = e.target.getAttribute('data-next');
+                document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
+                const target = document.getElementById('c-step-' + nextStep);
+                if (target) target.style.display = 'block';
+                updateCampsiteStepper(nextStep);
+            }
+
+            // C. Butonul FINISH Formular
+            if (e.target.classList.contains('campsite-finish')) {
+                e.preventDefault();
+
+                const currentStepElement = e.target.closest('.campsite-step');
+                if (!validateCurrentStep(currentStepElement)) {
+                    alert("Te rugăm să adaugi pozele obligatorii!");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('name', document.getElementById('c-name').value);
+                formData.append('short_desc', document.getElementById('c-short-desc').value);
+                formData.append('full_desc', document.getElementById('c-full-desc').value);
+                formData.append('street', document.getElementById('c-street').value);
+                formData.append('number', document.getElementById('c-number').value);
+                formData.append('city', document.getElementById('c-city').value);
+                formData.append('zip', document.getElementById('c-zip').value);
+                formData.append('lat', document.getElementById('c-lat').value);
+                formData.append('lng', document.getElementById('c-lng').value);
+                formData.append('capacity', document.getElementById('campsite-capacity').value);
+                formData.append('price_per_night', document.getElementById('campsite-price').value);
+
+                document.querySelectorAll('input[name="environment"]:checked').forEach(el => formData.append('environments[]', el.value));
+                document.querySelectorAll('input[name="facility"]:checked').forEach(el => formData.append('facilities[]', el.value));
+
+                const coverInput = document.getElementById('c-cover-upload');
+                if (coverInput && coverInput.files.length > 0) formData.append('cover_photo', coverInput.files[0]);
+
+                const galleryInput = document.getElementById('c-gallery-upload');
+                if (galleryInput) {
+                    for (let i = 0; i < galleryInput.files.length; i++) {
+                        formData.append('gallery_photos[]', galleryInput.files[i]);
+                    }
+                }
+
+                const token = localStorage.getItem('cat_token');
+
+                fetch('/cat/public/api/submit_campsite.php', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Success! Locația de camping a fost trimisă spre aprobare.");
+                        const form = document.getElementById('campsite-form');
+                        if (form) form.reset();
+
+                        document.getElementById('create-campsite-tab').style.display = 'none';
+                        document.getElementById('dashboard-tab').style.display = 'block';
+                        loadMyCampsites();
+                    } else {
+                        alert("Eroare la salvare: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Eroare Fetch:', error);
+                    alert("A apărut o problemă de conexiune cu serverul.");
                 });
             }
+
+            // D. Navigare BULINE (Înapoi în formular)
+            const stepItem = e.target.closest('.campsite-stepper .step-item');
+            if (stepItem) {
+                const targetStepId = parseInt(stepItem.getAttribute('data-c-step'));
+                const activeStep = document.querySelector('.campsite-step[style*="block"]');
+                if (activeStep) {
+                    let currentStepId = parseInt(activeStep.id.replace('c-step-', ''));
+                    if (targetStepId < currentStepId) {
+                        document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
+                        document.getElementById('c-step-' + targetStepId).style.display = 'block';
+                        updateCampsiteStepper(targetStepId);
+                    }
+                }
+            }
+        });
+
+        // 4. Funcția noastră de deschidere a detaliilor
+        function openCampsiteDetails(id) {
+            const token = localStorage.getItem('cat_token');
+
+            fetch(`/cat/public/api/get_campsite_details.php?id=${id}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (!res.success) {
+                    alert(res.message);
+                    return;
+                }
+
+                const data = res.data;
+
+                document.getElementById('dashboard-tab').style.display = 'none';
+                document.getElementById('campsite-details-view').style.display = 'block';
+
+                document.getElementById('detail-title').textContent = data.name;
+                document.getElementById('detail-address').textContent = `${data.address || ''}, ${data.region || ''}`;
+                document.getElementById('detail-description').textContent = data.description || 'Fără descriere disponibilă.';
+                document.getElementById('detail-type').textContent = data.type;
+                document.getElementById('detail-price').textContent = data.price_per_night ? `${data.price_per_night} RON` : 'Nespecificat';
+                document.getElementById('detail-capacity').textContent = data.capacity ? `${data.capacity} pers.` : 'Nespecificat';
+
+                const badge = document.getElementById('detail-status-badge');
+                const feedbackAlert = document.getElementById('admin-feedback-alert');
+
+                if (data.approval_status == 1) {
+                    badge.textContent = 'Aprobat';
+                    badge.className = 'status-badge badge-approved';
+                    feedbackAlert.style.display = 'none';
+                } else if (data.approval_status == 2) {
+                    badge.textContent = 'Respins';
+                    badge.className = 'status-badge badge-rejected';
+                    feedbackAlert.style.display = 'block';
+                    document.getElementById('feedback-text').textContent = data.admin_feedback || 'Niciun motiv specificat.';
+                } else {
+                    badge.textContent = 'În așteptare';
+                    badge.className = 'status-badge badge-pending';
+                    feedbackAlert.style.display = 'none';
+                }
+
+                const facContainer = document.getElementById('detail-facilities');
+                facContainer.innerHTML = data.facilities.length
+                    ? data.facilities.map(f => `<span class="tag tag-facility">${f}</span>`).join('')
+                    : '<span class="text-muted">Nicio facilitate bifată</span>';
+
+                const envContainer = document.getElementById('detail-environments');
+                envContainer.innerHTML = data.environments.length
+                    ? data.environments.map(e => `<span class="tag tag-environment">${e}</span>`).join('')
+                    : '<span class="text-muted">Niciun mediu bifat</span>';
+
+                const heroImg = document.getElementById('detail-hero-img');
+                const thumbContainer = document.getElementById('detail-thumbnails');
+
+                if (data.media && data.media.length > 0) {
+                    heroImg.src = `/cat/public/${data.media[0].url}`;
+                    thumbContainer.innerHTML = data.media.map(m => `
+                        <img src="/cat/public/${m.url}" class="thumb-img" onclick="document.getElementById('detail-hero-img').src=this.src" alt="Thumbnail">
+                    `).join('');
+                } else {
+                    heroImg.src = '../../assets/images/camping-placeholder.jpg';
+                    thumbContainer.innerHTML = '';
+                }
+            })
+            .catch(err => console.error("Eroare la preluare detalii locație:", err));
         }
-    }
 
-// 1. Ascultăm click-urile pe cartonașele de camping
-document.getElementById('my-campsites-container').addEventListener('click', function(e) {
-    // Căutăm dacă am dat click pe un cartonaș sau pe un element din interiorul lui
-    const card = e.target.closest('.cat-card');
+        // Buton back details
+        document.getElementById('btn-back-to-grid').addEventListener('click', function() {
+            document.getElementById('campsite-details-view').style.display = 'none';
+            document.getElementById('dashboard-tab').style.display = 'block';
+        });
 
-    if (card) {
-        const campsiteId = card.getAttribute('data-id');
-        openCampsiteDetails(campsiteId);
-    }
-});
-
-// 2. Butonul de înapoi (Ascunde detaliile, arată grila)
-document.getElementById('btn-back-to-grid').addEventListener('click', function() {
-    document.getElementById('campsite-details-view').style.display = 'none';
-    document.getElementById('my-campsites-container').style.display = 'flex'; // sau 'grid', cum e setat la tine
-});
-
-// 3. Funcția care aduce datele și populează pagina
-function openCampsiteDetails(id) {
-    const token = localStorage.getItem('cat_token');
-
-    fetch(`/cat/public/api/get_campsite_details.php?id=${id}`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (!res.success) {
-            alert(res.message);
-            return;
+        // 5. Funcții Ajutătoare Formular & Coleg
+        function openCreateCampsiteForm() {
+            document.getElementById('dashboard-tab').style.display = 'none';
+            document.getElementById('create-campsite-tab').style.display = 'block';
+            resetCampsiteForm();
         }
 
-        const data = res.data;
-
-        // --- ASCUNDEM GRILA ȘI ARĂTĂM DETALIILE ---
-        document.getElementById('my-campsites-container').style.display = 'none';
-        document.getElementById('campsite-details-view').style.display = 'block';
-
-        // --- POPULĂM DATELE TEXTUALE ---
-        document.getElementById('detail-title').textContent = data.name;
-        document.getElementById('detail-address').textContent = `${data.address || ''}, ${data.region || ''}`;
-        document.getElementById('detail-description').textContent = data.description || 'Fără descriere disponibilă.';
-        document.getElementById('detail-type').textContent = data.type;
-        document.getElementById('detail-price').textContent = data.price_per_night ? `${data.price_per_night} RON` : 'Nespecificat';
-        document.getElementById('detail-capacity').textContent = data.capacity ? `${data.capacity} pers.` : 'Nespecificat';
-
-        // --- LOGICA PENTRU STATUS (Aprobat/Respins/Pending) ---
-        const badge = document.getElementById('detail-status-badge');
-        const feedbackAlert = document.getElementById('admin-feedback-alert');
-
-        if (data.approval_status == 1) {
-            badge.textContent = 'Aprobat';
-            badge.className = 'status-badge badge-approved';
-            feedbackAlert.style.display = 'none';
-        } else if (data.approval_status == 2) {
-            badge.textContent = 'Respins';
-            badge.className = 'status-badge badge-rejected';
-            feedbackAlert.style.display = 'block';
-            document.getElementById('feedback-text').textContent = data.admin_feedback || 'Niciun motiv specificat.';
-        } else {
-            badge.textContent = 'În așteptare';
-            badge.className = 'status-badge badge-pending';
-            feedbackAlert.style.display = 'none';
+        function resetCampsiteForm() {
+            document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');
+            const s1 = document.getElementById('c-step-1');
+            if (s1) s1.style.display = 'block';
+            updateCampsiteStepper(1);
         }
 
-        // --- TAG-URI FACILITĂȚI ȘI MEDIU ---
-        const facContainer = document.getElementById('detail-facilities');
-        facContainer.innerHTML = data.facilities.length
-            ? data.facilities.map(f => `<span class="tag tag-facility">${f}</span>`).join('')
-            : '<span class="text-muted">Nicio facilitate bifată</span>';
-
-        const envContainer = document.getElementById('detail-environments');
-        envContainer.innerHTML = data.environments.length
-            ? data.environments.map(e => `<span class="tag tag-environment">${e}</span>`).join('')
-            : '<span class="text-muted">Niciun mediu bifat</span>';
-
-        // --- GALERIA FOTO ---
-        const heroImg = document.getElementById('detail-hero-img');
-        const thumbContainer = document.getElementById('detail-thumbnails');
-
-        if (data.media && data.media.length > 0) {
-            // Punem prima poză ca erou
-            heroImg.src = `/cat/public/${data.media[0].url}`;
-            // Generăm restul pozelor jos. Am pus un onClick ca atunci când apeși pe o poză mică, ea să apară sus mare.
-            thumbContainer.innerHTML = data.media.map(m => `
-                <img src="/cat/public/${m.url}" class="thumb-img" onclick="document.getElementById('detail-hero-img').src=this.src" alt="Thumbnail">
-            `).join('');
-        } else {
-            heroImg.src = '../../assets/images/camping-placeholder.jpg';
-            thumbContainer.innerHTML = '';
+        function updateCampsiteStepper(stepNumber) {
+            document.querySelectorAll('.campsite-stepper .step-item').forEach(item => {
+                item.classList.toggle('active', parseInt(item.getAttribute('data-c-step')) <= stepNumber);
+            });
         }
-    })
-    .catch(err => console.error("Eroare la preluare detalii locație:", err));
-}
 
-</script>
+        function validateCurrentStep(stepElement) {
+            if(!stepElement) return false;
+            let isValid = true;
+            stepElement.querySelectorAll('input[type="text"][required], input[type="number"][required], textarea[required], select[required]').forEach(input => {
+                if (input.value.trim() === '') {
+                    input.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '#ccc';
+                }
+            });
+            stepElement.querySelectorAll('input[type="file"][required]').forEach(input => {
+                const dashedBox = input.closest('.upload-dashed-box');
+                if (input.files.length === 0) {
+                    if (dashedBox) dashedBox.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    if (dashedBox) dashedBox.style.borderColor = '#ccc';
+                }
+            });
+            stepElement.querySelectorAll('.req-group').forEach(group => {
+                const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+                if (checkboxes.length > 0) {
+                    if (group.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
+                        group.style.border = '1px solid red';
+                        isValid = false;
+                    } else {
+                        group.style.border = 'none';
+                    }
+                } else {
+                    const inputs = group.querySelectorAll('select, input[type="number"]');
+                    let groupValid = true;
+                    inputs.forEach(input => {
+                        if (input.value.trim() === '') {
+                            input.style.borderColor = 'red';
+                            groupValid = false;
+                        } else {
+                            input.style.borderColor = '#ccc';
+                        }
+                    });
+                    if (!groupValid) isValid = false;
+                }
+            });
+            return isValid;
+        }
 
+        // Vizualizare upload poze coleg
+        const cCoverUpload = document.getElementById('c-cover-upload');
+        if (cCoverUpload) {
+            cCoverUpload.addEventListener('change', function () {
+                const count = this.files.length;
+                const label = document.getElementById('cover-filename');
+                if (label) label.textContent = count > 0 ? `${count} poză selectată` : '';
+            });
+        }
+
+        const cGalleryUpload = document.getElementById('c-gallery-upload');
+        if (cGalleryUpload) {
+            cGalleryUpload.addEventListener('change', function () {
+                const count = this.files.length;
+                const label = document.getElementById('gallery-count');
+                if (label) label.textContent = count > 0 ? `${count} poze selectate` : '';
+            });
+        }
+
+        async function resubmitCamping(id) {
+            const ok = confirm('Cererea va fi trimisa din nou spre aprobare.');
+            if (!ok) return;
+            try {
+                const token = localStorage.getItem('cat_token');
+                const res = await fetch(`/cat/public/api/campings/${id}/resubmit`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: '{}'
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    alert('Cererea a fost retrimisa spre aprobare.');
+                    loadMyCampsites();
+                } else {
+                    alert(data.error || 'Eroare la retrimitere.');
+                }
+            } catch (e) {
+                alert('Eroare de retea.');
+            }
+        }
+
+        function initMapLogic() {
+            const btnPinMap = document.getElementById('btn-pin-map');
+            const mapModal = document.getElementById('map-modal');
+            const closeMapBtn = document.getElementById('close-map-modal');
+            const confirmLocationBtn = document.getElementById('confirm-location-btn');
+            const coordsDisplay = document.getElementById('selected-coords');
+            const inputLat = document.getElementById('c-lat');
+            const inputLng = document.getElementById('c-lng');
+            let pickerMap = null, pickerMarker = null, tempLat = null, tempLng = null;
+
+            if (btnPinMap && mapModal) {
+                btnPinMap.addEventListener('click', () => {
+                    mapModal.style.display = 'flex';
+                    if (!pickerMap) {
+                        pickerMap = L.map('picker-map').setView([45.9432, 24.9668], 6);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(pickerMap);
+                        pickerMap.on('click', function (e) {
+                            tempLat = e.latlng.lat.toFixed(6);
+                            tempLng = e.latlng.lng.toFixed(6);
+                            if (pickerMarker) pickerMap.removeLayer(pickerMarker);
+                            pickerMarker = L.marker([tempLat, tempLng]).addTo(pickerMap);
+                            if (coordsDisplay) coordsDisplay.textContent = `Coordonate: ${tempLat}, ${tempLng}`;
+                        });
+                    }
+                    setTimeout(() => pickerMap.invalidateSize(), 200);
+                });
+                if (closeMapBtn) closeMapBtn.addEventListener('click', () => mapModal.style.display = 'none');
+                if (confirmLocationBtn) {
+                    confirmLocationBtn.addEventListener('click', () => {
+                        if (tempLat && tempLng) {
+                            inputLat.value = tempLat; inputLng.value = tempLng;
+                            mapModal.style.display = 'none';
+                        } else alert("Te rog dă click pe hartă!");
+                    });
+                }
+            }
+        }
+
+    </script>
 </body>
-</html>
-</body>
-
 </html>

@@ -100,6 +100,40 @@ class CampingsController extends Controller
     }
 
     /**
+     * POST /api/campings/{id}/resubmit
+     * Reseteaza approval_status la 0 (pending) pentru campinguri respinse (-1 sau 2).
+     * Doar proprietarul poate face asta, si nu daca e banat.
+     */
+    #[NoReturn]
+    public function resubmit(int $id): void
+    {
+        $user = $this->requireAuth();
+        $pdo  = DB::getConnection();
+
+        $stmt = $pdo->prepare("SELECT id, created_by, approval_status FROM campings WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        $camping = $stmt->fetch();
+
+        if (!$camping) {
+            $this->json(['error' => 'Camping inexistent'], 404);
+        }
+        if ((int)$camping['created_by'] !== (int)$user['id']) {
+            $this->json(['error' => 'Nu ai permisiunea sa modifici aceasta cerere'], 403);
+        }
+
+        $status = (int)$camping['approval_status'];
+        if ($status !== -1 && $status !== 2) {
+            $this->json(['error' => 'Cererea nu poate fi retrimisa (status curent: ' . $status . ')'], 400);
+        }
+
+        $pdo->prepare(
+            "UPDATE campings SET approval_status = 0, admin_feedback = NULL WHERE id = :id"
+        )->execute(['id' => $id]);
+
+        $this->json(['ok' => true, 'message' => 'Cererea a fost retrimisa spre aprobare.']);
+    }
+
+    /**
      * Owner-ul camping-ului sau adminii pot modifica/sterge campingul.
      */
     private function assertCanModify(int $campingId, array $user): void

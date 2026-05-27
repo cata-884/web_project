@@ -95,6 +95,8 @@ CREATE TABLE campings (
 	,-- recalculat de trigger
 	rating_count INT NOT NULL DEFAULT 0
 	,is_published BOOLEAN NOT NULL DEFAULT TRUE
+	,approval_status INT NOT NULL DEFAULT 0
+	,admin_feedback TEXT
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	,updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 	);
@@ -120,6 +122,21 @@ CREATE TABLE camping_media (
 
 CREATE INDEX idx_camping_media_camping ON camping_media (camping_id
 	);
+
+-- FACILITIES & ENVIRONMENTS
+CREATE TABLE camping_facilities (
+    id          SERIAL PRIMARY KEY,
+    camping_id  INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE,
+    facility_name VARCHAR(100) NOT NULL,
+    UNIQUE (camping_id, facility_name)
+);
+
+CREATE TABLE camping_environments (
+    id               SERIAL PRIMARY KEY,
+    camping_id       INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE,
+    environment_name VARCHAR(100) NOT NULL,
+    UNIQUE (camping_id, environment_name)
+);
 
 -- BOOKINGS
 CREATE TABLE bookings (
@@ -216,17 +233,35 @@ IF NOT EXISTS idx_section_campings_section ON section_campings(
 CREATE TABLE organizer_verifications (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    legal_name VARCHAR(200) NOT NULL,
-    cui VARCHAR(50),
-    id_card_url TEXT,
-    authorization_url TEXT,
-    contract_url TEXT,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    admin_notes TEXT,
-    reviewed_by INT REFERENCES users(id),
-    submitted_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    reviewed_at TIMESTAMP,
-    CONSTRAINT chk_org_status CHECK (status IN ('pending', 'approved', 'rejected'))
+    -- Date reprezentant legal
+    last_name                VARCHAR(100),
+    first_name               VARCHAR(100),
+    id_document_path         TEXT,
+    -- Date firma
+    business_type            VARCHAR(50),
+    company_name             VARCHAR(200),
+    registration_number      VARCHAR(50),
+    address_street           VARCHAR(200),
+    address_number           VARCHAR(20),
+    address_city             VARCHAR(100),
+    address_zip              VARCHAR(20),
+    registration_document_path TEXT,
+    -- Contact
+    contact_phone            VARCHAR(50),
+    contact_email            VARCHAR(200),
+    -- Campuri vechi pastrate pentru compatibilitate
+    legal_name               VARCHAR(200),
+    cui                      VARCHAR(50),
+    id_card_url              TEXT,
+    authorization_url        TEXT,
+    contract_url             TEXT,
+    -- Status si metadate
+    status                   VARCHAR(20) NOT NULL DEFAULT 'pending',
+    admin_notes              TEXT,
+    reviewed_by              INT REFERENCES users(id),
+    submitted_at             TIMESTAMP NOT NULL DEFAULT NOW(),
+    reviewed_at              TIMESTAMP,
+    CONSTRAINT chk_org_status CHECK (status IN ('pending', 'approved', 'rejected', 'rejected_feedback'))
 );
 
 CREATE INDEX idx_org_verif_user ON organizer_verifications(user_id);

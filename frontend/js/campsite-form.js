@@ -33,7 +33,7 @@ document.addEventListener('click', function(e) {
 
     // Butonul FINISH
     if (e.target.classList.contains('campsite-finish')) {
-        alert("Success! Your new campsite has been created.");
+        showToast("Locatia de camping a fost creata cu succes!", "success");
         // Aici poți adăuga logica de salvare în BD și întoarcerea la Dashboard
         location.reload();
     }

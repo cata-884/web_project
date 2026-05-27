@@ -7,6 +7,15 @@ function debounce(fn, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('cat_token')) {
+        const authLink = document.querySelector('.nav-group a[href="auth.html"]');
+        const hartaLink = document.querySelector('.nav-group a[href="map.html"]');
+        const rightNavGroup = document.querySelector('.nav-group:last-of-type');
+
+        if (authLink) authLink.remove();
+        if (hartaLink && rightNavGroup) rightNavGroup.prepend(hartaLink);
+    }
+
     const filtersForm = document.getElementById('filters-form');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
