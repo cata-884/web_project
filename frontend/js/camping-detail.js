@@ -48,6 +48,7 @@ const TYPE_LABELS = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    //  Logica existenta de meniu
     if (localStorage.getItem('cat_token')) {
         const authLink = document.querySelector('.nav-group a[href="auth.html"]');
         const hartaLink = document.querySelector('.nav-group a[href="map.html"]');
@@ -57,50 +58,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (hartaLink && rightNavGroup) rightNavGroup.prepend(hartaLink);
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const slug = params.get('slug');
-    const id = params.get('id');
+    //  EXTRAEM SLUG-UL DIN URL-UL NOU (ex: /pages/camping/valea-verde)
+    const pathSegments = window.location.pathname.split('/');
+    const slug = pathSegments[pathSegments.length - 1];
 
-    if (!slug && !id) {
-        document.getElementById('detail-main').innerHTML = '<h2 style="color:red">Camping invalid.</h2>';
+    if (!slug || slug === 'camping.html') {
+        document.getElementById('detail-main').innerHTML = '<h2 style="color:red; text-align:center; padding:50px;">Camping invalid sau adresă greșită.</h2>';
         return;
     }
 
     try {
-        const query = slug ? `slug=${slug}` : `id=${id}`;
-        // Temporarily handling GET with slug/id via search since backend is generic.
-        if (id) {
-            const res = await api.get(`/api/campings/${id}`);
-            currentCamping = res.camping;
-        } else {
-            // Fetch list and find the one with the slug
-            const res = await api.get(`/api/campings?limit=100`);
-            currentCamping = res.campings.find(c => c.slug === slug);
-            if (currentCamping) {
-                // Fetch full details
-                const fullRes = await api.get(`/api/campings/${currentCamping.id}`);
-                currentCamping = fullRes.camping;
-            }
-        }
+        //  APELAM NOUL ENDPOINT API EXTREM DE RAPID
+        const res = await api.get(`/api/campings/slug/${slug}`);
+
+        // În controller, noi am pus datele în cheia 'data'
+        currentCamping = res.data;
 
         if (!currentCamping) throw new Error("Camping not found");
 
+        //  MAGIE PENTRU SEO: Setam titlul si meta descrierea dinamic
+        document.title = `${currentCamping.name} | CaT Camping Info`;
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && currentCamping.description) {
+            metaDesc.content = currentCamping.description.substring(0, 160) + '...';
+        }
+
+        // PORNIREA LOGICII TALE EXISTENTE
         currentPricePerNight = parseFloat(currentCamping.price_per_night);
         renderCampingDetails();
-
-        // Check if user has a completed booking to show review form
         checkReviewEligibility();
 
     } catch (err) {
+        // AFISAM EROAREA (404) DACA URL-UL E GRESIT
         document.getElementById('detail-main').innerHTML =
             `<div style="padding:40px;text-align:center">
-                <h2 style="color:#EF6A00">Eroare la încărcarea campingului</h2>
-                <p style="color:#666;margin-top:8px">${err.message || 'Te rugăm să încerci din nou.'}</p>
-                <a href="campings.html" style="display:inline-block;margin-top:16px" class="btn-dark">← Înapoi la lista</a>
+                <h2 style="color:#EF6A00">404 - Campingul nu a fost găsit</h2>
+                <p style="color:#666;margin-top:8px">Camping-ul "${escapeHtml(slug)}" nu există sau nu este public.</p>
+                <a href="/cat/public/pages/campings.html" style="display:inline-block;margin-top:16px" class="btn-dark">← Înapoi la lista de campinguri</a>
             </div>`;
     }
 });
-
 function renderCampingDetails() {
     const main = document.getElementById('detail-main');
     const media = currentCamping.media || [];
@@ -185,7 +182,7 @@ function renderCampingDetails() {
                         <label>Numar oaspeti</label>
                         <input type="number" id="book-guests" min="1" max="20" value="2">
                     </div>
-                    
+
                     <div class="price-calculation" id="price-calc-display" style="display: none;">
                         <div class="calc-row">
                             <span id="calc-nights">0 nopti x ${currentPricePerNight} RON</span>

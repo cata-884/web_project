@@ -28,9 +28,9 @@ async function loadAdminCampings(status = '') {
 
     try {
         const qs = status !== '' ? `?status=${encodeURIComponent(status)}` : '';
-// În admin.js, în funcția loadAdminMessages:
-// În admin.js
-const res = await api.get('/api/admin/messages');
+        // Apelul corect pentru campinguri
+        const res = await api.get(`/api/admin/campings${qs}`);
+
         const campings = res?.campings ?? [];
 
         if (!campings.length) {
@@ -276,37 +276,43 @@ async function loadAdminStats() {
 
 async function loadAdminMessages() {
     const grid = document.getElementById('admin-messages-grid');
-    if (!grid) {
-        console.error("Eroare: Elementul #admin-messages-grid nu a fost găsit în pagină!");
-        return;
-    }
-    grid.innerHTML = '<p>Se încarcă...</p>';
+    if (!grid) return;
+
+    grid.innerHTML = '<p class="admin-loading">Se încarcă mesajele...</p>';
 
     try {
-        // Punem calea directă către fișierul tău PHP
-        const response = await fetch('/cat/public/api/admin/get_messages.php');
-        const data = await response.json();
+        const res = await api.get('/api/admin/messages');
+        const messages = res?.messages ?? [];
 
-        if (data.success && data.messages.length > 0) {
-            grid.innerHTML = data.messages.map(m => `
-                <div class="admin-message-card">
-                    <div class="msg-header">
-                        <strong>${esc(m.name)}</strong>
-                        <span>${esc(m.email)}</span>
+        if (messages.length > 0) {
+            grid.innerHTML = messages.map(m => {
+                // Luăm prima literă din nume pentru pătratul gri
+                const initial = esc(m.name)[0].toUpperCase();
+
+                return `
+                <div class="admin-message-card expandable-card" onclick="this.classList.toggle('expanded')">
+                    <div class="msg-header-row">
+                        <div class="msg-avatar">${initial}</div>
+
+                        <div class="msg-info">
+                            <h3 class="msg-title">${esc(m.name)}</h3>
+                            <p class="msg-meta">${esc(m.email)} ${m.phone ? `&bull; ${esc(m.phone)}` : ''}</p>
+                            <span class="msg-date-badge">${fmtDate(m.created_at)} &bull; MESAJ CONTACT</span>
+                        </div>
+
+                        <div class="msg-expand-icon">↗</div>
                     </div>
+
                     <div class="msg-body">
-                        <p>${esc(m.message)}</p>
-                    </div>
-                    <div class="msg-footer">
-                        <span>${fmtDate(m.created_at)}</span>
+                        <p class="msg-text">${esc(m.message).replace(/\n/g, '<br>')}</p>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         } else {
-            grid.innerHTML = '<p>Nu există mesaje.</p>';
+            grid.innerHTML = '<p class="admin-empty">Nu există mesaje în baza de date.</p>';
         }
     } catch (err) {
-        grid.innerHTML = `<p>Eroare: ${err.message}</p>`;
+        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare: ${err.message}</p>`;
         console.error(err);
     }
 }

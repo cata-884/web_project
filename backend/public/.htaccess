@@ -1,9 +1,16 @@
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
 
-# Apache uneori strip-eaza headerul Authorization — il reintroduce explicit
-RewriteCond %{HTTP:Authorization} ^(.+)$
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+    # 1. Pastram header-ul de Auth
+    RewriteCond %{HTTP:Authorization} ^(.+)$
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [L]
+    # 2. Regula pentru Slug-ul de camping
+    RewriteRule ^pages/camping/([a-zA-Z0-9_-]+)$ pages/camping.html [L,QSA]
+
+    # 3. Trimitem TOATE celelalte cereri catre index.php (Routerul tau)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+</IfModule>

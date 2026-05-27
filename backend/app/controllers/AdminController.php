@@ -207,4 +207,34 @@ class AdminController extends Controller
 
     $this->json(['success' => true, 'messages' => $messages]);
 }
+
+/**
+     * GET /api/campings/slug/{slug}
+     * Returneaza datele publice ale unui camping folosind slug-ul pentru URL-uri SEO
+     */
+    public function showBySlug(string $slug): void
+    {
+        $pdo = DB::getConnection();
+
+        $stmt = $pdo->prepare("SELECT * FROM campings WHERE slug = :slug AND is_published = TRUE");
+        $stmt->execute(['slug' => $slug]);
+        $camping = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$camping) {
+            $this->json(['error' => 'Campingul nu a fost găsit sau nu este public.'], 404);
+            return;
+        }
+
+        $mediaStmt = $pdo->prepare("SELECT * FROM camping_media WHERE camping_id = :id ORDER BY sort_order ASC");
+        $mediaStmt->execute(['id' => $camping['id']]);
+        $camping['media'] = $mediaStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //  Returnam datele
+        $this->json([
+            'success' => true,
+            'data' => $camping
+        ]);
+    }
+
+
 }

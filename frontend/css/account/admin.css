@@ -820,3 +820,304 @@
 .btn-stats-pdf:hover {
     opacity: .85;
 }
+
+
+/* Stilizarea cardului de bază */
+.expandable-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+.expandable-card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-color: #cbd5e1;
+}
+
+/* Antetul cardului */
+.msg-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.msg-date {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.msg-contact {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #3b82f6; /* Albastru pentru contact */
+}
+
+/* Corpul mesajului - ASCUNS INIȚIAL */
+.expandable-card .msg-body {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.msg-body h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+.msg-text {
+    color: #334155;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Mic indiciu vizual jos */
+.msg-hint {
+    text-align: right;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.expandable-card.expanded .msg-body {
+    display: block;
+}
+
+.expandable-card.expanded .msg-hint {
+    display: none;
+}
+
+
+
+/* Cardul de bază */
+.expandable-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #047857; /* Marginea verde din stânga */
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.expandable-card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-color: #d1d5db;
+}
+
+/* Rândul principal (cel vizibil mereu) */
+.msg-header-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Pătratul gri din stânga */
+.msg-avatar {
+    width: 48px;
+    height: 48px;
+    background-color: #e5e7eb; /* Gri deschis exact ca in poza */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #6b7280;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Informațiile din mijloc */
+.msg-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.msg-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a; /* Albastru foarte închis / Negru */
+}
+
+.msg-meta {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #6b7280; /* Gri pentru subtitlu */
+}
+
+/* Textul verde de status */
+.msg-date-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #047857; /* Verdele textului "IN ASTEPTARE" */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Săgeata din dreapta */
+.msg-expand-icon {
+    font-size: 1.1rem;
+    color: #475569;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Corpul mesajului ascuns */
+.expandable-card .msg-body {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.msg-text {
+    margin: 0;
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* --- MAGIA LA CLICK (Extindere) --- */
+.expandable-card.expanded .msg-body {
+    display: block;
+}
+
+/* Când e extins, rotim săgeata în jos */
+.expandable-card.expanded .msg-expand-icon {
+    transform: rotate(135deg);
+}
+
+
+/* 1. Resetăm grid-ul global pentru a le afișa una sub alta */
+#admin-messages-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 2. Cardul principal blindat */
+#admin-messages-grid .expandable-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #047857; /* Marginea verde curată */
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0; /* Anulăm margini globale */
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+    text-align: left; /* Anulăm centrări globale */
+    display: block;
+}
+
+#admin-messages-grid .expandable-card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+    border-color: #d1d5db;
+}
+
+/* 3. Structura rândului */
+#admin-messages-grid .msg-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 100%;
+}
+
+/* 4. Pătratul gri de avatar */
+#admin-messages-grid .msg-avatar {
+    width: 48px;
+    height: 48px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #6b7280;
+    font-weight: bold;
+    flex-shrink: 0; /* Să nu se turtească */
+    margin: 0;
+}
+
+/* 5. Coloana de informații */
+#admin-messages-grid .msg-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#admin-messages-grid .msg-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+#admin-messages-grid .msg-meta {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.2;
+}
+
+#admin-messages-grid .msg-date-badge {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #047857;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 6. Săgeata din dreapta */
+#admin-messages-grid .msg-expand-icon {
+    font-size: 20px;
+    color: #475569;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/* 7. Corpul mesajului ascuns */
+#admin-messages-grid .msg-body {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+#admin-messages-grid .msg-text {
+    margin: 0;
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 8. Extinderea (Click) */
+#admin-messages-grid .expandable-card.expanded .msg-body {
+    display: block;
+}
+
+#admin-messages-grid .expandable-card.expanded .msg-expand-icon {
+    transform: rotate(135deg);
+}

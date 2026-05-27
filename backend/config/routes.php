@@ -24,6 +24,10 @@ $routes = [
     'get /api/auth/me'         => ['AuthController', 'me'],
     'patch /api/users/me'      => ['AuthController', 'updateMe'],
 
+
+    // Cauta dupa slug
+    'get /api/campings/slug/([a-zA-Z0-9_-]+)' => ['CampingsController', 'showBySlug'],
+
     // Campings API
     // /map TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
     'get /api/campings/map'         => ['CampingsController', 'mapMarkers'],

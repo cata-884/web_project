@@ -118,7 +118,7 @@ function renderCampings(data) {
                         <div class="card-rating">${ratingStr}</div>
                     </div>
                 </div>
-                <a href="camping.html?slug=${c.slug}" class="btn-details">Vezi Detalii</a>
+<a href="/cat/public/pages/camping/${c.slug}" class="btn-details">Vezi Detalii</a>
             `;
             grid.appendChild(card);
         });
