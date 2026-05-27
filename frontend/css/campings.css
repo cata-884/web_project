@@ -346,3 +346,81 @@
         width: 100%;
     }
 }
+
+
+
+
+.cat-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 8px; /* Loc pentru dungă */
+    background-color: #E3DDD1; /* Culoarea de fundal a cardului */
+}
+
+/* Dunga colorată la bază */
+.cat-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px; /* Înălțimea dungii */
+    z-index: 1;
+}
+
+/* 1. Aprobat = Verde solid */
+.cat-card.cs-approved::after { background-color: #2D4C36; }
+
+/* 2. Pending = Portocaliu transparent */
+.cat-card.cs-pending::after { background-color: rgba(245, 166, 35, 0.5); }
+
+/* 3. Respins/Feedback = Portocaliu solid */
+.cat-card.cs-rejected::after { background-color: #F5A623; }
+
+
+/* Containerul iconiței de status - Poziționat absolut în colț */
+.status-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2; /* Să stea deasupra imaginii */
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px;
+    border-radius: 50%;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Culorile iconițelor */
+.status-indicator.approved { color: #2D4C36; }
+.status-indicator.pending { color: #F5A623; }
+.status-indicator.rejected { color: #DC2626; }
+
+
+/* 1. Containerul părinte trebuie să aibă poziționare relativă */
+.cat-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    /* Padding-ul de jos ajută ca dunga să nu acopere conținutul */
+    padding-bottom: 8px;
+    /* ... restul stilurilor tale existente ... */
+}
+
+/* 2. Dunga de jos - forțată să apară */
+.cat-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px; /* Înălțime puțin mai mare să fie vizibilă */
+    display: block;
+    z-index: 99; /* Forțăm să stea deasupra oricărui conținut */
+}
+
+/* 3. Culorile specifice (Trebuie să coincidă cu clasele din JS-ul tău) */
+.cat-card.cs-approved::after { background-color: #2D4C36 !important; }
+.cat-card.cs-pending::after { background-color: rgba(245, 166, 35, 0.5) !important; }
+.cat-card.cs-rejected::after { background-color: #F5A623 !important; }

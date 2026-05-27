@@ -519,8 +519,12 @@
                 </div>
 
 
+
+
                 <div id="create-campsite-tab" class="tab-section" style="display: none;">
                     <div class="partner-form-wrapper">
+
+                        <input type="hidden" id="edit-campsite-id" value="">
 
                         <div class="campsite-step" id="c-step-1">
                             <div class="step-header">
@@ -818,16 +822,23 @@
 
                 <div id="campsite-details-view" style="display: none;" class="campsite-details-layout tab-section">
                     <div class="details-header">
-                        <button id="btn-back-to-grid" class="btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Înapoi la locații
-                        </button>
-                        <div class="details-actions">
-                            <span id="detail-status-badge" class="status-badge"></span>
-                            <button id="btn-toggle-publish" class="btn-outline">Ascunde</button>
-                            <button id="btn-edit-campsite" class="btn-primary">Editează</button>
-                            <button id="btn-delete-campsite" class="btn-danger">Șterge</button>
-                        </div>
-                    </div>
+    <button id="btn-back-to-grid" class="btn-back">
+        Back
+    </button>
+
+    <div class="details-actions">
+    <span id="detail-status-badge" class="status-badge"></span>
+
+    <div class="toggle-group">
+        <button id="btn-unpublish" class="toggle-btn active">Unpublish</button>
+        <button id="btn-publish" class="toggle-btn">Publish</button>
+    </div>
+
+    <button id="btn-delete-campsite" class="btn-danger-outline">Delete</button>
+    <button id="btn-edit-campsite" class="btn-outline">Edit</button>
+    <button id="btn-messages" class="btn-outline">Messages</button>
+</div>
+</div>
 
                     <div id="admin-feedback-alert" class="alert-danger" style="display: none;">
                         <strong>Motiv respingere:</strong> <span id="feedback-text"></span>
@@ -885,6 +896,24 @@
                         <div id="reviews-container" class="reviews-list"></div>
                     </div>
                 </div>
+
+                <div id="campsite-messages-view" class="tab-section" style="display: none;">
+    <div class="messages-header-centered">
+        <h1>Messages</h1>
+        <p class="messages-subtitle">
+            Aici poți vedea comunicările și feedback-ul primit de la administratorii CaT cu privire la această proprietate.
+        </p>
+    </div>
+
+    <div id="messages-container" class="messages-grid">
+        </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <button id="btn-back-from-messages" class="btn-outline">
+            <i class="fas fa-arrow-left"></i> Înapoi la locație
+        </button>
+    </div>
+</div>
 
                 <div id="admin-tab" class="tab-section">
                     <div class="admin-panel-nav">
@@ -997,69 +1026,74 @@
 
     <script>
         // 1. Definim funcția GLOBALA îmbinată
-        function loadMyCampsites() {
-            const container = document.getElementById('my-campsites-container');
-            if (!container) return;
+  function loadMyCampsites() {
+    const container = document.getElementById('my-campsites-container');
+    if (!container) return;
 
-            const token = localStorage.getItem('cat_token');
+    const token = localStorage.getItem('cat_token');
 
-            fetch('/cat/public/api/get_my_campsites.php', {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            .then(response => response.json())
-            .then(res => {
-                if (!res.success) {
-                    console.error("Eroare la preluarea campingurilor:", res.message);
-                    return;
-                }
-
-                const createCard = container.querySelector('.create-card');
-                container.innerHTML = '';
-                if (createCard) container.appendChild(createCard);
-
-                if (res.data.length === 0) return;
-
-                res.data.forEach(camping => {
-                    // Logica colegului pentru badge-uri status
-                    const st = { '-1': ['cs--1', 'Respins'], '0': ['cs-0', 'In Asteptare'], '1': ['cs-1', 'Aprobat'], '2': ['cs-2', 'Respins cu Feedback'] };
-                    const [badgeCls, badgeLabel] = st[String(camping.approval_status)] ?? ['cs-0', 'In Asteptare'];
-                    const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
-                    const canResubmit = camping.approval_status == -1 || camping.approval_status == 2;
-                    const feedbackMsg = (camping.approval_status == 2 && camping.admin_feedback) ? `<p class="camping-admin-feedback">${camping.admin_feedback}</p>` : '';
-
-                    // Buton resubmit adăugat cu event.stopPropagation() ca să nu declanșeze și deschiderea detaliilor
-                    const resubmitBtn = canResubmit ? `<button class="btn-resubmit" onclick="event.stopPropagation(); resubmitCamping(${camping.id})">Retrimite spre aprobare</button>` : '';
-
-                    // Logica noastră de text
-                    const descText = camping.description || 'Fără descriere disponibilă.';
-                    let locationText = 'România';
-                    if (camping.region && camping.address) locationText = `${camping.region}, ${camping.address}`;
-                    else if (camping.address) locationText = camping.address;
-                    else if (camping.region) locationText = camping.region;
-
-                    // Designul nostru de card combinat cu butoanele colegului
-                    const cardHTML = `
-                        <div class="cat-card" data-id="${camping.id}">
-                            <div class="cat-card-img-wrapper">
-                                <img src="${coverImg}" alt="${camping.name}" onerror="this.onerror=null; this.src='../../assets/images/camping-placeholder.jpg';">
-                            </div>
-                            <div class="cat-card-content">
-                                <h3 class="cat-card-title">${camping.name}</h3>
-                                <p class="cat-card-desc" title="${descText}">${descText}</p>
-                                <p class="cat-card-detail"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> ${locationText}</p>
-                                <p class="cat-card-detail"><strong>Tip:</strong> ${camping.type}</p>
-                                <span class="campsite-status-badge ${badgeCls}">${badgeLabel}</span>
-                                ${feedbackMsg}
-                                ${resubmitBtn}
-                            </div>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', cardHTML);
-                });
-            })
-            .catch(err => console.error("Eroare rețea Fetch:", err));
+    fetch('/cat/public/api/get_my_campsites.php', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(response => response.json())
+    .then(res => {
+        if (!res.success) {
+            console.error("Eroare API:", res.message);
+            return;
         }
+
+        const createCard = container.querySelector('.create-card');
+        container.innerHTML = '';
+        if (createCard) container.appendChild(createCard);
+
+        if (!res.data || res.data.length === 0) return;
+
+        res.data.forEach(camping => {
+            // 1. Variabile de siguranță
+            const name = camping.name || 'Camping fără nume';
+            const descText = camping.description || 'Fără descriere.';
+            const region = camping.region || 'România';
+            const address = camping.address || '';
+            const type = camping.type || 'Nespecificat';
+            const coverImg = camping.cover_url ? `/cat/public/${camping.cover_url}` : '../../assets/images/camping-placeholder.jpg';
+
+            // 2. Status pentru dungă
+            const st = { '-1': 'cs-rejected', '0': 'cs-pending', '1': 'cs-approved', '2': 'cs-rejected' };
+            const statusClass = st[String(camping.approval_status)] || 'cs-pending';
+
+            // 3. Butoane (doar dacă sunt necesare)
+            let feedbackMsg = '';
+            let resubmitBtn = '';
+
+            if (camping.approval_status == 2 && camping.admin_feedback) {
+                feedbackMsg = `<p class="camping-admin-feedback" style="color:red; font-size:12px;">${camping.admin_feedback}</p>`;
+            }
+            if (camping.approval_status == -1 || camping.approval_status == 2) {
+                resubmitBtn = `<button class="btn-resubmit" onclick="event.stopPropagation(); resubmitCamping(${camping.id})">Retrimite</button>`;
+            }
+
+            // 4. HTML
+            const cardHTML = `
+                <div class="cat-card ${statusClass}" data-id="${camping.id}">
+                    <div class="cat-card-img-wrapper">
+                        <img src="${coverImg}" alt="${name}" onerror="this.onerror=null; this.src='../../assets/images/camping-placeholder.jpg';">
+                    </div>
+                    <div class="cat-card-content">
+                        <h3 class="cat-card-title">${name}</h3>
+                        <p class="cat-card-desc">${descText}</p>
+                        <p class="cat-card-detail"><strong>Locație:</strong> ${region}, ${address}</p>
+                        <p class="cat-card-detail"><strong>Tip:</strong> ${type}</p>
+                        ${feedbackMsg}
+                        ${resubmitBtn}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    })
+    .catch(err => console.error("Eroare rețea Fetch:", err));
+}
 
         // 2. Apelăm la DOMContentLoaded
         document.addEventListener('DOMContentLoaded', () => {
@@ -1134,27 +1168,45 @@
                     }
                 }
 
-                const token = localStorage.getItem('cat_token');
+                // ... (codul unde strângi datele în formData rămâne la fel) ...
 
-                fetch('/cat/public/api/submit_campsite.php', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Success! Locația de camping a fost trimisă spre aprobare.");
-                        const form = document.getElementById('campsite-form');
-                        if (form) form.reset();
+// CITIM ANCORA
+const editCampsiteId = document.getElementById('edit-campsite-id').value;
 
-                        document.getElementById('create-campsite-tab').style.display = 'none';
-                        document.getElementById('dashboard-tab').style.display = 'block';
-                        loadMyCampsites();
-                    } else {
-                        alert("Eroare la salvare: " + data.message);
-                    }
-                })
+// Decidem ruta: dacă avem ID în ancoră, facem Update. Dacă nu, facem Submit.
+const apiUrl = editCampsiteId ? '/cat/public/api/update_campsite.php' : '/cat/public/api/submit_campsite.php';
+
+// Dacă facem editare, trebuie să trimitem și ID-ul către PHP
+if (editCampsiteId) {
+    formData.append('campsite_id', editCampsiteId);
+}
+
+const token = localStorage.getItem('cat_token');
+
+fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` },
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        alert(editCampsiteId ? "Locația a fost actualizată!" : "Success! Locația de camping a fost trimisă spre aprobare.");
+
+        const form = document.getElementById('campsite-form'); // Dacă folosești <form>
+        if (form) form.reset();
+
+        // Curățăm ancora pentru următoarea dată
+        document.getElementById('edit-campsite-id').value = '';
+
+        document.getElementById('create-campsite-tab').style.display = 'none';
+        document.getElementById('dashboard-tab').style.display = 'block';
+        loadMyCampsites();
+    } else {
+        alert("Eroare la salvare: " + data.message);
+    }
+})
+
                 .catch(error => {
                     console.error('Eroare Fetch:', error);
                     alert("A apărut o problemă de conexiune cu serverul.");
@@ -1175,8 +1227,139 @@
                     }
                 }
             }
+
+            // E. Butonul Edit din pagina de detalii
+if (e.target.id === 'btn-edit-campsite') {
+    if (!currentCampsiteData) return;
+
+    // 1. Schimbăm view-ul: ascundem detaliile, arătăm formularul
+    document.getElementById('campsite-details-view').style.display = 'none';
+    document.getElementById('create-campsite-tab').style.display = 'block';
+
+    // Resetăm pașii formularului la Pasul 1
+    resetCampsiteForm();
+
+    // 2. Setăm ANCORA cu ID-ul locației
+    document.getElementById('edit-campsite-id').value = currentCampsiteData.id;
+
+    // 3. Populăm input-urile cu datele existente
+    document.getElementById('c-name').value = currentCampsiteData.name || '';
+    document.getElementById('c-full-desc').value = currentCampsiteData.description || '';
+    document.getElementById('c-lat').value = currentCampsiteData.latitude || '';
+    document.getElementById('c-lng').value = currentCampsiteData.longitude || '';
+    document.getElementById('campsite-price').value = currentCampsiteData.price_per_night || '';
+    document.getElementById('campsite-capacity').value = currentCampsiteData.capacity || '';
+    document.getElementById('c-city').value = currentCampsiteData.region || '';
+
+    /* Atenție la o problemă de logică:
+       În PHP, tu ai salvat strada, numărul și codul poștal ca un singur string (ex: "Strada X nr. 10, Oras, Zip").
+       Din acest motiv, nu le putem separa perfect înapoi în cele 4 input-uri.
+       Recomandare pe viitor: salvează strada, numărul și codul poștal în coloane separate în baza de date!
+       Momentan, vom pune toată adresa în 'c-street' ca să nu se piardă.
+    */
+    document.getElementById('c-street').value = currentCampsiteData.address || '';
+    document.getElementById('c-number').value = '-';
+    document.getElementById('c-zip').value = '-';
+
+    // 4. Bifăm Checkbox-urile pentru Mediu și Facilități
+    document.querySelectorAll('input[name="environment"]').forEach(cb => {
+        cb.checked = currentCampsiteData.environments.includes(cb.value);
+    });
+
+    document.querySelectorAll('input[name="facility"]').forEach(cb => {
+        cb.checked = currentCampsiteData.facilities.includes(cb.value);
+    });
+}
+
+// Toggle Publish
+if (e.target.id === 'btn-publish') {
+    updatePublishStatus(true);
+}
+
+// Toggle Unpublish
+if (e.target.id === 'btn-unpublish') {
+    updatePublishStatus(false);
+}
+
+
+// F. Butonul "Messages" din pagina de detalii
+if (e.target.id === 'btn-messages') {
+    if (!currentCampsiteData) return;
+
+    // 1. Schimbăm view-ul
+    document.getElementById('campsite-details-view').style.display = 'none';
+    document.getElementById('campsite-messages-view').style.display = 'block';
+
+    // 2. Extragem mesajul din datele locației curente
+    const container = document.getElementById('messages-container');
+    const feedbackText = currentCampsiteData.admin_feedback;
+
+    // 3. Verificăm dacă avem text și nu e doar null sau gol
+    if (feedbackText && feedbackText.trim() !== '') {
+        // Afișăm cartonașul (momentan e unul singur în DB, dar designul permite mai multe)
+        container.innerHTML = `
+            <div class="message-card">
+                <span class="message-sender-info">Echipa de Aprobare CaT</span>
+                <p class="message-body">${feedbackText}</p>
+            </div>
+        `;
+    } else {
+        // Nu există mesaje
+        container.innerHTML = `
+            <p class="no-messages-text">Nu ai niciun mesaj nou pentru această locație.</p>
+        `;
+    }
+}
+
+// G. Butonul de întoarcere de la mesaje la detalii
+if (e.target.id === 'btn-back-from-messages' || e.target.closest('#btn-back-from-messages')) {
+    document.getElementById('campsite-messages-view').style.display = 'none';
+    document.getElementById('campsite-details-view').style.display = 'block';
+}
+
+// H. Butonul Delete din pagina de detalii
+if (e.target.id === 'btn-delete-campsite') {
+    if (!currentCampsiteData) return;
+
+    // Confirmare clasică de la browser
+    const isSure = confirm("Ești absolut sigur că vrei să ștergi locația '" + currentCampsiteData.name + "'? Acțiunea este ireversibilă și va șterge toate pozele și datele asociate.");
+
+    if (isSure) {
+        const token = localStorage.getItem('cat_token');
+
+        fetch('/cat/public/api/delete_campsite.php', {
+            method: 'POST', // Chiar dacă logic e un DELETE, POST cu JSON e mai stabil în PHP standard
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                campsite_id: currentCampsiteData.id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Locația a fost ștearsă.");
+
+                // Ne întoarcem la dashboard și reîncărcăm grila de carduri
+                document.getElementById('campsite-details-view').style.display = 'none';
+                document.getElementById('dashboard-tab').style.display = 'block';
+                currentCampsiteData = null; // Curățăm variabila
+                loadMyCampsites(); // Reîncărcăm lista de locații actualizată
+            } else {
+                alert("Eroare la ștergere: " + data.message);
+            }
+        })
+        .catch(err => {
+            console.error("Eroare Fetch:", err);
+            alert("A apărut o problemă de conexiune la ștergere.");
+        });
+    }
+}
         });
 
+        let currentCampsiteData = null;
         // 4. Funcția noastră de deschidere a detaliilor
         function openCampsiteDetails(id) {
             const token = localStorage.getItem('cat_token');
@@ -1193,6 +1376,19 @@
                 }
 
                 const data = res.data;
+                currentCampsiteData = data;
+
+                const btnPublish = document.getElementById('btn-publish');
+const btnUnpublish = document.getElementById('btn-unpublish');
+
+// Setăm corect clasa 'active' în funcție de DB
+if (data.is_published === true || data.is_published === 'true' || data.is_published === 1) {
+    btnPublish.classList.add('active');
+    btnUnpublish.classList.remove('active');
+} else {
+    btnUnpublish.classList.add('active');
+    btnPublish.classList.remove('active');
+}
 
                 document.getElementById('dashboard-tab').style.display = 'none';
                 document.getElementById('campsite-details-view').style.display = 'block';
@@ -1248,6 +1444,51 @@
             .catch(err => console.error("Eroare la preluare detalii locație:", err));
         }
 
+
+        function updatePublishStatus(publishTarget) {
+    if (!currentCampsiteData) return;
+
+    const token = localStorage.getItem('cat_token');
+
+    fetch('/cat/public/api/toggle_publish.php', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            campsite_id: currentCampsiteData.id,
+            is_published: publishTarget
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // Dacă a mers, mutăm vizual clasa 'active' pe butonul corect
+            const btnPublish = document.getElementById('btn-publish');
+            const btnUnpublish = document.getElementById('btn-unpublish');
+
+            if (data.is_published) {
+                btnPublish.classList.add('active');
+                btnUnpublish.classList.remove('active');
+            } else {
+                btnUnpublish.classList.add('active');
+                btnPublish.classList.remove('active');
+            }
+
+            // Salvăm și în variabila globală ca să nu fie nevoie de refresh
+            currentCampsiteData.is_published = data.is_published;
+        } else {
+            alert("Eroare la modificare: " + data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Eroare Fetch:", err);
+        alert("A apărut o problemă de conexiune cu serverul.");
+    });
+}
+
+
         // Buton back details
         document.getElementById('btn-back-to-grid').addEventListener('click', function() {
             document.getElementById('campsite-details-view').style.display = 'none';
@@ -1256,10 +1497,14 @@
 
         // 5. Funcții Ajutătoare Formular & Coleg
         function openCreateCampsiteForm() {
-            document.getElementById('dashboard-tab').style.display = 'none';
-            document.getElementById('create-campsite-tab').style.display = 'block';
-            resetCampsiteForm();
-        }
+    document.getElementById('dashboard-tab').style.display = 'none';
+    document.getElementById('create-campsite-tab').style.display = 'block';
+
+    // GOLIM ANCORA și formularul
+    document.getElementById('edit-campsite-id').value = '';
+
+    resetCampsiteForm();
+}
 
         function resetCampsiteForm() {
             document.querySelectorAll('.campsite-step').forEach(s => s.style.display = 'none');

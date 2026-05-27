@@ -400,7 +400,7 @@
     transition: all 0.3s ease;
     cursor: pointer;
     overflow: hidden;
-    height: 320px;
+    height: 400px;
     display: flex;
     flex-direction: column;
 }
@@ -614,7 +614,7 @@
 
 
 /* --- Noua clasă pentru Descriere --- */
-.cat-card-desc {
+-desc {
     font-size: 13px;          /* Un pic mai mic decât detaliile principale */
     color: #5A4C40;           /* Gri-maroniu, să nu fure ochii de la titlu */
     margin: 0 0 10px 0;       /* Spațiu jos ca să respire */
@@ -629,44 +629,8 @@
 }
 
 
-.cat-card {
-    background-color: #E3DDD1;
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, opacity 0.3s ease;
-    cursor: pointer;
 
-    /* Mărim un pic înălțimea totală ca să respire textul nou */
-    height: 380px;
-}
 
-/* --- Partea vizuală (Imaginea) --- */
-.cat-card-img-wrapper {
-    /* AM MODIFICAT AICI: dăm o înălțime fixă pozei, ca să nu se mai modifice niciodată */
-    flex: 0 0 200px;
-    width: 100%;
-    position: relative;
-    overflow: hidden; /* Orice depășește se taie */
-}
-
-.cat-card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* --- Partea de text (Informațiile) --- */
-.cat-card-content {
-    padding: 12px 16px;
-    /* AM MODIFICAT AICI: îi spunem să ocupe automat restul de spațiu rămas */
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Siguranță ca textul să nu curgă din card */
-}
 
 /* --- LAYOUT DETALII --- */
 .campsite-details-layout {
@@ -674,7 +638,7 @@
     animation: fadeIn 0.3s ease-in-out;
 }
 
-.details-header {
+.detai.cat-cardls-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -829,4 +793,279 @@
     .hero-image-wrapper {
         height: 250px;
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.status-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2; /* Să stea deasupra imaginii */
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px;
+    border-radius: 50%;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Culorile iconițelor */
+.status-indicator.approved { color: #2D4C36; }
+.status-indicator.pending { color: #F5A623; }
+.status-indicator.rejected { color: #DC2626; }
+
+
+
+
+/* Containerul principal */
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    font-family: Arial, sans-serif; /* Poți ajusta cu fontul proiectului tău */
+}
+
+/* Butonul Back */
+.btn-back {
+    background: transparent;
+    border: none;
+    color: #888888; /* Gri */
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Containerul pentru butoanele din dreapta */
+.details-actions {
+    display: flex;
+    gap: 12px; /* Spațierea dintre butoane */
+    align-items: center;
+}
+
+/* --- Stiluri pentru comutatorul Unpublish/Publish --- */
+.toggle-group {
+    display: flex;
+    border: 1px solid #000; /* Chenar negru exterior */
+    border-radius: 25px; /* Formă de pilulă */
+    background-color: #f4f4f4; /* Fundalul gri deschis pentru starea inactivă */
+    overflow: hidden; /* Taie colțurile pentru fundalul verde */
+}
+
+.toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 16px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+/* Starea activă (Verde) */
+.toggle-btn.active {
+    background-color: #6da300; /* Verdele din imagine */
+    color: #ffffff;
+}
+
+/* --- Stiluri pentru restul butoanelor --- */
+.btn-danger-outline,
+.btn-outline {
+    background: transparent;
+    padding: 6px 18px;
+    border-radius: 25px; /* Formă de pilulă */
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Butonul Delete */
+.btn-danger-outline {
+    border: 1px solid red;
+    color: red;
+}
+
+/* Butoanele Edit și Messages */
+.btn-outline {
+    border: 1px solid #000;
+    color: #000;
+}
+
+.cat-card-img-wrapper {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.cat-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 1. Părintele: Cardul propriu-zis */
+.cat-card {
+    display: flex;
+    flex-direction: column; /* Pune imaginea sus și textul jos */
+    background-color: #ffffff;
+    border-radius: 12px; /* Colțuri rotunjite per total */
+    overflow: hidden; /* Asigură-te că imaginea nu iese din colțurile rotunjite */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* O umbră fină pentru adâncime */
+    height: 100%; /* Îl face să se întindă uniform în grid */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.cat-card:hover {
+    transform: translateY(-4px); /* Efect de ridicare la hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Wrapper-ul imaginii (ce am discutat anterior) */
+.cat-card-img-wrapper {
+    width: 100%;
+    height: 200px; /* Fixăm înălțimea imaginii */
+    flex-shrink: 0; /* Îi spunem browserului să NU strivească imaginea dacă textul e prea lung */
+}
+
+.cat-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 3. Containerul de conținut (Ce îți lipsea ție) */
+.cat-card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px; /* Dăm aer textului ca să nu stea lipit de margini */
+    flex-grow: 1; /* MAGIC: Forțează acest div să ocupe tot restul spațiului din card, împingând mereu butoanele/tagurile în jos */
+    gap: 8px; /* Spațiu uniform între titlu, descriere și detalii */
+}
+
+/* 4. Aranjăm puțin textul */
+.cat-card-title {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.cat-card-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Taie descrierea la 2 rânduri dacă e prea lungă, adăugând ... */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cat-card-detail {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* --- Status Carduri --- */
+
+/* 1 (Aceptat) -> Verde închis */
+.cat-card.cs-approved {
+    border-bottom: 5px solid #1b5e20;
+}
+
+/* 0 (În așteptare) -> Portocaliu cu opacitate (50%) */
+.cat-card.cs-pending {
+    /* Folosim rgba (Red, Green, Blue, Alpha) unde ultimul număr e opacitatea (0.5 = 50%) */
+    border-bottom: 5px solid rgba(255, 152, 0, 0.4);
+}
+
+/* -1 sau 2 (Refuzat) -> Portocaliu solid (fără opacitate) */
+.cat-card.cs-rejected {
+    border-bottom: 5px solid #ff9800;
+}
+
+
+/* --- Pagina de Mesaje --- */
+
+/* Header centrat */
+.messages-header-centered {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 50px auto; /* Centrat pe orizontală, spațiu mare jos */
+}
+
+.messages-header-centered h1 {
+    font-size: 2.8rem; /* Font mare, impunător */
+    color: #1a1a1a; /* Negru intens, dar nu complet #000 */
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.messages-subtitle {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Grila pentru mesaje */
+.messages-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrează cartonașele */
+    gap: 20px;
+}
+
+/* Design-ul unui cartonaș de mesaj */
+.message-card {
+    background-color: #ffffff;
+    border-left: 5px solid #ff9800; /* Dungă portocalie pt atenționare */
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 700px; /* Să nu se întindă pe tot ecranul */
+    text-align: left;
+}
+
+.message-sender-info {
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+}
+
+.message-body {
+    font-size: 1.05rem;
+    color: #333;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Starea când nu există mesaje (Empty State) */
+.no-messages-text {
+    font-size: 1.1rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 30px 40px;
+    border-radius: 10px;
+    border: 1px dashed #ccc;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
 }
