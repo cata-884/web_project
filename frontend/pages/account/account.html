@@ -918,10 +918,11 @@
 
                 <div id="admin-tab" class="tab-section">
                     <div class="admin-panel-nav">
-                        <button class="admin-panel-tab active" data-panel="campings">Cereri Camping</button>
-                        <button class="admin-panel-tab" data-panel="users">Utilizatori</button>
-                        <button class="admin-panel-tab" data-panel="stats">Statistici</button>
-                    </div>
+    <button class="admin-panel-tab active" data-panel="campings">Cereri Camping</button>
+    <button class="admin-panel-tab" data-panel="users">Utilizatori</button>
+    <button class="admin-panel-tab" data-panel="stats">Statistici</button>
+    <button class="admin-panel-tab" data-panel="messages">Mesaje Contact</button>
+</div>
 
                     <div id="admin-panel-campings" class="admin-panel">
                         <div class="admin-toolbar">
@@ -984,6 +985,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="admin-panel-messages" class="admin-panel" style="display:none;">
+    <div class="admin-toolbar">
+        <h2>Mesaje primite de la utilizatori</h2>
+    </div>
+    <div id="admin-messages-grid" class="admin-cards-grid">
+        <p class="admin-loading">Se încarcă mesajele...</p>
+    </div>
+</div>
+
                 </div><div id="admin-feedback-modal" class="admin-modal-overlay" style="display:none;">
                     <div class="admin-modal-box">
                         <h3>Respinge cu Feedback</h3>

@@ -4,6 +4,9 @@ $uri    = str_replace(BASE_URL, '', $uri);
 $uri    = '/' . trim($uri, '/');
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 
+
+
+
 // CORS — permite frontend-ul sa faca fetch() din alta origine la dev
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -70,7 +73,7 @@ $routes = [
 
     // Contact API
     'post /api/contact'           => ['ContactController', 'store'],
-    'get /api/admin/messages'     => ['ContactController', 'index'],
+  /*  'get /api/admin/messages'     => ['ContactController', 'index'],*/
 
     // Admin API (gestionare useri + ban-uri)
     'get /api/admin/users'                           => ['AdminController', 'listUsers'],
@@ -92,6 +95,7 @@ $routes = [
     'get /api/admin/stats/chart.svg' => ['StatsController', 'chartSvg'],
     'get /api/admin/stats/report.pdf'=> ['StatsController', 'reportPdf'],
 
+'get /api/admin/messages' => ['AdminController', 'listMessages'],
     // OAuth Google
     'get /api/auth/oauth/google'                     => ['AuthController', 'oauthGoogleStart'],
     'get /api/auth/oauth/google/callback'            => ['AuthController', 'oauthGoogleCallback'],

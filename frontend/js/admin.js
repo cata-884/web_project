@@ -28,7 +28,9 @@ async function loadAdminCampings(status = '') {
 
     try {
         const qs = status !== '' ? `?status=${encodeURIComponent(status)}` : '';
-        const res = await api.get(`/api/admin/campings${qs}`);
+// În admin.js, în funcția loadAdminMessages:
+// În admin.js
+const res = await api.get('/api/admin/messages');
         const campings = res?.campings ?? [];
 
         if (!campings.length) {
@@ -271,6 +273,44 @@ async function loadAdminStats() {
     loadAdminChart();
 }
 
+
+async function loadAdminMessages() {
+    const grid = document.getElementById('admin-messages-grid');
+    if (!grid) {
+        console.error("Eroare: Elementul #admin-messages-grid nu a fost găsit în pagină!");
+        return;
+    }
+    grid.innerHTML = '<p>Se încarcă...</p>';
+
+    try {
+        // Punem calea directă către fișierul tău PHP
+        const response = await fetch('/cat/public/api/admin/get_messages.php');
+        const data = await response.json();
+
+        if (data.success && data.messages.length > 0) {
+            grid.innerHTML = data.messages.map(m => `
+                <div class="admin-message-card">
+                    <div class="msg-header">
+                        <strong>${esc(m.name)}</strong>
+                        <span>${esc(m.email)}</span>
+                    </div>
+                    <div class="msg-body">
+                        <p>${esc(m.message)}</p>
+                    </div>
+                    <div class="msg-footer">
+                        <span>${fmtDate(m.created_at)}</span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            grid.innerHTML = '<p>Nu există mesaje.</p>';
+        }
+    } catch (err) {
+        grid.innerHTML = `<p>Eroare: ${err.message}</p>`;
+        console.error(err);
+    }
+}
+
 async function loadAdminChart() {
     const container = document.getElementById('admin-chart-container');
     if (!container) return;
@@ -333,16 +373,25 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAdminCampings('');
     });
 
-    // Sub-nav (Cereri Camping / Utilizatori / Statistici)
+ // Sub-nav (Cereri Camping / Utilizatori / Statistici / Mesaje)
     document.querySelectorAll('.admin-panel-tab').forEach(btn => {
         btn.addEventListener('click', () => {
+            // 1. Resetăm active pe butoane
             document.querySelectorAll('.admin-panel-tab').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+
+            // 2. Ascundem toate panelurile
             document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+
+            // 3. Afișăm panelul corect
             const panel = document.getElementById('admin-panel-' + btn.dataset.panel);
             if (panel) panel.style.display = 'block';
-            if (btn.dataset.panel === 'users') loadAdminUsers(true);
-            if (btn.dataset.panel === 'stats') loadAdminStats();
+
+            // 4. Apelăm funcția de încărcare corespunzătoare (O SINGURĂ DATĂ!)
+            const target = btn.dataset.panel;
+            if (target === 'users') loadAdminUsers(true);
+            if (target === 'stats') loadAdminStats();
+            if (target === 'messages') loadAdminMessages();
         });
     });
 

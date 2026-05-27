@@ -196,4 +196,15 @@ class AdminController extends Controller
             'bans'    => $bans,
         ]);
     }
+
+
+ public function listMessages(): void
+{
+    $this->requireAdmin();
+    $pdo = DB::getConnection();
+    $stmt = $pdo->query("SELECT * FROM contact_requests ORDER BY created_at DESC");
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $this->json(['success' => true, 'messages' => $messages]);
+}
 }

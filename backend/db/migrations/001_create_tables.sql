@@ -16,10 +16,21 @@ DROP TYPE IF EXISTS user_role CASCADE;
 DROP TYPE IF EXISTS camping_type CASCADE;
 DROP TYPE IF EXISTS booking_status CASCADE;
 DROP TYPE IF EXISTS media_type CASCADE;
+DROP TABLE IF EXISTS contact_requests CASCADE;
+
+-- CONTACT MESSAGES
+CREATE TABLE contact_requests (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    phone VARCHAR(50),
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
 
 CREATE TYPE user_role AS ENUM (
     'user',
-    'organizer',	
+    'organizer',
     'admin'
 );
 
@@ -206,17 +217,17 @@ CREATE TABLE contact_messages (
 -- SECTIUNI PERSONALE
 CREATE TABLE
 
-IF NOT EXISTS user_sections(id SERIAL PRIMARY KEY, user_id INT NOT NULL 
-		REFERENCES users(id) ON DELETE CASCADE, name VARCHAR(100) NOT 
-		NULL, color VARCHAR(7) DEFAULT '#4A90D9', 
+IF NOT EXISTS user_sections(id SERIAL PRIMARY KEY, user_id INT NOT NULL
+		REFERENCES users(id) ON DELETE CASCADE, name VARCHAR(100) NOT
+		NULL, color VARCHAR(7) DEFAULT '#4A90D9',
 		-- hex color pentru UI
 		created_at TIMESTAMP NOT NULL DEFAULT NOW());
 	-- CAMPING-URI ASOCIATE SECTIUNILOR (many-to-many)
 	CREATE TABLE
 
-IF NOT EXISTS section_campings(section_id INT NOT NULL REFERENCES 
-		user_sections(id) ON DELETE CASCADE, camping_id INT NOT NULL 
-		REFERENCES campings(id) ON DELETE CASCADE, added_at TIMESTAMP 
+IF NOT EXISTS section_campings(section_id INT NOT NULL REFERENCES
+		user_sections(id) ON DELETE CASCADE, camping_id INT NOT NULL
+		REFERENCES campings(id) ON DELETE CASCADE, added_at TIMESTAMP
 		NOT NULL DEFAULT NOW(), PRIMARY KEY (
 			section_id
 			,camping_id
