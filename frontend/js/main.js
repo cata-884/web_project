@@ -296,16 +296,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // USER PILL + PROFILE FORM (real API)
-    function populateUserPill(user) {
-        const nameEl   = document.getElementById('user-pill-name');
-        const emailEl  = document.getElementById('user-pill-email');
-        const avatarEl = document.getElementById('user-pill-avatar');
-        if (nameEl)   nameEl.textContent = user.full_name || user.username || '—';
-        if (emailEl)  emailEl.textContent = user.email || '';
-        if (avatarEl && user.avatar_url) avatarEl.src = user.avatar_url;
-    }
 
+   function populateUserPill(user) {
+    const nameEl   = document.getElementById('user-pill-name');
+    const emailEl  = document.getElementById('user-pill-email');
+    const avatarEl = document.getElementById('user-pill-avatar');
+
+    if (nameEl)   nameEl.textContent = user.full_name || user.username || '—';
+    if (emailEl)  emailEl.textContent = user.email || '';
+
+    if (avatarEl && user.avatar_url) {
+        // Verificăm dacă are deja prefixul ca să nu îl punem de două ori din greșeală
+        if (user.avatar_url.startsWith('/cat/public/')) {
+            avatarEl.src = user.avatar_url;
+        } else {
+            // Dacă îi lipsește (cum se întâmplă acum), îl lipim noi aici
+            avatarEl.src = '/cat/public/' + user.avatar_url;
+        }
+    }
+}
     function populateProfileForm(user) {
         const usernameInput = document.getElementById('profile-username');
         const fullnameInput = document.getElementById('profile-fullname');

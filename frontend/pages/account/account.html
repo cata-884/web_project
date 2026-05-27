@@ -77,7 +77,7 @@
                 <div class="header-logo">CaT</div>
 
                 <div class="user-pill">
-                    <img id="user-pill-avatar" src="../../assets/profil.jpg" alt="Avatar">
+                    <img id="user-pill-avatar" src="/cat/public/uploads/avatars/user_10_1779900557.jpg" alt="Avatar">
                     <div class="user-info">
                         <span class="user-name" id="user-pill-name">...</span>
                         <span class="user-email" id="user-pill-email">...</span>
@@ -97,9 +97,10 @@
                             <input type="file" id="cover-upload" accept="image/*" style="display: none;">
 
                             <div class="avatar-container">
-                                <img src="../../assets/profil.jpg" alt="Avatar" class="profile-photo-circle"
-                                    onclick="document.getElementById('avatar-upload').click()"
-                                    title="Apasa pentru a schimba poza de profil">
+                                <img src="/cat/public/uploads/avatars/user_10_1779900557.jpg" alt="Avatar" class="profile-photo-circle"
+     id="profile-avatar-img"
+     onclick="document.getElementById('avatar-upload').click()"
+     title="Apasa pentru a schimba poza de profil">
                                 <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                             </div>
 
@@ -1105,7 +1106,131 @@
 
             initMapLogic();
             loadMyCampsites();
+
+
+const avatarInput = document.getElementById('avatar-upload');
+const avatarImg = document.getElementById('profile-avatar-img');
+
+if (avatarInput && avatarImg) {
+    avatarInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+
+            // 1. PREVIZUALIZARE INSTANTANEE
+            // Schimbăm imediat ambele poze pe ecran (mare și mică) până se încarcă pe server
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                avatarImg.src = e.target.result;
+                const pillAvatar = document.getElementById('user-pill-avatar');
+                if (pillAvatar) pillAvatar.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+
+            // 2. TRIMITEM PE SERVER
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            const token = localStorage.getItem('cat_token');
+
+            fetch('/cat/public/api/upload_avatar.php', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+
+                    // TRUCUL ANTI-CACHE: Adăugăm milisecundele curente la finalul linkului (?t=1234567)
+                    // Astfel, browserul este forțat să reîncarce poza proaspătă de pe server!
+                    const timestamp = new Date().getTime();
+                    const caleaPozeiNoi = '/cat/public/' + data.avatar_url + '?t=' + timestamp;
+
+                    // Actualizăm linkurile finale sigure de pe server
+                    avatarImg.src = caleaPozeiNoi;
+
+                    const pillAvatar = document.getElementById('user-pill-avatar');
+                    if (pillAvatar) {
+                        pillAvatar.src = caleaPozeiNoi;
+                    }
+
+                    // Salvăm în memoria browserului (salvăm linkul curat, fără timestamp)
+                    try {
+                        let userData = JSON.parse(localStorage.getItem('cat_user') || '{}');
+                        userData.avatar_url = data.avatar_url;
+                        localStorage.setItem('cat_user', JSON.stringify(userData));
+                    } catch (e) {
+                        console.warn("Eroare localStorage:", e);
+                    }
+
+                } else {
+                    alert("Eroare la încărcare: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Eroare upload avatar:", err);
+                alert("Eroare de rețea. Încearcă din nou.");
+            });
+        }
+    });
+}
+initProfile();
         });
+
+
+     function initProfile() {
+    const token = localStorage.getItem('cat_token');
+    if (!token) return; // Daca nu e logat, nu avem ce incarca
+
+    fetch('/cat/public/api/get_profile.php', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            const user = res.data;
+
+            // Cream link-ul O SINGURA DATA ca sa fim siguri ca e identic
+          // Construim calea corectă prin puntea de la Docker
+const caleaPozei = user.avatar_url ? '/cat/public/' + user.avatar_url : '../../assets/profil.jpg';
+
+// 1. Schimbăm poza MARE din profil
+if (document.getElementById('profile-avatar-img')) {
+    document.getElementById('profile-avatar-img').src = caleaPozei;
+}
+
+// 2. Schimbăm poza MICĂ din colțul dreapta-sus (cea din div-ul trimis de tine)
+if (document.getElementById('user-pill-avatar')) {
+    document.getElementById('user-pill-avatar').src = caleaPozei;
+}
+
+            // 3. Completam numele si emailul in dreapta sus
+            if (document.getElementById('user-pill-name')) {
+                document.getElementById('user-pill-name').textContent = user.full_name || user.username || 'Utilizator';
+            }
+            if (document.getElementById('user-pill-email')) {
+                document.getElementById('user-pill-email').textContent = user.email || '';
+            }
+
+            // 4. Completam campurile din formular
+            if (document.getElementById('profile-username')) {
+                document.getElementById('profile-username').value = user.username || '';
+            }
+            if (document.getElementById('profile-fullname')) {
+                document.getElementById('profile-fullname').value = user.full_name || '';
+            }
+            if (document.getElementById('profile-email')) {
+                document.getElementById('profile-email').value = user.email || '';
+            }
+        } else {
+            console.error("Eroare la incarcarea profilului:", res.message);
+        }
+    })
+    .catch(err => console.error("Eroare retea profil:", err));
+}
 
         // 3. Manager Global Click-uri
         document.addEventListener('click', function (e) {
