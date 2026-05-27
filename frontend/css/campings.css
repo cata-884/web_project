@@ -5,7 +5,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    z-index: 100;
+    z-index: 1100;
     padding: 16px 32px;
     background-color: var(--color-primary);
 }
@@ -85,7 +85,7 @@
     background-color: transparent;
     border: none;
     padding: 0;
-    z-index: 100;
+    z-index: 1100;
 }
 
 .hamburger-menu .bar {
@@ -110,6 +110,19 @@
 
     .hamburger-menu {
         display: flex;
+    }
+
+    .main-nav.nav-open {
+        flex-wrap: wrap;
+        border-radius: 16px;
+    }
+
+    .main-nav.nav-open .nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        padding: 0.5rem 0;
     }
 }
 

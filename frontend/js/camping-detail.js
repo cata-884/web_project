@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeLightbox();
     });
+
+    const hamburger = document.querySelector('.hamburger-menu');
+    const mainNav = document.querySelector('.main-nav');
+    if (hamburger && mainNav) {
+        hamburger.addEventListener('click', () => mainNav.classList.toggle('nav-open'));
+    }
 });
 
 const TYPE_LABELS = {
@@ -42,6 +48,15 @@ const TYPE_LABELS = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    if (localStorage.getItem('cat_token')) {
+        const authLink = document.querySelector('.nav-group a[href="auth.html"]');
+        const hartaLink = document.querySelector('.nav-group a[href="map.html"]');
+        const rightNavGroup = document.querySelector('.nav-group:last-of-type');
+
+        if (authLink) authLink.remove();
+        if (hartaLink && rightNavGroup) rightNavGroup.prepend(hartaLink);
+    }
+
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
     const id = params.get('id');
