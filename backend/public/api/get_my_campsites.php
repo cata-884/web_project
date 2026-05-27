@@ -39,8 +39,9 @@ $stmtUser = $pdo->prepare("SELECT user_id FROM sesiuni WHERE token = ? LIMIT 1")
     // ----------------------------------------
 
     // Interogare SQL: Luăm campingurile utilizatorului curent și doar poza de copertă
+  // Interogare SQL: Luăm campingurile utilizatorului curent, descrierea și poza de copertă
     $stmt = $pdo->prepare("
-        SELECT c.id, c.name, c.address, c.region, c.type, c.approval_status, m.url as cover_url
+        SELECT c.id, c.name, c.description, c.address, c.region, c.type, c.approval_status, m.url as cover_url
         FROM campings c
         LEFT JOIN camping_media m ON c.id = m.camping_id AND m.sort_order = 1
         WHERE c.created_by = :user_id

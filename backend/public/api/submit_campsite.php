@@ -52,12 +52,11 @@ try {
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $_POST['name'])));
     $slug .= '-' . time();
 
-    // 3. Inserăm în tabelul principal "campings"
-   // 3. Inserăm în tabelul principal "campings"
+ // 3. Inserăm în tabelul principal "campings"
     $stmt = $pdo->prepare("
         INSERT INTO campings
-        (created_by, name, slug, description, type, address, region, latitude, longitude, approval_status, is_published, created_at)
-        VALUES (?, ?, ?, ?, 'tent', ?, ?, ?, ?, 0, false, NOW())
+        (created_by, name, slug, description, type, address, region, latitude, longitude, capacity, price_per_night, approval_status, is_published, created_at)
+        VALUES (?, ?, ?, ?, 'tent', ?, ?, ?, ?, ?, ?, 0, false, NOW())
         RETURNING id
     ");
 
@@ -69,7 +68,11 @@ try {
         $address,
         $region,
         $_POST['lat'],
-        $_POST['lng']
+        $_POST['lng'],
+
+        // Noile câmpuri: dacă lipsesc din formular, trimitem null în DB
+        !empty($_POST['capacity']) ? (int)$_POST['capacity'] : null,
+        !empty($_POST['price_per_night']) ? (float)$_POST['price_per_night'] : null
     ]);
 
     // Luăm ID-ul campingului abia creat
