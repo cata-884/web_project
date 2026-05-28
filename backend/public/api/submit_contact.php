@@ -37,10 +37,10 @@ try {
         exit;
     }
 
-    // AICI ESTE REPARAȚIA: Combinăm Numele și Prenumele într-o singură variabilă
+    // AICI ESTE REPARATIA: Combinam Numele si Prenumele intr-o singura variabila
     $fullName = $lastName . ' ' . $firstName;
 
-    // Inserare în baza de date folosind $fullName
+    // Inserare in baza de date folosind $fullName
     $stmt = $pdo->prepare("INSERT INTO contact_requests (name, email, phone, message) VALUES (?, ?, ?, ?)");
     $stmt->execute([$fullName, $email, $phone, $message]);
 

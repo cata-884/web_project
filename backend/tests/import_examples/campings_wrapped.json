@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "name": "Camping Vama Veche",
+      "type": "tent",
+      "description": "Camping pe malul marii, atmosfera relaxata, langa granita cu Bulgaria",
+      "address": "Vama Veche, jud. Constanta",
+      "region": "Constanta",
+      "latitude": 43.7500,
+      "longitude": 28.5667,
+      "price_per_night": 45.00,
+      "capacity": 100
+    },
+    {
+      "name": "Camping Praid",
+      "type": "tent",
+      "description": "Camping la poalele Muntilor Gurghiu, aproape de mina de sare",
+      "address": "Praid, jud. Harghita",
+      "region": "Harghita",
+      "latitude": 46.5667,
+      "longitude": 25.1333,
+      "price_per_night": 30.00,
+      "capacity": 40
+    },
+    {
+      "name": "Cabane Apuseni",
+      "type": "cabin",
+      "description": "Complex de cabane in Muntii Apuseni, zona Arieseni",
+      "address": "Arieseni, jud. Alba",
+      "region": "Alba",
+      "latitude": 46.5050,
+      "longitude": 22.7310,
+      "price_per_night": 90.00,
+      "capacity": 35
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-/* --- CaT Partner Multi-Step Form --- */
+/* cat partner multi-step form */
 .partner-form-wrapper {
     max-width: 550px;
     margin: 0 auto;
@@ -142,7 +142,7 @@
     /* Trage linia in sus sa se alinieze cu centrul bulinei */
 }
 
-/* --- Stilizare Input-uri si Formulare (CaT Partner) --- */
+/* stilizare input-uri si formulare (cat partner) */
 .form-row.split {
     display: flex;
     gap: 16px;
@@ -186,7 +186,7 @@
     }
 }
 
-/* --- Form 2: Specific Styles --- */
+/* form 2: specific styles */
 .step-header h3 {
     font-size: 18px;
     margin-bottom: 8px;
@@ -225,7 +225,7 @@
 
 .dropdown-content {
     display: none;
-    /* Îl ascundem inițial */
+    /* Il ascundem initial */
     flex-direction: column;
     background-color: #fff;
 }
@@ -245,7 +245,7 @@
     color: #222;
 }
 
-/* Transformăm Radio Buttons în pătrățele de bifat (pentru a respecta UI-ul) */
+/* Transformam Radio Buttons in patratele de bifat (pentru a respecta UI-ul) */
 .checkbox-row input[type="radio"] {
     width: 16px;
     height: 16px;
@@ -274,7 +274,7 @@
     color: #222;
 }
 
-/* --- Form 3: Agreements Section --- */
+/* form 3: agreements section */
 .agreements-section {
     margin: 24px 0;
     display: flex;
@@ -285,7 +285,7 @@
 .agreement-checkbox {
     display: flex;
     align-items: flex-start;
-    /* Ține căsuța sus, chiar dacă textul are 2 rânduri */
+    /* Tine casuta sus, chiar daca textul are 2 randuri */
     gap: 12px;
     cursor: pointer;
     font-size: 14px;
@@ -294,22 +294,22 @@
 }
 
 .agreement-checkbox input[type="checkbox"] {
-    /* Stilizare pentru pătrățelul de bifat */
+    /* Stilizare pentru patratelul de bifat */
     width: 16px;
     height: 16px;
     margin-top: 2px;
-    /* Coboară puțin căsuța ca să se alinieze cu textul */
+    /* Coboara putin casuta ca sa se alinieze cu textul */
     accent-color: #222;
-    /* Face bifa neagră în loc de albastrul clasic din browser */
+    /* Face bifa neagra in loc de albastrul clasic din browser */
     cursor: pointer;
 }
 
 
 
-/* --- Clasa pentru validarea erorilor --- */
+/* clasa pentru validarea erorilor */
 .input-error {
     border-color: #e74c3c !important;
-    /* Roșu de eroare */
+    /* Rosu de eroare */
     box-shadow: 0 0 0 2px rgb(231 76 60 / 20%) !important;
 }
 
@@ -450,9 +450,9 @@
     color: #777;
 }
 
-/* --- STILURI FORMULAR ADD CAMPSITE --- */
+/* stiluri formular add campsite */
 
-/* Ca să avem acea animație fină de apariție când trecem de la un pas la altul */
+/* Ca sa avem acea animatie fina de aparitie cand trecem de la un pas la altul */
 .campsite-step {
     animation: fade-in 0.3s ease-in-out;
 }
@@ -469,7 +469,7 @@
     }
 }
 
-/* Grila frumoasă pentru căsuțele de bifat (Facilități: WiFi, Apă, etc.) */
+/* Grila frumoasa pentru casutele de bifat (Facilitati: WiFi, Apa, etc.) */
 .amenities-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -478,7 +478,7 @@
     padding: 10px 0;
 }
 
-/* Cum arată textul de lângă căsuța de bifat */
+/* Cum arata textul de langa casuta de bifat */
 .amenities-grid label {
     display: flex;
     align-items: center;
@@ -493,29 +493,29 @@
     color: var(--primary-green, #2D4C36);
 }
 
-/* Casuța efectivă de bifat (o facem puțin mai mare și mai elegantă) */
+/* Casuta efectiva de bifat (o facem putin mai mare si mai eleganta) */
 .amenities-grid input[type="checkbox"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
     accent-color: var(--primary-green, #2D4C36);
-    /* Se face verde când e bifată */
+    /* Se face verde cand e bifata */
 }
 
-/* Rândurile cu opțiuni, text în stânga, checkbox în dreapta */
+/* Randurile cu optiuni, text in stanga, checkbox in dreapta */
 .check-row-between {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 8px;
-    /* Mai mult spațiu sus-jos pentru aerisire */
+    /* Mai mult spatiu sus-jos pentru aerisire */
     border-bottom: 1px solid #d1d1d1;
-    /* Linia gri exact ca în design */
+    /* Linia gri exact ca in design */
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
-/* Ultimul rând din acordeon NU primește linie dedesubt */
+/* Ultimul rand din acordeon NU primeste linie dedesubt */
 .check-row-between:last-child {
     border-bottom: none;
 }
@@ -540,11 +540,11 @@
     accent-color: #2D4C36;
     border-radius: 4px;
     border: 1px solid #d1d1d1;
-    /* Le dăm și lor un contur fin */
+    /* Le dam si lor un contur fin */
 }
 
 
-/* --- STILURI MODAL HARTĂ --- */
+/* stiluri modal harta */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -554,7 +554,7 @@
     background-color: rgb(0 0 0 / 60%);
     /* Fundal negru transparent */
     z-index: 9999;
-    /* Stă deasupra la orice */
+    /* Sta deasupra la orice */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -584,21 +584,21 @@
     color: #EF6A00;
 }
 
-/* --- Noua clasă pentru Descriere --- */
+/* noua clasa pentru descriere */
 -desc {
     font-size: 13px;
-    /* Un pic mai mic decât detaliile principale */
+    /* Un pic mai mic decat detaliile principale */
     color: #5A4C40;
-    /* Gri-maroniu, să nu fure ochii de la titlu */
+    /* Gri-maroniu, sa nu fure ochii de la titlu */
     margin: 0 0 10px;
-    /* Spațiu jos ca să respire */
+    /* Spatiu jos ca sa respire */
     line-height: 1.4;
-    /* Spațiere între rânduri */
+    /* Spatiere intre randuri */
 
-    /* Magia pentru 3 rânduri cu puncte de suspensie: */
+    /* Magia pentru 3 randuri cu puncte de suspensie: */
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    /* Aici controlezi numărul maxim de rânduri */
+    /* Aici controlezi numarul maxim de randuri */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -608,7 +608,7 @@
 
 
 
-/* --- LAYOUT DETALII --- */
+/* layout detalii */
 .campsite-details-layout {
     width: 100%;
     animation: fade-in 0.3s ease-in-out;
@@ -638,7 +638,7 @@
     border-left: 5px solid #c62828;
 }
 
-/* --- GALERIE FOTO --- */
+/* galerie foto */
 .details-gallery {
     margin-bottom: 30px;
 }
@@ -677,7 +677,7 @@
     opacity: 70%;
 }
 
-/* --- GRID INFORMAȚII --- */
+/* grid informatii */
 .details-content-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -691,7 +691,7 @@
     margin-bottom: 20px;
 }
 
-/* --- TAG-URI --- */
+/* tag-uri */
 .tags-section {
     margin: 25px 0;
 }
@@ -722,7 +722,7 @@
     border: 1px solid #c8e6c9;
 }
 
-/* --- SIDEBAR DREAPTA (STATISTICI) --- */
+/* sidebar dreapta (statistici) */
 .stats-card {
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -774,7 +774,7 @@
     top: 10px;
     right: 10px;
     z-index: 2;
-    /* Să stea deasupra imaginii */
+    /* Sa stea deasupra imaginii */
     background: rgb(255 255 255 / 80%);
     padding: 6px;
     border-radius: 50%;
@@ -782,7 +782,7 @@
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
-/* Culorile iconițelor */
+/* Culorile iconitelor */
 .status-indicator.approved {
     color: #2D4C36;
 }
@@ -805,7 +805,7 @@
     align-items: center;
     padding: 15px 0;
     font-family: Arial, sans-serif;
-    /* Poți ajusta cu fontul proiectului tău */
+    /* Poti ajusta cu fontul proiectului tau */
 }
 
 /* Butonul Back */
@@ -821,17 +821,17 @@
 }
 
 
-/* --- Stiluri pentru comutatorul Unpublish/Publish --- */
+/* stiluri pentru comutatorul unpublish/publish */
 .toggle-group {
     display: flex;
     border: 1px solid #000;
     /* Chenar negru exterior */
     border-radius: 25px;
-    /* Formă de pilulă */
+    /* Forma de pilula */
     background-color: #f4f4f4;
-    /* Fundalul gri deschis pentru starea inactivă */
+    /* Fundalul gri deschis pentru starea inactiva */
     overflow: hidden;
-    /* Taie colțurile pentru fundalul verde */
+    /* Taie colturile pentru fundalul verde */
 }
 
 .toggle-btn {
@@ -845,20 +845,20 @@
     transition: all 0.2s ease;
 }
 
-/* Starea activă (Verde) */
+/* Starea activa (Verde) */
 .toggle-btn.active {
     background-color: #6da300;
     /* Verdele din imagine */
     color: #fff;
 }
 
-/* --- Stiluri pentru restul butoanelor --- */
+/* stiluri pentru restul butoanelor */
 .btn-danger-outline,
 .btn-outline {
     background: transparent;
     padding: 6px 18px;
     border-radius: 25px;
-    /* Formă de pilulă */
+    /* Forma de pilula */
     font-weight: bold;
     font-size: 14px;
     cursor: pointer;
@@ -870,7 +870,7 @@
     color: red;
 }
 
-/* Butoanele Edit și Messages */
+/* Butoanele Edit si Messages */
 .btn-outline {
     border: 1px solid #000;
     color: #000;
@@ -890,20 +890,20 @@
     display: block;
 }
 
-/* 1. Părintele: Cardul propriu-zis */
+/* 1. Parintele: Cardul propriu-zis */
 .cat-card {
     display: flex;
     flex-direction: column;
-    /* Pune imaginea sus și textul jos */
+    /* Pune imaginea sus si textul jos */
     background-color: #fff;
     border-radius: 12px;
-    /* Colțuri rotunjite per total */
+    /* Colturi rotunjite per total */
     overflow: hidden;
-    /* Asigură-te că imaginea nu iese din colțurile rotunjite */
+    /* Asigura-te ca imaginea nu iese din colturile rotunjite */
     box-shadow: 0 4px 10px rgb(0 0 0 / 5%);
-    /* O umbră fină pentru adâncime */
+    /* O umbra fina pentru adancime */
     height: 100%;
-    /* Îl face să se întindă uniform în grid */
+    /* Il face sa se intinda uniform in grid */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
@@ -915,19 +915,19 @@
 }
 
 
-/* 3. Containerul de conținut (Ce îți lipsea ție) */
+/* 3. Containerul de continut (Ce iti lipsea tie) */
 .cat-card-content {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    /* Dăm aer textului ca să nu stea lipit de margini */
+    /* Dam aer textului ca sa nu stea lipit de margini */
     flex-grow: 1;
-    /* MAGIC: Forțează acest div să ocupe tot restul spațiului din card, împingând mereu butoanele/tagurile în jos */
+    /* MAGIC: Forteaza acest div sa ocupe tot restul spatiului din card, impingand mereu butoanele/tagurile in jos */
     gap: 8px;
-    /* Spațiu uniform între titlu, descriere și detalii */
+    /* Spatiu uniform intre titlu, descriere si detalii */
 }
 
-/* 4. Aranjăm puțin textul */
+/* 4. Aranjam putin textul */
 .cat-card-title {
     margin: 0;
     font-size: 1.1rem;
@@ -940,7 +940,7 @@
     color: #666;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    /* Taie descrierea la 2 rânduri dacă e prea lungă, adăugând ... */
+    /* Taie descrierea la 2 randuri daca e prea lunga, adaugand ... */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -951,38 +951,38 @@
     color: #555;
 }
 
-/* --- Status Carduri --- */
+/* status carduri */
 
-/* 1 (Aceptat) -> Verde închis */
+/* 1 (Aceptat) -> Verde inchis */
 .cat-card.cs-approved {
     border-bottom: 5px solid #1b5e20;
 }
 
-/* 0 (În așteptare) -> Portocaliu cu opacitate (50%) */
+/* 0 (In asteptare) -> Portocaliu cu opacitate (50%) */
 .cat-card.cs-pending {
-    /* Folosim rgba (Red, Green, Blue, Alpha) unde ultimul număr e opacitatea (0.5 = 50%) */
+    /* Folosim rgba (Red, Green, Blue, Alpha) unde ultimul numar e opacitatea (0.5 = 50%) */
     border-bottom: 5px solid rgb(255 152 0 / 40%);
 }
 
-/* -1 sau 2 (Refuzat) -> Portocaliu solid (fără opacitate) */
+/* -1 sau 2 (Refuzat) -> Portocaliu solid (fara opacitate) */
 .cat-card.cs-rejected {
     border-bottom: 5px solid #ff9800;
 }
 
 
-/* --- Pagina de Mesaje --- */
+/* pagina de mesaje */
 
 /* Header centrat */
 .messages-header-centered {
     text-align: center;
     max-width: 600px;
     margin: 0 auto 50px;
-    /* Centrat pe orizontală, spațiu mare jos */
+    /* Centrat pe orizontala, spatiu mare jos */
 }
 
 .messages-header-centered h1 {
     font-size: 2.8rem;
-    /* Font mare, impunător */
+    /* Font mare, impunator */
     color: #1a1a1a;
     /* Negru intens, dar nu complet #000 */
     margin-bottom: 15px;
@@ -1000,21 +1000,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Centrează cartonașele */
+    /* Centreaza cartonasele */
     gap: 20px;
 }
 
-/* Design-ul unui cartonaș de mesaj */
+/* Design-ul unui cartonas de mesaj */
 .message-card {
     background-color: #fff;
     border-left: 5px solid #ff9800;
-    /* Dungă portocalie pt atenționare */
+    /* Dunga portocalie pt atentionare */
     border-radius: 10px;
     padding: 24px;
     box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
     width: 100%;
     max-width: 700px;
-    /* Să nu se întindă pe tot ecranul */
+    /* Sa nu se intinda pe tot ecranul */
     text-align: left;
 }
 
@@ -1035,7 +1035,7 @@
     line-height: 1.5;
 }
 
-/* Starea când nu există mesaje (Empty State) */
+/* Starea cand nu exista mesaje (Empty State) */
 .no-messages-text {
     font-size: 1.1rem;
     color: #888;

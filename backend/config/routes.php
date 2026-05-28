@@ -1,4 +1,5 @@
 <?php
+
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri    = str_replace(BASE_URL, '', $uri);
 $uri    = '/' . trim($uri, '/');
@@ -8,6 +9,7 @@ $method = strtolower($_SERVER['REQUEST_METHOD']);
 
 
 // CORS — permite frontend-ul sa faca fetch() din alta origine la dev
+// Cross-Origin Resource Sharing
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
@@ -125,6 +127,10 @@ foreach ($routes as $pattern => $handler) {
     [$routeMethod, $routePath] = explode(' ', $pattern, 2);
     if ($routeMethod !== $method) continue;
 
+    /*
+        $matches[0] va fi intregul text potrivit: '/api/campings/45'
+        $matches[1] va fi doar bucata prinsa in paranteze (\d+), adica ID-ul: '45'
+    */
     if (preg_match('#^' . $routePath . '$#', $uri, $matches)) {
         [$class, $action] = $handler;
         $controller = new $class();

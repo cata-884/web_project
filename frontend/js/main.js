@@ -56,17 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (accountTabBtns.length > 0 && accountSections.length > 0) {
         accountTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // 1. Mutăm clasa 'active' pe butonul apăsat
+                //Mutam clasa 'active' pe butonul apasat
                 accountTabBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                // 2. ASCUNDEM FORȚAT absolut toate secțiunile
+                //ASCUNDEM FORTAT absolut toate sectiunile
                 accountSections.forEach(section => {
                     section.classList.remove('active-section');
                     section.style.display = 'none';
                 });
 
-                // 3. AFIȘĂM FORȚAT doar secțiunea de care avem nevoie
+                //AFISAM FORTAT doar sectiunea de care avem nevoie
                 const targetId = btn.getAttribute('data-tab');
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
@@ -309,11 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emailEl)  emailEl.textContent = user.email || '';
 
     if (avatarEl && user.avatar_url) {
-        // Verificăm dacă are deja prefixul ca să nu îl punem de două ori din greșeală
+        // Verificam daca are deja prefixul ca sa nu il punem de doua ori din greseala
         if (user.avatar_url.startsWith('/cat/public/')) {
             avatarEl.src = user.avatar_url;
         } else {
-            // Dacă îi lipsește (cum se întâmplă acum), îl lipim noi aici
+            // Daca ii lipseste (cum se intampla acum), il lipim noi aici
             avatarEl.src = '/cat/public/' + user.avatar_url;
         }
     }
@@ -539,8 +539,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
-        // 4. Click pe ORICE buton din meniu închide sidebar-ul
-        // (Pentru că e Single Page App, vrem să vedem pagina nou selectată)
+        //Click pe ORICE buton din meniu inchide sidebar-ul
+        // (Pentru ca e Single Page App, vrem sa vedem pagina nou selectata)
         const sidebarLinks = sidebar.querySelectorAll('.nav-item');
         sidebarLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -608,9 +608,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Oprim reîncărcarea paginii
+            e.preventDefault(); // Oprim reincarcarea paginii
 
-            // Luăm valorile din input-uri folosind ID-urile tale
+            // Luam valorile din input-uri folosind ID-urile tale
             const lastName = document.getElementById('contact-last').value;
             const firstName = document.getElementById('contact-first').value;
             const phone = document.getElementById('contact-phone').value;
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = document.getElementById('contact-message').value;
             const submitBtn = document.getElementById('contact-btn');
 
-            // Schimbăm textul butonului cât timp se trimite
+            // Schimbam textul butonului cat timp se trimite
             const originalBtnText = submitBtn.textContent;
             submitBtn.textContent = 'Se trimite...';
             submitBtn.disabled = true;
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     feedbackBox.textContent = data.message;
                     contactForm.reset(); // Golim formularul
                 } else {
-                    // Mesaj de eroare roșu
+                    // Mesaj de eroare rosu
                     feedbackBox.style.backgroundColor = '#f8d7da';
                     feedbackBox.style.color = '#721c24';
                     feedbackBox.style.border = '1px solid #f5c6cb';
@@ -663,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 feedbackBox.textContent = 'A apărut o problemă de conexiune. Încearcă din nou.';
             })
             .finally(() => {
-                // Revenim la starea normală a butonului
+                // Revenim la starea normala a butonului
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
             });

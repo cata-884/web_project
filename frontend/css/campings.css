@@ -387,7 +387,7 @@
 .cat-card.cs-rejected::after { background-color: #F5A623 !important; }
 
 
-/* Containerul iconiței de status - Poziționat absolut în colț */
+/* Containerul iconitei de status - Pozitionat absolut in colt */
 .status-indicator {
     position: absolute;
     top: 10px;
@@ -400,7 +400,7 @@
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
-/* Culorile iconițelor */
+/* Culorile iconitelor */
 .status-indicator.approved { color: #2D4C36; }
 .status-indicator.pending { color: #F5A623; }
 .status-indicator.rejected { color: #DC2626; }

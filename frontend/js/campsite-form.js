@@ -1,15 +1,15 @@
-// Funcția care deschide formularul din Dashboard
+// Functia care deschide formularul din Dashboard
 function openCreateCampsiteForm() {
-    // 1. Ascundem Dashboard-ul
+    //Ascundem Dashboard-ul
     document.getElementById('dashboard-tab').style.display = 'none';
     document.getElementById('dashboard-tab').classList.remove('active-section');
 
-    // 2. Afișăm formularul nou
+    //Afisam formularul nou
     const formTab = document.getElementById('create-campsite-tab');
     formTab.style.display = 'block';
     formTab.classList.add('active-section');
 
-    // Resetăm formularul la pasul 1 (în caz că a mai fost deschis)
+    // Resetam formularul la pasul 1 (in caz ca a mai fost deschis)
     resetCampsiteForm();
 }
 
@@ -19,7 +19,7 @@ function resetCampsiteForm() {
     updateCampsiteStepper(1);
 }
 
-// Navigarea între pași
+// Navigarea intre pasi
 document.addEventListener('click', function(e) {
     // Butonul NEXT
     if (e.target.classList.contains('campsite-next')) {
@@ -34,7 +34,7 @@ document.addEventListener('click', function(e) {
     // Butonul FINISH
     if (e.target.classList.contains('campsite-finish')) {
         showToast("Locatia de camping a fost creata cu succes!", "success");
-        // Aici poți adăuga logica de salvare în BD și întoarcerea la Dashboard
+        // Aici poti adauga logica de salvare in BD si intoarcerea la Dashboard
         location.reload();
     }
 });

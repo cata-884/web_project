@@ -1,16 +1,14 @@
-// =================================================================
-// Logica și Validarea pentru Formularul CaT Partner
-// =================================================================
+// Logica si Validarea pentru Formularul CaT Partner
 
-// --- FUNCȚIA DE VALIDARE A UNUI PAS ---
-// --- FUNCȚIA DE VALIDARE A UNUI PAS ---
+// functia de validare a unui pas
+// functia de validare a unui pas
 function validateStep(stepElement) {
     let isValid = true;
 
     const allInputs = stepElement.querySelectorAll('input');
     allInputs.forEach(input => input.classList.remove('input-error'));
 
-    // 1. Verificăm text și email
+    //Verificam text si email
     const textInputs = stepElement.querySelectorAll('input[type="text"], input[type="email"]');
     textInputs.forEach(input => {
         if (input.value.trim() === '') {
@@ -26,20 +24,20 @@ function validateStep(stepElement) {
         }
     });
 
-    // 2. Verificăm fișierele
+    //Verificam fisierele
     const fileInputs = stepElement.querySelectorAll('input[type="file"]');
     fileInputs.forEach(input => {
         if (input.files.length === 0) {
             const dropZone = input.closest('.upload-dashed-box');
-            if(dropZone) {
+            if (dropZone) {
                 dropZone.classList.add('input-error');
-                input.addEventListener('change', () => dropZone.classList.remove('input-error'), {once: true});
+                input.addEventListener('change', () => dropZone.classList.remove('input-error'), { once: true });
             }
             isValid = false;
         }
     });
 
-    // 3. Validare Specifică Pasul 2 (Business Type)
+    //Validare Specifica Pasul 2 (Business Type)
     if (stepElement.id === 'step-2') {
         const radioButtons = stepElement.querySelectorAll('input[name="business_type"]');
         let isSelected = false;
@@ -49,22 +47,22 @@ function validateStep(stepElement) {
         });
 
         if (!isSelected) {
-            // Căutăm containerul mare al dropdown-ului, nu doar butonul
+            // Cautam containerul mare al dropdown-ului, nu doar butonul
             const businessSelector = stepElement.querySelector('.business-type-selector');
             if (businessSelector) {
-                // Îi adăugăm clasa de eroare containerului (va face tot chenarul roșu)
+                // Ii adaugam clasa de eroare containerului (va face tot chenarul rosu)
                 businessSelector.classList.add('input-error');
 
-                // Scoatem imediat marginea roșie când utilizatorul dă click să aleagă o opțiune
+                // Scoatem imediat marginea rosie cand utilizatorul da click sa aleaga o optiune
                 businessSelector.addEventListener('click', () => {
                     businessSelector.classList.remove('input-error');
-                }, {once: true});
+                }, { once: true });
             }
             isValid = false;
         }
     }
 
-    // 4. Validare Specifică Pasul 3 (Termeni și Condiții)
+    //Validare Specifica Pasul 3 (Termeni si Conditii)
     if (stepElement.id === 'step-3') {
         const checkTerms = document.getElementById('agree-terms');
         const checkTruth = document.getElementById('declare-truth');
@@ -78,20 +76,20 @@ function validateStep(stepElement) {
     return isValid;
 }
 
-// --- 1. BUTOANELE NEXT (Trecerea între pași) ---
-document.addEventListener('click', function(e) {
+//butoanele next (trecerea intre pasi)
+document.addEventListener('click', function (e) {
     if (e.target && e.target.classList.contains('btn-next')) {
         e.preventDefault();
 
-        // Găsim pasul curent în care ne aflăm
+        // Gasim pasul curent in care ne aflam
         const currentStep = e.target.closest('.partner-step');
 
-        // Dacă NU trece validarea, ne oprim aici
+        // Daca NU trece validarea, ne oprim aici
         if (!validateStep(currentStep)) {
             return;
         }
 
-        // Dacă trece validarea, mergem la pasul următor
+        // Daca trece validarea, mergem la pasul urmator
         const nextStepId = e.target.getAttribute('data-next');
         const allSteps = document.querySelectorAll('.partner-step');
         allSteps.forEach(step => step.style.display = 'none');
@@ -102,7 +100,7 @@ document.addEventListener('click', function(e) {
         const stepItems = document.querySelectorAll('.step-item');
         stepItems.forEach(item => {
             const itemStep = parseInt(item.getAttribute('data-step'));
-            if(itemStep <= parseInt(nextStepId)) {
+            if (itemStep <= parseInt(nextStepId)) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');
@@ -111,39 +109,39 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// --- 2. BUTONUL FINISH (Trimiterea finală către Server) ---
-document.addEventListener('click', async function(e) {
+//butonul finish (trimiterea finala catre server)
+document.addEventListener('click', async function (e) {
     if (e.target && e.target.classList.contains('btn-submit')) {
         e.preventDefault();
 
         const currentStep = document.getElementById('step-3');
 
-        // 1. Validăm ultimul pas (să aibă bifele puse și câmpurile pline)
+        //Validam ultimul pas (sa aiba bifele puse si campurile pline)
         if (!validateStep(currentStep)) {
             return;
         }
 
-        // 2. Schimbăm starea butonului ca utilizatorul să aștepte
+        //Schimbam starea butonului ca utilizatorul sa astepte
         const submitBtn = e.target;
         const originalText = submitBtn.innerText;
         submitBtn.innerText = 'Sending...';
         submitBtn.disabled = true;
 
         try {
-            // 3. Creăm "coletul" care poate ține și texte, și poze
-           const formData = new FormData();
+            //Cream "coletul" care poate tine si texte, si poze
+            const formData = new FormData();
 
-            // Extragem datele userului logat și adăugăm user_id-ul în colet
+            // Extragem datele userului logat si adaugam user_id-ul in colet
             const catUser = JSON.parse(localStorage.getItem('cat_user') || '{}');
-            formData.append('user_id', catUser.id || 1); // 1 este fallback de siguranță
+            formData.append('user_id', catUser.id || 1); // 1 este fallback de siguranta
 
 
-            // Adunăm datele de la PASUL 1
+            // Adunam datele de la PASUL 1
             formData.append('last_name', document.getElementById('partner-last-name').value);
             formData.append('first_name', document.getElementById('partner-first-name').value);
             formData.append('id_document', document.getElementById('partner-id-upload').files[0]);
 
-            // Adunăm datele de la PASUL 2
+            // Adunam datele de la PASUL 2
             const businessType = document.querySelector('input[name="business_type"]:checked').value;
             formData.append('business_type', businessType);
             formData.append('company_name', document.getElementById('partner-company-name').value);
@@ -154,57 +152,57 @@ document.addEventListener('click', async function(e) {
             formData.append('address_zip', document.getElementById('partner-zip').value);
             formData.append('registration_document', document.getElementById('partner-reg-upload').files[0]);
 
-            // Adunăm datele de la PASUL 3
+            // Adunam datele de la PASUL 3
             formData.append('contact_phone', document.getElementById('partner-phone').value);
             formData.append('contact_email', document.getElementById('partner-email').value);
 
-            // 4. Expediem coletul către calea exactă a serverului
+            //Expediem coletul catre calea exacta a serverului
             const token = localStorage.getItem('cat_token');
-           const response = await fetch('/cat/public/api/submit_partner.php', {
-    method: 'POST',
-    headers: {
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-    },
-    body: formData
-});
-            // Citim răspunsul de la server (ex: { "success": true })
+            const response = await fetch('/cat/public/api/submit_partner.php', {
+                method: 'POST',
+                headers: {
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
+                body: formData
+            });
+            // Citim raspunsul de la server (ex: { "success": true })
             const result = await response.json();
 
-         // 5. Dacă totul e OK, mergem direct la noul Dashboard
+            //Daca totul e OK, mergem direct la noul Dashboard
             if (response.ok && result.success) {
 
-                // 1. Ascundem ABSOLUT TOATE secțiunile de tip tab (ca să eliberăm tot ecranul)
+                //Ascundem ABSOLUT TOATE sectiunile de tip tab (ca sa eliberam tot ecranul)
                 const allTabs = document.querySelectorAll('.tab-section');
                 allTabs.forEach(tab => {
                     tab.style.display = 'none';
-                    tab.classList.remove('active-section'); // Curățăm și clasa
+                    tab.classList.remove('active-section'); // Curatam si clasa
                 });
 
-                // 2. Afișăm direct panoul de control (Dashboard-ul tău nou)
+                //Afisam direct panoul de control (Dashboard-ul tau nou)
                 const dashboardTab = document.getElementById('dashboard-tab');
                 if (dashboardTab) {
                     dashboardTab.style.display = 'block';
-                    dashboardTab.classList.add('active-section'); // Îl facem pe el tab-ul activ
+                    dashboardTab.classList.add('active-section'); // Il facem pe el tab-ul activ
                 }
 
             } else {
-                // Dacă backend-ul ne trimite o eroare logică
+                // Daca backend-ul ne trimite o eroare logica
                 alert("A apărut o eroare: " + (result.message || "Te rugăm să încerci din nou."));
             }
 
-       } catch (error) {
-            // Dacă pică netul sau serverul e închis
+        } catch (error) {
+            // Daca pica netul sau serverul e inchis
             console.error('Eroare la trimitere:', error);
             alert("A apărut o eroare de rețea. Te rugăm să verifici conexiunea!");
         } finally {
-            // Indiferent ce se întâmplă, la final deblocăm butonul
+            // Indiferent ce se intampla, la final deblocam butonul
             submitBtn.innerText = originalText;
             submitBtn.disabled = false;
         }
     }
 });
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     if (e.target && e.target.classList.contains('dropdown-trigger')) {
         e.preventDefault();
         const content = e.target.nextElementSibling;
@@ -214,22 +212,22 @@ document.addEventListener('click', function(e) {
     }
 });
 
-   // --- 4. Navigarea prin Stepper (doar pentru a te întoarce) ---
-document.addEventListener('click', function(e) {
+//navigarea prin stepper (doar pentru a te intoarce)
+document.addEventListener('click', function (e) {
     const stepItem = e.target.closest('.step-item');
     if (stepItem) {
         const targetStepId = parseInt(stepItem.getAttribute('data-step'));
 
-        // Aflăm în ce pas ne aflăm acum
+        // Aflam in ce pas ne aflam acum
         let currentStepId = 1;
         const allSteps = document.querySelectorAll('.partner-step');
         allSteps.forEach(step => {
-            // Dacă formularul este vizibil pe ecran
+            // Daca formularul este vizibil pe ecran
             if (step.style.display === 'block' || step.style.display === 'flex') {
                 currentStepId = parseInt(step.id.replace('step-', ''));
             }
         });
-// Permitem navigarea doar dacă vrea să meargă ÎNAPOI (la un pas completat deja)
+        // Permitem navigarea doar daca vrea sa mearga INAPOI (la un pas completat deja)
         if (targetStepId < currentStepId) {
             allSteps.forEach(step => step.style.display = 'none');
             const targetStep = document.getElementById('step-' + targetStepId);
@@ -240,7 +238,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// --- VERIFICARE STATUS PARTENER LA ÎNCĂRCAREA PAGINII ---
+// verificare status partener la incarcarea paginii
 document.addEventListener('DOMContentLoaded', async () => {
     const catUser = JSON.parse(localStorage.getItem('cat_user') || '{}');
 
@@ -253,11 +251,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const sidebarBtn = document.querySelector('.nav-item[data-tab="partner"]');
 
                 if (sidebarBtn) {
-                    // Schimbăm DOAR destinația, ca să deschidă Dashboard-ul
+                    // Schimbam DOAR destinatia, ca sa deschida Dashboard-ul
                     sidebarBtn.setAttribute('data-tab', 'dashboard-tab');
 
-                    // AM ȘTERS linia care modifica innerHTML-ul.
-                    // Astfel, butonul rămâne "CaT Partner", cu săgeata la locul ei și centrat perfect!
+                    // AM STERS linia care modifica innerHTML-ul.
+                    // Astfel, butonul ramane "CaT Partner", cu sageata la locul ei si centrat perfect!
                 }
             }
         } catch (error) {

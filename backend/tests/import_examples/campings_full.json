@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Camping Cheile Turzii",
+    "type": "tent",
+    "description": "Camping la poalele cheilor, acces direct la trasee montane si escalada",
+    "address": "Cheile Turzii, com. Mihai Viteazu, Cluj",
+    "region": "Cluj",
+    "latitude": 46.5789,
+    "longitude": 23.6897,
+    "price_per_night": 35.00,
+    "capacity": 60
+  },
+  {
+    "name": "Glamping Transfagarasan",
+    "type": "glamping",
+    "description": "Corturi premium cu pat si incalzire langa lacul Balea, vedere spectaculoasa",
+    "address": "DN7C km 104, jud. Sibiu",
+    "region": "Sibiu",
+    "latitude": 45.6012,
+    "longitude": 24.6196,
+    "price_per_night": 150.00,
+    "capacity": 20
+  },
+  {
+    "name": "Cabana Retezat",
+    "type": "cabin",
+    "description": "Cabane din lemn in Parcul National Retezat, aproape de lacuri glaciare",
+    "address": "Parcul National Retezat, jud. Hunedoara",
+    "region": "Hunedoara",
+    "latitude": 45.3823,
+    "longitude": 22.9267,
+    "price_per_night": 80.00,
+    "capacity": 30
+  },
+  {
+    "name": "Wild Camp Delta Dunarii",
+    "type": "wild",
+    "description": "Camping salbatic in inima Deltei, acces doar cu barca, fara electricitate",
+    "address": "Canal Sulina, jud. Tulcea",
+    "region": "Tulcea",
+    "latitude": 45.1520,
+    "longitude": 29.6600,
+    "price_per_night": 20.00,
+    "capacity": 15
+  },
+  {
+    "name": "RV Park Sinaia",
+    "type": "rv",
+    "description": "Parcare amenajata pentru autorulote cu utilitati complete, langa partii de schi",
+    "address": "Str. Cuza Voda 2, Sinaia, Prahova",
+    "region": "Prahova",
+    "latitude": 45.3606,
+    "longitude": 25.5454,
+    "price_per_night": 50.00,
+    "capacity": 25
+  }
+]

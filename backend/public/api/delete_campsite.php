@@ -11,7 +11,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- AUTENTIFICARE CU TOKEN ---
+    // autentificare cu token
     $headers = apache_request_headers();
     if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
@@ -33,7 +33,7 @@ try {
     }
     $user_id = $userRow['user_id'];
 
-    // --- PRELUARE DATE ---
+    // preluare date
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (empty($data['campsite_id'])) {
@@ -43,7 +43,7 @@ try {
 
     $camping_id = (int)$data['campsite_id'];
 
-    // --- VERIFICARE PROPRIETATE ---
+    // verificare proprietate
     $stmtCheck = $pdo->prepare("SELECT id FROM campings WHERE id = ? AND created_by = ?");
     $stmtCheck->execute([$camping_id, $user_id]);
 
@@ -52,27 +52,27 @@ try {
         exit;
     }
 
-    // --- ȘTERGEREA EFECTIVĂ (Folosind o Tranzacție) ---
+    // stergerea efectiva (folosind o tranzactie)
     $pdo->beginTransaction();
 
-    // 1. (Opțional dar recomandat) Ștergem fișierele pozelor de pe server
+    //(Optional dar recomandat) Stergem fisierele pozelor de pe server
     $stmtMedia = $pdo->prepare("SELECT url FROM camping_media WHERE camping_id = ?");
     $stmtMedia->execute([$camping_id]);
     $mediaFiles = $stmtMedia->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($mediaFiles as $media) {
-        $filePath = '../' . $media['url']; // Calea fizică pe server
+        $filePath = '../' . $media['url']; // Calea fizica pe server
         if (file_exists($filePath) && is_file($filePath)) {
-            unlink($filePath); // Șterge fișierul fizic
+            unlink($filePath); // Sterge fisierul fizic
         }
     }
 
-    // 2. Ștergem rândurile dependente ("copiii") din baza de date
+    //Stergem randurile dependente ("copiii") din baza de date
     $pdo->prepare("DELETE FROM camping_environments WHERE camping_id = ?")->execute([$camping_id]);
     $pdo->prepare("DELETE FROM camping_facilities WHERE camping_id = ?")->execute([$camping_id]);
     $pdo->prepare("DELETE FROM camping_media WHERE camping_id = ?")->execute([$camping_id]);
 
-    // 3. Ștergem locația principală ("părintele")
+    //Stergem locatia principala ("parintele")
     $pdo->prepare("DELETE FROM campings WHERE id = ?")->execute([$camping_id]);
 
     $pdo->commit();

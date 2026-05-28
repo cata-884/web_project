@@ -20,7 +20,6 @@ class DB
             self::$pdo = new PDO($dsn, $user, $pass, [
                 // in situatia care apare o eroare, arunca exceptie
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                // datele sunt grupate intr-un array asociativ
                 // ex: $row['name'] in loc de $row[0]
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 // dezactiveaza emularea prepared statements pentru a preveni SQL injection

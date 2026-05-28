@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../core/Controller.php';
-
 class ExportController extends Controller
 {
     private PDO $pdo;
@@ -16,7 +14,7 @@ class ExportController extends Controller
         $this->pdo = DB::getConnection();
     }
 
-    // ===== CAMPINGS =====
+    // campings
 
     public function campingsCsv(): void
     {
@@ -43,7 +41,7 @@ class ExportController extends Controller
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ===== BOOKINGS =====
+    // bookings
 
     public function bookingsCsv(): void
     {
@@ -69,7 +67,7 @@ class ExportController extends Controller
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ===== REVIEWS =====
+    // reviews
 
     public function reviewsCsv(): void
     {
@@ -95,7 +93,7 @@ class ExportController extends Controller
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ===== USERS =====
+    // users
 
     public function usersCsv(): void
     {
@@ -118,7 +116,7 @@ class ExportController extends Controller
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ===== OUTPUT HELPERS =====
+    // output helpers
 
     private function sendCsv(string $name, array $rows): void
     {

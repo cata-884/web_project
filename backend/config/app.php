@@ -4,6 +4,7 @@ define('BASE_URL', '/cat/public');
 define('DEFAULT_LANG', 'ro');
 
 // Incarca .env daca variabilele nu sunt deja in mediu (Apache nu citeste .env automat)
+// in mediul de executie al mediului php curent
 (function () {
     $envFile = dirname(__DIR__, 2) . '/.env';
     if (!file_exists($envFile)) return;

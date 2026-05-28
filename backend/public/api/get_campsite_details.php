@@ -11,7 +11,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- 1. AUTENTIFICARE CU TOKEN BEARER ---
+    //autentificare cu token bearer
     $headers = apache_request_headers();
     if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
@@ -33,15 +33,15 @@ try {
     }
     $user_id = $userRow['user_id'];
 
-    // --- 2. VALIDARE ID CAMPING ---
+    //validare id camping
     if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
         echo json_encode(['success' => false, 'message' => 'Eroare: ID camping lipsă sau invalid.']);
         exit;
     }
     $camping_id = (int)$_GET['id'];
 
-    // --- 3. EXTRAGERE DATE PRINCIPALE ---
-    // Verificăm și dacă locația aparține utilizatorului logat
+    //extragere date principale
+    // Verificam si daca locatia apartine utilizatorului logat
     $stmtCamping = $pdo->prepare("
         SELECT id, name, slug, description, type, address, region, latitude, longitude,
                price_per_night, capacity, rating_avg, rating_count, is_published,
@@ -57,22 +57,22 @@ try {
         exit;
     }
 
-    // --- 4. EXTRAGERE GALERIE FOTO ---
+    //extragere galerie foto
     $stmtMedia = $pdo->prepare("SELECT url, type FROM camping_media WHERE camping_id = ? ORDER BY sort_order ASC");
     $stmtMedia->execute([$camping_id]);
     $camping['media'] = $stmtMedia->fetchAll(PDO::FETCH_ASSOC);
 
-    // --- 5. EXTRAGERE FACILITĂȚI ---
+    //extragere facilitati
     $stmtFac = $pdo->prepare("SELECT facility_name FROM camping_facilities WHERE camping_id = ?");
     $stmtFac->execute([$camping_id]);
-    $camping['facilities'] = $stmtFac->fetchAll(PDO::FETCH_COLUMN); // Luăm doar lista de string-uri
+    $camping['facilities'] = $stmtFac->fetchAll(PDO::FETCH_COLUMN); // Luam doar lista de string-uri
 
-    // --- 6. EXTRAGERE MEDIU ÎNCONJURĂTOR ---
+    //extragere mediu inconjurator
     $stmtEnv = $pdo->prepare("SELECT environment_name FROM camping_environments WHERE camping_id = ?");
     $stmtEnv->execute([$camping_id]);
     $camping['environments'] = $stmtEnv->fetchAll(PDO::FETCH_COLUMN);
 
-    // --- 7. EXTRAGERE RECENZII (Ultimele 10) ---
+    //extragere recenzii (ultimele 10)
     $stmtRev = $pdo->prepare("
         SELECT r.rating, r.title, r.content, r.created_at, u.username as author_name
         FROM reviews r
@@ -84,7 +84,7 @@ try {
     $stmtRev->execute([$camping_id]);
     $camping['reviews'] = $stmtRev->fetchAll(PDO::FETCH_ASSOC);
 
-    // Trimitem JSON-ul complet către Frontend
+    // Trimitem JSON-ul complet catre Frontend
     echo json_encode(['success' => true, 'data' => $camping]);
 
 } catch (PDOException $e) {

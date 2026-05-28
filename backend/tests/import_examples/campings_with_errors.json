@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Camping Brasov",
+    "type": "tent",
+    "address": "Poiana Brasov, jud. Brasov",
+    "region": "Brasov",
+    "latitude": 45.5897,
+    "longitude": 25.5538,
+    "price_per_night": 40.00,
+    "capacity": 80
+  },
+  {
+    "name": "Camping Baile Felix",
+    "type": "rv",
+    "address": "Baile Felix, jud. Bihor",
+    "region": "Bihor",
+    "latitude": 47.0333,
+    "longitude": 22.0000,
+    "price_per_night": 55.00,
+    "capacity": 45
+  },
+  {
+    "name": "Camping Lacul Rosu",
+    "type": "wild",
+    "address": "Lacul Rosu, jud. Harghita",
+    "region": "Harghita",
+    "latitude": 46.7667,
+    "longitude": 25.8167,
+    "price_per_night": 25.00,
+    "capacity": 20
+  },
+  {
+    "name": "",
+    "latitude": 0,
+    "longitude": 0
+  }
+]

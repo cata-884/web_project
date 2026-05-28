@@ -11,7 +11,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- AUTENTIFICARE CU TOKEN ---
+    // autentificare cu token
     $headers = apache_request_headers();
     if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
@@ -33,8 +33,8 @@ try {
     }
     $user_id = $userRow['user_id'];
 
-    // --- EXTRAGERE DATE PROFIL ---
-    // Luăm exact câmpurile de care avem nevoie, inclusiv avatar_url
+    // extragere date profil
+    // Luam exact campurile de care avem nevoie, inclusiv avatar_url
     $stmt = $pdo->prepare("SELECT username, email, full_name, avatar_url FROM users WHERE id = ? LIMIT 1");
     $stmt->execute([$user_id]);
     $profile = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -1,0 +1,419 @@
+BASE = http://localhost/cat/public
+TOKEN = (valoarea returnata de /api/auth/login → token)
+ADMIN_TOKEN = (token al unui user cu role=admin)
+
+Inlocuieste TOKEN, ADMIN_TOKEN, ID-urile si slug-urile cu valori reale la rulare.
+
+# auth
+
+# register
+curl -s -X POST http://localhost/cat/public/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","email":"test@example.com","password":"parola123"}' | jq .
+# asteptat: {"success":true, "token":"...", "user":{...}}
+
+# login
+curl -s -X POST http://localhost/cat/public/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"parola123"}' | jq .
+# asteptat: {"success":true, "token":"...", "user":{"id":...,"role":"user",...}}
+
+# me (profil curent)
+curl -s http://localhost/cat/public/api/auth/me \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"id":1,"username":"testuser","email":"test@example.com","role":"user",...}
+
+# update profil
+curl -s -X PATCH http://localhost/cat/public/api/users/me \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"full_name":"Prenume Nume","email":"test@example.com"}' | jq .
+# asteptat: {"success":true,"user":{...}}
+
+# logout
+curl -s -X POST http://localhost/cat/public/api/auth/logout \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# campings
+
+# lista campinguri (public, pagina 1)
+curl -s "http://localhost/cat/public/api/campings?page=1&limit=10" | jq .
+# asteptat: {"data":[...],"total":...,"page":1}
+
+# lista campinguri cu filtru tip
+curl -s "http://localhost/cat/public/api/campings?type=tent&page=1" | jq .
+
+# markere harta (public)
+curl -s "http://localhost/cat/public/api/campings/map" | jq .
+# asteptat: [{"id":1,"lat":...,"lng":...,"name":"...","type":"tent",...}, ...]
+
+# detalii dupa slug (public)
+curl -s http://localhost/cat/public/api/campings/by-slug/camping-cheile-turzii | jq .
+# asteptat: {"id":...,"name":"...","slug":"camping-cheile-turzii",...}
+
+# detalii dupa ID (public)
+curl -s http://localhost/cat/public/api/campings/1 | jq .
+# asteptat: {"id":1,"name":"...","latitude":...,"longitude":...,...}
+
+# creare camping (necesita token)
+curl -s -X POST http://localhost/cat/public/api/campings \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Camping Cheile Turzii",
+    "type": "tent",
+    "description": "Camping la poalele cheilor, aproape de trasee",
+    "address": "Cheile Turzii, Cluj",
+    "region": "Cluj",
+    "latitude": 46.5789,
+    "longitude": 23.6897,
+    "price_per_night": 35.00,
+    "capacity": 50
+  }' | jq .
+# asteptat: {"success":true,"id":...,"slug":"..."}
+
+# actualizare camping (owner sau admin)
+curl -s -X PATCH http://localhost/cat/public/api/campings/1 \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"price_per_night": 40.00, "description": "Descriere actualizata"}' | jq .
+# asteptat: {"success":true}
+
+# disponibilitate (public)
+curl -s "http://localhost/cat/public/api/campings/1/availability?from=2025-07-01&to=2025-07-10" | jq .
+# asteptat: {"available":true,"blocked_dates":[...]}
+
+# retrimitere cerere camping dupa respingere (owner)
+curl -s -X POST http://localhost/cat/public/api/campings/1/resubmit \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+# stergere camping (owner sau admin)
+curl -s -X DELETE http://localhost/cat/public/api/campings/99 \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# reviews
+
+# recenzii pentru un camping (public)
+curl -s http://localhost/cat/public/api/campings/1/reviews | jq .
+# asteptat: [{"id":1,"rating":5,"title":"...","content":"...","user":"..."},...]
+
+# adaugare recenzie
+curl -s -X POST http://localhost/cat/public/api/campings/1/reviews \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"rating":5,"title":"Super loc","content":"Am avut o experienta excelenta!"}' | jq .
+# asteptat: {"success":true,"id":...}
+
+# detaliu recenzie
+curl -s http://localhost/cat/public/api/reviews/1 \
+  -H "Authorization: Bearer TOKEN" | jq .
+
+# actualizare recenzie (autor)
+curl -s -X PATCH http://localhost/cat/public/api/reviews/1 \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"rating":4,"title":"Loc bun","content":"Frumos dar aglomerat"}' | jq .
+# asteptat: {"success":true}
+
+# stergere recenzie (autor sau admin)
+curl -s -X DELETE http://localhost/cat/public/api/reviews/1 \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# bookings
+
+# lista rezervari proprii
+curl -s http://localhost/cat/public/api/bookings \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: [{"id":1,"check_in":"2025-07-01","check_out":"2025-07-05",...},...]
+
+# creare rezervare
+curl -s -X POST http://localhost/cat/public/api/bookings \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "camping_id": 1,
+    "check_in": "2025-07-10",
+    "check_out": "2025-07-15",
+    "guests": 2
+  }' | jq .
+# asteptat: {"success":true,"id":...,"total_price":...}
+
+# detaliu rezervare
+curl -s http://localhost/cat/public/api/bookings/1 \
+  -H "Authorization: Bearer TOKEN" | jq .
+
+# actualizare rezervare
+curl -s -X PATCH http://localhost/cat/public/api/bookings/1 \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"guests":3}' | jq .
+# asteptat: {"success":true}
+
+# anulare rezervare
+curl -s -X POST http://localhost/cat/public/api/bookings/1/cancel \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true,"status":"cancelled"}
+
+
+# sections
+
+# lista sectiuni proprii
+curl -s http://localhost/cat/public/api/sections \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: [{"id":1,"name":"Favorite Munte",...},...]
+
+# creare sectiune
+curl -s -X POST http://localhost/cat/public/api/sections \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Favorite Munte","description":"Campinguri de munte preferate"}' | jq .
+# asteptat: {"success":true,"id":...}
+
+# detaliu sectiune cu campinguri
+curl -s http://localhost/cat/public/api/sections/1/campings \
+  -H "Authorization: Bearer TOKEN" | jq .
+
+# adauga camping in sectiune
+curl -s -X POST http://localhost/cat/public/api/sections/1/campings \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"camping_id":1}' | jq .
+# asteptat: {"success":true}
+
+# elimina camping din sectiune
+curl -s -X DELETE http://localhost/cat/public/api/sections/1/campings/1 \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+# stergere sectiune
+curl -s -X DELETE http://localhost/cat/public/api/sections/1 \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# organizers
+
+# aplica pentru statut organizer
+curl -s -X POST http://localhost/cat/public/api/organizers/apply \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"motivation":"Gestionez un camping de 5 ani in zona Brasov"}' | jq .
+# asteptat: {"success":true,"id":...}
+
+# statusul propriei cereri
+curl -s http://localhost/cat/public/api/organizers/my-application \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"id":1,"status":"pending",...}
+
+# cereri in asteptare (admin)
+curl -s http://localhost/cat/public/api/organizers/pending \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: [{"id":1,"user":"...","motivation":"...","status":"pending"},...]
+
+# aproba cerere (admin)
+curl -s -X POST http://localhost/cat/public/api/organizers/1/approve \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"success":true}
+
+# respinge cerere (admin)
+curl -s -X POST http://localhost/cat/public/api/organizers/1/reject \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"reason":"Informatii insuficiente"}' | jq .
+# asteptat: {"success":true}
+
+
+# media
+
+# upload poza camping (owner)
+curl -s -X POST http://localhost/cat/public/api/campings/1/media \
+  -H "Authorization: Bearer TOKEN" \
+  -F "photo=@/tmp/camping.jpg" | jq .
+# asteptat: {"success":true,"url":"..."}
+
+# upload poza recenzie (autor)
+curl -s -X POST http://localhost/cat/public/api/reviews/1/media \
+  -H "Authorization: Bearer TOKEN" \
+  -F "photo=@/tmp/review.jpg" | jq .
+# asteptat: {"success":true,"url":"..."}
+
+# stergere poza camping
+curl -s -X DELETE http://localhost/cat/public/api/media/camping/5 \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# contact
+
+# trimite mesaj contact (public)
+curl -s -X POST http://localhost/cat/public/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ion Popescu","email":"ion@example.com","subject":"Intrebare","message":"Buna ziua, vreau informatii despre camping."}' | jq .
+# asteptat: {"success":true}
+
+
+# preferences
+
+# citeste preferinte
+curl -s http://localhost/cat/public/api/preferences \
+  -H "Authorization: Bearer TOKEN" | jq .
+# asteptat: {"theme":"light","lang":"ro",...}
+
+# salveaza preferinte
+curl -s -X POST http://localhost/cat/public/api/preferences \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"theme":"dark","lang":"en"}' | jq .
+# asteptat: {"success":true}
+
+
+# admin - users
+
+# lista useri (admin)
+curl -s "http://localhost/cat/public/api/admin/users?page=1&limit=20" \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"data":[{"id":1,"username":"...","role":"user",...}],"total":...}
+
+# lista useri cu filtru
+curl -s "http://localhost/cat/public/api/admin/users?search=ion&role=user" \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+
+# istoricul banurilor unui user
+curl -s http://localhost/cat/public/api/admin/users/2/bans \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: [{"id":1,"reason":"...","banned_at":"...","lifted_at":null},...]
+
+# baneaza user
+curl -s -X POST http://localhost/cat/public/api/admin/users/2/ban \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"reason":"Continut neadecvat"}' | jq .
+# asteptat: {"success":true}
+
+# debaneaza user
+curl -s -X POST http://localhost/cat/public/api/admin/users/2/unban \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"success":true}
+
+
+# admin - campings
+
+# lista campinguri admin (toate statusurile)
+curl -s "http://localhost/cat/public/api/admin/campings" \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"data":[{"id":1,"name":"...","approval_status":0,...}],...}
+
+# campinguri in asteptare
+curl -s "http://localhost/cat/public/api/admin/campings?status=0" \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+
+# aproba camping
+curl -s -X POST http://localhost/cat/public/api/admin/campings/1/approve \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"success":true}
+
+# respinge camping (fara feedback)
+curl -s -X POST http://localhost/cat/public/api/admin/campings/1/reject \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"success":true}
+
+# respinge camping cu feedback pentru owner
+curl -s -X POST http://localhost/cat/public/api/admin/campings/1/reject-feedback \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"feedback":"Pozele sunt neclare, te rog sa reincerci cu poze de calitate."}' | jq .
+# asteptat: {"success":true}
+
+
+# admin - messages
+
+# lista mesaje contact
+curl -s http://localhost/cat/public/api/admin/messages \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: [{"id":1,"name":"...","email":"...","subject":"...","message":"...","created_at":"..."},...]
+
+
+# admin - stats
+
+# sumar statistici
+curl -s http://localhost/cat/public/api/admin/stats/summary \
+  -H "Authorization: Bearer ADMIN_TOKEN" | jq .
+# asteptat: {"nr_users":...,"nr_campings":...,"nr_bookings":...,"nr_reviews":...}
+
+# grafic SVG (download direct in browser cu token in query)
+curl -s "http://localhost/cat/public/api/admin/stats/chart.svg?type=bookings&token=ADMIN_TOKEN" \
+  -o /tmp/chart.svg
+# rezultat: fisier SVG salvat local
+
+# raport PDF (download direct)
+curl -s "http://localhost/cat/public/api/admin/stats/report.pdf?token=ADMIN_TOKEN" \
+  -o /tmp/report.pdf
+# rezultat: fisier PDF salvat local
+
+
+# admin - export
+
+# export campinguri JSON
+curl -s "http://localhost/cat/public/api/admin/export/campings.json?token=ADMIN_TOKEN" \
+  -o /tmp/campings_export.json
+# rezultat: JSON cu toate campingurile
+
+# export campinguri CSV
+curl -s "http://localhost/cat/public/api/admin/export/campings.csv?token=ADMIN_TOKEN" \
+  -o /tmp/campings_export.csv
+
+# export rezervari JSON
+curl -s "http://localhost/cat/public/api/admin/export/bookings.json?token=ADMIN_TOKEN" \
+  -o /tmp/bookings_export.json
+
+# export recenzii JSON
+curl -s "http://localhost/cat/public/api/admin/export/reviews.json?token=ADMIN_TOKEN" \
+  -o /tmp/reviews_export.json
+
+# export useri JSON
+curl -s "http://localhost/cat/public/api/admin/export/users.json?token=ADMIN_TOKEN" \
+  -o /tmp/users_export.json
+
+
+# admin - import
+
+# import campinguri din JSON
+curl -s -X POST http://localhost/cat/public/api/admin/import/campings \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -F "file=@backend/tests/import_examples/campings_full.json" | jq .
+# asteptat: {"inserted":5,"total":5,"errors":[]}
+
+# import cu erori partiale (rand invalid → eroare, restul se insereaza)
+curl -s -X POST http://localhost/cat/public/api/admin/import/campings \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -F "file=@backend/tests/import_examples/campings_with_errors.json" | jq .
+# asteptat: {"inserted":3,"total":4,"errors":[{"row":4,"error":"Camp obligatoriu lipsa: name"}]}
+
+# import din CSV
+curl -s -X POST http://localhost/cat/public/api/admin/import/campings \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -F "file=@backend/tests/import_examples/campings_minimal.csv" | jq .
+# asteptat: {"inserted":2,"total":2,"errors":[]}
+
+
+# health check
+
+# endpoint inexistent → 404 corect formatat
+curl -s http://localhost/cat/public/api/nonexistent | jq .
+# asteptat: {"error":"Endpoint inexistent","uri":"/api/nonexistent"}
+
+# request fara token la endpoint protejat → 401
+curl -s http://localhost/cat/public/api/auth/me | jq .
+# asteptat: {"error":"Neautorizat"} sau similar, HTTP 401
+
+# token invalid → 401
+curl -s http://localhost/cat/public/api/auth/me \
+  -H "Authorization: Bearer token_fals_xxx" | jq .
+# asteptat: {"error":"..."}, HTTP 401

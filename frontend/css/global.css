@@ -83,7 +83,7 @@ h4 {
     color: var(--text-main);
 }
 
-/* ---- i18n language toggle ---- */
+/* i18n language toggle */
 .lang-toggle-container {
     display: flex;
     align-items: center;

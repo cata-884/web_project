@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../core/Controller.php';
-
 class ImportController extends Controller
 {
     private PDO $pdo;
@@ -45,7 +43,7 @@ class ImportController extends Controller
         ]);
     }
 
-    // ===== PARSE =====
+    // parse
 
     private function parseFile(array $file): ?array
     {
@@ -96,7 +94,7 @@ class ImportController extends Controller
         return array_is_list($data) ? $data : ($data['data'] ?? null);
     }
 
-    // ===== INSERT =====
+    // insert
 
     private function insertCamping(array $row, int $createdBy): void
     {

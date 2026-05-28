@@ -289,7 +289,7 @@ async function loadAdminMessages() {
 
         if (messages.length > 0) {
             grid.innerHTML = messages.map(m => {
-                // Luăm prima literă din nume pentru pătratul gri
+                // Luam prima litera din nume pentru patratul gri
                 const initial = esc(m.name)[0].toUpperCase();
 
                 return `
@@ -385,18 +385,18 @@ document.addEventListener('DOMContentLoaded', () => {
  // Sub-nav (Cereri Camping / Utilizatori / Statistici / Mesaje)
     document.querySelectorAll('.admin-panel-tab').forEach(btn => {
         btn.addEventListener('click', () => {
-            // 1. Resetăm active pe butoane
+            //Resetam active pe butoane
             document.querySelectorAll('.admin-panel-tab').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // 2. Ascundem toate panelurile
+            //Ascundem toate panelurile
             document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
 
-            // 3. Afișăm panelul corect
+            //Afisam panelul corect
             const panel = document.getElementById('admin-panel-' + btn.dataset.panel);
             if (panel) panel.style.display = 'block';
 
-            // 4. Apelăm funcția de încărcare corespunzătoare (O SINGURĂ DATĂ!)
+            //Apelam functia de incarcare corespunzatoare (O SINGURA DATA!)
             const target = btn.dataset.panel;
             if (target === 'users') loadAdminUsers(true);
             if (target === 'stats') loadAdminStats();
@@ -499,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ===== EXPORT =====
+// export
 
 function adminExport(entity, format) {
     const token = localStorage.getItem('cat_token');
@@ -513,7 +513,7 @@ function adminExport(entity, format) {
     a.remove();
 }
 
-// ===== IMPORT =====
+// import
 
 async function adminImport() {
     const fileInput = document.getElementById('import-file-input');

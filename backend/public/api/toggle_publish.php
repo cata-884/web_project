@@ -11,7 +11,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- AUTENTIFICARE CU TOKEN ---
+    // autentificare cu token
     $headers = apache_request_headers();
     if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
@@ -33,7 +33,7 @@ try {
     }
     $user_id = $userRow['user_id'];
 
-    // --- PRELUARE DATE (Așteptăm JSON din JS) ---
+    // preluare date (asteptam json din js)
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (empty($data['campsite_id'])) {
@@ -44,7 +44,7 @@ try {
     $camping_id = (int)$data['campsite_id'];
     $is_published = !empty($data['is_published']) ? 'true' : 'false'; // Format sigur pt Postgres boolean
 
-    // --- VERIFICARE PROPRIETATE ---
+    // verificare proprietate
     $stmtCheck = $pdo->prepare("SELECT id FROM campings WHERE id = ? AND created_by = ?");
     $stmtCheck->execute([$camping_id, $user_id]);
 
@@ -53,11 +53,11 @@ try {
         exit;
     }
 
-    // --- UPDATE STATUS ---
+    // update status
     $stmtUpdate = $pdo->prepare("UPDATE campings SET is_published = ? WHERE id = ?");
     $stmtUpdate->execute([$is_published, $camping_id]);
 
-    // Returnăm starea finală ca să confirmăm pe frontend
+    // Returnam starea finala ca sa confirmam pe frontend
     echo json_encode(['success' => true, 'is_published' => !empty($data['is_published'])]);
 
 } catch (Exception $e) {

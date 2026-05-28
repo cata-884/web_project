@@ -11,7 +11,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- AUTENTIFICARE CU TOKEN ---
+    // autentificare cu token
     $headers = apache_request_headers();
     if (!isset($headers['Authorization']) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $headers['Authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
@@ -33,7 +33,7 @@ try {
     }
     $user_id = $userRow['user_id'];
 
-    // --- PROCESARE UPLOAD ---
+    // procesare upload
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
         echo json_encode(['success' => false, 'message' => 'Te rog selectează o imagine validă.']);
         exit;
@@ -47,25 +47,25 @@ try {
     $file = $_FILES['avatar'];
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
 
-    // Verificăm dacă e chiar o imagine (opțional, dar recomandat)
+    // Verificam daca e chiar o imagine (optional, dar recomandat)
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     if (!in_array(strtolower($ext), $allowedTypes)) {
         echo json_encode(['success' => false, 'message' => 'Format nepermis. Doar imagini!']);
         exit;
     }
 
-    // Generăm un nume unic pentru poză ca să nu se suprascrie
+    // Generam un nume unic pentru poza ca sa nu se suprascrie
     $avatarName = 'user_' . $user_id . '_' . time() . '.' . $ext;
     $destination = $uploadDir . $avatarName;
 
     if (move_uploaded_file($file['tmp_name'], $destination)) {
         $avatarUrl = 'uploads/avatars/' . $avatarName;
 
-        // Actualizăm baza de date
+        // Actualizam baza de date
         $stmtUpdate = $pdo->prepare("UPDATE users SET avatar_url = ? WHERE id = ?");
         $stmtUpdate->execute([$avatarUrl, $user_id]);
 
-        // Răspundem cu noul URL ca să îl afișăm pe frontend
+        // Raspundem cu noul URL ca sa il afisam pe frontend
         echo json_encode([
             'success' => true,
             'message' => 'Avatar actualizat!',

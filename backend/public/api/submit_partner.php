@@ -23,7 +23,7 @@ function uploadFile($fileInputName, $uploadDir) {
         $destination = $uploadDir . $fileName;
 
      if (move_uploaded_file($tmpName, $destination)) {
-            // Asta se va scrie în baza de date ca să afișezi poza ușor pe frontend
+            // Asta se va scrie in baza de date ca sa afisezi poza usor pe frontend
             return '/cat/public/uploads/documents/' . $fileName;
         }
     }
@@ -86,6 +86,6 @@ try {
     echo json_encode(['success' => true, 'message' => 'Application submitted.']);
 
 } catch (PDOException $e) {
-    // Adăugăm $e->getMessage() ca să vedem exact mesajul trimis de pgAdmin
+    // Adaugam $e->getMessage() ca sa vedem exact mesajul trimis de pgAdmin
     echo json_encode(['success' => false, 'message' => 'Eroare SQL: ' . $e->getMessage()]);
 }
