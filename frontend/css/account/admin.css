@@ -1,14 +1,18 @@
 :root {
     --ap: #D97706;
+
     /* pending  — amber  */
     --ap-bg: #FEF3C7;
     --aa: #059669;
+
     /* approved — emerald */
     --aa-bg: #D1FAE5;
     --ar: #DC2626;
+
     /* rejected — crimson */
     --ar-bg: #FEE2E2;
     --af: #7C3AED;
+
     /* feedback — violet  */
     --af-bg: #EDE9FE;
 }
@@ -105,7 +109,7 @@
 }
 
 .admin-camping-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .07);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 7%);
 }
 
 .admin-camping-card.st-0 {
@@ -347,7 +351,7 @@
 }
 
 .admin-user-card:hover {
-    box-shadow: 0 3px 14px rgba(0, 0, 0, .06);
+    box-shadow: 0 3px 14px rgb(0 0 0 / 6%);
 }
 
 .admin-user-card.banned {
@@ -474,7 +478,7 @@
 .admin-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .48);
+    background: rgb(0 0 0 / 48%);
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
@@ -486,11 +490,11 @@
 
 @keyframes am-fade {
     from {
-        opacity: 0;
+        opacity: 0%;
     }
 
     to {
-        opacity: 1;
+        opacity: 100%;
     }
 }
 
@@ -500,19 +504,19 @@
     padding: 30px;
     width: 100%;
     max-width: 470px;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, .22);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 22%);
     animation: am-up .18s ease;
 }
 
 @keyframes am-up {
     from {
         transform: translateY(18px);
-        opacity: 0;
+        opacity: 0%;
     }
 
     to {
         transform: translateY(0);
-        opacity: 1;
+        opacity: 100%;
     }
 }
 
@@ -818,24 +822,27 @@
 }
 
 .btn-stats-pdf:hover {
-    opacity: .85;
+    opacity: 85%;
 }
+
 
 
 /* Stilizarea cardului de bază */
 .expandable-card {
     background: #fff;
     border: 1px solid #e2e8f0;
+    border-left: 4px solid #047857;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 12px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
     transition: all 0.2s ease-in-out;
+    overflow: hidden;
 }
 
 .expandable-card:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
     border-color: #cbd5e1;
 }
 
@@ -864,20 +871,21 @@
 /* Corpul mesajului - ASCUNS INIȚIAL */
 .expandable-card .msg-body {
     display: none;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed #e2e8f0;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
 }
 
 .msg-body h4 {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     font-size: 0.95rem;
     color: #475569;
 }
 
 .msg-text {
     color: #334155;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-size: 0.95rem;
     margin: 0;
 }
 
@@ -896,27 +904,6 @@
 
 .expandable-card.expanded .msg-hint {
     display: none;
-}
-
-
-
-/* Cardul de bază */
-.expandable-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-left: 4px solid #047857; /* Marginea verde din stânga */
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: all 0.2s ease-in-out;
-    overflow: hidden;
-}
-
-.expandable-card:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border-color: #d1d5db;
 }
 
 /* Rândul principal (cel vizibil mereu) */
@@ -979,26 +966,6 @@
     flex-shrink: 0;
 }
 
-/* Corpul mesajului ascuns */
-.expandable-card .msg-body {
-    display: none;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #f1f5f9;
-}
-
-.msg-text {
-    margin: 0;
-    color: #334155;
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-/* --- MAGIA LA CLICK (Extindere) --- */
-.expandable-card.expanded .msg-body {
-    display: block;
-}
-
 /* Când e extins, rotim săgeata în jos */
 .expandable-card.expanded .msg-expand-icon {
     transform: rotate(135deg);
@@ -1014,21 +981,21 @@
 
 /* 2. Cardul principal blindat */
 #admin-messages-grid .expandable-card {
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid #e5e7eb;
     border-left: 4px solid #047857; /* Marginea verde curată */
     border-radius: 8px;
     padding: 16px;
     margin: 0; /* Anulăm margini globale */
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
     transition: all 0.2s ease-in-out;
     text-align: left; /* Anulăm centrări globale */
     display: block;
 }
 
 #admin-messages-grid .expandable-card:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 8%);
     border-color: #d1d5db;
 }
 
@@ -1121,3 +1088,160 @@
 #admin-messages-grid .expandable-card.expanded .msg-expand-icon {
     transform: rotate(135deg);
 }
+
+/* ---- Export / Import panel ---- */
+.data-io-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 20px 0;
+}
+
+@media (width <= 700px) {
+    .data-io-grid { grid-template-columns: 1fr; }
+}
+
+.data-io-card {
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.data-io-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.data-io-desc {
+    font-size: 0.82rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.data-io-desc code {
+    background: rgb(0 0 0 / 6%);
+    border-radius: 3px;
+    padding: 1px 4px;
+    font-size: 0.8rem;
+}
+
+.export-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border, #f0f0f0);
+}
+
+.export-group:last-of-type { border-bottom: none; }
+
+.export-label {
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.export-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-export {
+    padding: 5px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid var(--color-border, #d1d5db);
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: .04em;
+}
+
+.btn-export:hover {
+    background: var(--color-primary, #2D4C36);
+    color: #fff;
+    border-color: transparent;
+}
+
+.import-drop-zone {
+    border: 2px dashed var(--color-border, #d1d5db);
+    border-radius: 10px;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+}
+
+.import-drop-zone:hover,
+.import-drop-zone.drag-over {
+    border-color: var(--color-primary, #2D4C36);
+    background: rgb(45 76 54 / 4%);
+}
+
+.import-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 50%;
+}
+
+.import-drop-zone p {
+    font-size: 0.83rem;
+    color: #888;
+    margin: 0;
+}
+
+.btn-import {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: var(--color-primary, #2D4C36);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-import:disabled {
+    opacity: 45%;
+    cursor: not-allowed;
+}
+
+.btn-import:not(:disabled):hover { opacity: 85%; }
+
+.import-result {
+    font-size: 0.83rem;
+    border-radius: 8px;
+    padding: 10px 14px;
+    background: rgb(0 0 0 / 3%);
+    border: 1px solid var(--color-border, #e5e7eb);
+}
+
+.io-ok {
+    color: #2D4C36;
+    font-weight: 600;
+}
+
+.io-err {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.import-errors {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    color: #dc2626;
+    font-size: 0.8rem;
+}
+
+.import-errors li { margin-bottom: 3px; }
+

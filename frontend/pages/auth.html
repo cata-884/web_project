@@ -4,53 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - CaT Camping</title>
+    <title>Autentificare - CaT</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
 
-<body>
+<body data-page-title="auth.title">
 
     <main class="auth-layout">
 
         <div class="auth-visual">
-            <img src="../assets/Mobile login-pana (1).svg" alt="Login Illustration" class="illustration">
+            <img src="../assets/Mobile%20login-pana%20%281%29.svg" alt="Login Illustration" class="illustration">
         </div>
 
         <div class="auth-form-container">
             <div class="auth-card">
-                <h2>Sign in</h2>
-                <p class="subtitle">Conecteaza-te pentru a vedea rezervarile si favoritele tale.</p>
+                <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+                    <span class="lang-toggle-container"></span>
+                </div>
+                <h1 data-i18n="auth.heading">Sign in</h1>
+                <p class="subtitle" data-i18n="auth.subtitle">Conecteaza-te pentru a vedea rezervarile si favoritele tale.</p>
 
                 <form id="login-form" class="login-form" novalidate>
 
                     <div class="form-group">
-                        <label for="email">Email sau username</label>
+                        <label for="email" data-i18n="auth.email_label">Email sau username</label>
                         <div class="input-wrapper">
-                            <input type="text" id="email" name="email" placeholder="e.g., name@example.com" required>
+                            <input type="text" id="email" name="email" data-i18n-ph="auth.email_ph" placeholder="e.g., name@example.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Parola</label>
+                        <label for="password" data-i18n="auth.pass_label">Parola</label>
                         <div class="input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="parola ta" required>
+                            <input type="password" id="password" name="password" data-i18n-ph="auth.pass_ph" placeholder="parola ta" required>
                         </div>
                     </div>
 
                     <div class="forgot-password">
-                        <a href="#">Ai uitat parola?</a>
+                        <a href="#" data-i18n="auth.forgot">Ai uitat parola?</a>
                     </div>
 
                     <div id="login-error"
                         style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;">
                     </div>
 
-                    <button type="submit" class="btn-submit" id="login-btn">Sign In</button>
+                    <button type="submit" class="btn-submit" id="login-btn" data-i18n="auth.btn">Sign In</button>
                 </form>
 
                 <div class="divider">
-                    <span>Sau</span>
+                    <span data-i18n="auth.divider">Sau</span>
                 </div>
 
                 <div class="social-login">
@@ -58,15 +61,15 @@
                         <span>G</span> Google
                     </a>
                 </div>
-                <p class="signup-link">Nu ai cont? <a href="register.html">Creeaza un cont</a></p>
+                <p class="signup-link"><span data-i18n="auth.no_account">Nu ai cont?</span> <a href="register.html" data-i18n="auth.create">Creeaza un cont</a></p>
             </div>
         </div>
     </main>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script>
         (function () {
-            // Preia tokenul din URL dupa OAuth callback (?token=...)
             const urlParams = new URLSearchParams(window.location.search);
             const oauthToken = urlParams.get('token');
             if (oauthToken) {
@@ -79,11 +82,10 @@
             const oauthError = urlParams.get('error');
             if (oauthError) {
                 const errEl = document.getElementById('login-error');
-                errEl.textContent = 'Eroare Google OAuth: ' + oauthError;
+                errEl.textContent = t('auth.error_oauth') + oauthError;
                 errEl.style.display = 'block';
             }
 
-            // Redirect daca e deja logat
             if (localStorage.getItem('cat_token')) {
                 window.location.href = 'account/account.html';
             }
@@ -97,7 +99,7 @@
 
                 errEl.style.display = 'none';
                 btn.disabled = true;
-                btn.textContent = 'Se conecteaza...';
+                btn.textContent = t('auth.loading');
 
                 try {
                     const body = { password };
@@ -111,10 +113,10 @@
                     localStorage.setItem('cat_user', JSON.stringify(data.user));
                     window.location.href = 'account/account.html';
                 } catch (err) {
-                    errEl.textContent = err.message || 'Eroare la autentificare. Incearca din nou.';
+                    errEl.textContent = err.message || t('auth.error_default');
                     errEl.style.display = 'block';
                     btn.disabled = false;
-                    btn.textContent = 'Sign In';
+                    btn.textContent = t('auth.btn');
                 }
             });
         })();

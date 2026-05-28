@@ -25,14 +25,12 @@ $routes = [
     'patch /api/users/me'      => ['AuthController', 'updateMe'],
 
 
-    // Cauta dupa slug
-    'get /api/campings/slug/([a-zA-Z0-9_-]+)' => ['CampingsController', 'showBySlug'],
-
     // Campings API
-    // /map TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
-    'get /api/campings/map'         => ['CampingsController', 'mapMarkers'],
-    'get /api/campings'             => ['CampingsController', 'index'],
-    'get /api/campings/(\d+)'       => ['CampingsController', 'show'],
+    // /map si /by-slug TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
+    'get /api/campings/map'              => ['CampingsController', 'mapMarkers'],
+    'get /api/campings/by-slug/([^/]+)' => ['CampingsController', 'showBySlug'],
+    'get /api/campings'                  => ['CampingsController', 'index'],
+    'get /api/campings/(\d+)'            => ['CampingsController', 'show'],
     'post /api/campings'            => ['CampingsController', 'store'],
     'patch /api/campings/(\d+)'     => ['CampingsController', 'update'],
     'delete /api/campings/(\d+)'    => ['CampingsController', 'destroy'],
@@ -99,7 +97,24 @@ $routes = [
     'get /api/admin/stats/chart.svg' => ['StatsController', 'chartSvg'],
     'get /api/admin/stats/report.pdf'=> ['StatsController', 'reportPdf'],
 
-'get /api/admin/messages' => ['AdminController', 'listMessages'],
+    'get /api/admin/messages'              => ['AdminController', 'listMessages'],
+
+    // Admin Export API
+    'get /api/admin/export/campings.csv'  => ['ExportController', 'campingsCsv'],
+    'get /api/admin/export/campings.json' => ['ExportController', 'campingsJson'],
+    'get /api/admin/export/bookings.csv'  => ['ExportController', 'bookingsCsv'],
+    'get /api/admin/export/bookings.json' => ['ExportController', 'bookingsJson'],
+    'get /api/admin/export/reviews.csv'   => ['ExportController', 'reviewsCsv'],
+    'get /api/admin/export/reviews.json'  => ['ExportController', 'reviewsJson'],
+    'get /api/admin/export/users.csv'     => ['ExportController', 'usersCsv'],
+    'get /api/admin/export/users.json'    => ['ExportController', 'usersJson'],
+
+    // Preferences API
+    'get /api/preferences'  => ['PreferencesController', 'get'],
+    'post /api/preferences' => ['PreferencesController', 'save'],
+
+    // Admin Import API
+    'post /api/admin/import/campings'     => ['ImportController', 'campings'],
     // OAuth Google
     'get /api/auth/oauth/google'                     => ['AuthController', 'oauthGoogleStart'],
     'get /api/auth/oauth/google/callback'            => ['AuthController', 'oauthGoogleCallback'],

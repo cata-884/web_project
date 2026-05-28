@@ -131,6 +131,25 @@
     background-color: var(--color-primary);
 }
 
+.btn-save-prefs {
+    margin-top: 16px;
+    background-color: var(--color-teal);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    width: 100%;
+}
+
+.btn-save-prefs:hover { opacity: 88%; }
+.btn-save-prefs:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+}
+
 /* coloana dreapta acordeoane */
 .accordion-item {
     margin-bottom: 12px;
@@ -206,7 +225,7 @@
 }
 
 /* responsive mobil si tablete */
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
     .profile-split-layout {
         grid-template-columns: 1fr;
     }

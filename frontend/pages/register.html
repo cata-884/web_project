@@ -3,72 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - CaT Camping</title>
+    <title>Creeaza cont - CaT</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
-<body>
+<body data-page-title="register.title">
 
     <main class="auth-layout">
 
         <div class="auth-visual">
-            <img src="../assets/Mobile login-pana (1).svg" alt="Sign Up Illustration" class="illustration">
+            <img src="../assets/Mobile%20login-pana%20%281%29.svg" alt="Sign Up Illustration" class="illustration">
         </div>
 
         <div class="auth-form-container">
             <div class="auth-card">
-                <h2>Creeaza cont</h2>
-                <p class="subtitle">Un singur cont pentru a explora si rezerva campinguri din Romania.</p>
+                <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+                    <span class="lang-toggle-container"></span>
+                </div>
+                <h1 data-i18n="register.heading">Creeaza cont</h1>
+                <p class="subtitle" data-i18n="register.subtitle">Un singur cont pentru a explora si rezerva campinguri din Romania.</p>
 
                 <form id="register-form" class="login-form" novalidate>
 
                     <div class="form-group">
-                        <label for="username">Username</label>
+                        <label for="username" data-i18n="register.username_label">Username</label>
                         <div class="input-wrapper">
-                            <input type="text" id="username" name="username" placeholder="e.g., ion_popescu" required minlength="3">
+                            <input type="text" id="username" name="username" data-i18n-ph="register.username_ph" placeholder="e.g., ion_popescu" required minlength="3">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="fullname">Nume complet <span style="font-weight:400; color:#999;">(optional)</span></label>
+                        <label for="fullname"><span data-i18n="register.fullname_label">Nume complet</span> <span style="font-weight:400; color:#999;" data-i18n="register.fullname_optional">(optional)</span></label>
                         <div class="input-wrapper">
-                            <input type="text" id="fullname" name="fullname" placeholder="e.g., Ion Popescu">
+                            <input type="text" id="fullname" name="fullname" data-i18n-ph="register.fullname_ph" placeholder="e.g., Ion Popescu">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email" data-i18n="register.email_label">Email</label>
                         <div class="input-wrapper">
-                            <input type="email" id="email" name="email" placeholder="e.g., ion@example.com" required>
+                            <input type="email" id="email" name="email" data-i18n-ph="register.email_ph" placeholder="e.g., ion@example.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Parola <span style="font-weight:400; color:#999;">(min. 8 caractere)</span></label>
+                        <label for="password"><span data-i18n="register.pass_label">Parola</span> <span style="font-weight:400; color:#999;" data-i18n="register.pass_hint">(min. 8 caractere)</span></label>
                         <div class="input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="Creeaza o parola" required minlength="8">
+                            <input type="password" id="password" name="password" data-i18n-ph="register.pass_ph" placeholder="Creeaza o parola" required minlength="8">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="confirm-password">Confirma parola</label>
+                        <label for="confirm-password" data-i18n="register.confirm_label">Confirma parola</label>
                         <div class="input-wrapper">
-                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeta parola" required>
+                            <input type="password" id="confirm-password" name="confirm-password" data-i18n-ph="register.confirm_ph" placeholder="Repeta parola" required>
                         </div>
                     </div>
 
                     <div class="terms-group">
                         <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">Sunt de acord cu <a href="#">Termenii si Conditiile</a></label>
+                        <label for="terms"><span data-i18n="register.terms_text">Sunt de acord cu</span> <a href="#" data-i18n="register.terms_link">Termenii si Conditiile</a></label>
                     </div>
 
                     <div id="register-error" style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;"></div>
 
-                    <button type="submit" class="btn-submit" id="register-btn">Creeaza cont</button>
+                    <button type="submit" class="btn-submit" id="register-btn" data-i18n="register.btn">Creeaza cont</button>
                 </form>
 
                 <div class="divider">
-                    <span>Sau</span>
+                    <span data-i18n="register.divider">Sau</span>
                 </div>
 
                 <div class="social-login">
@@ -80,11 +83,12 @@
                     </button>
                 </div>
 
-                <p class="signup-link">Ai deja cont? <a href="auth.html">Sign In</a></p>
+                <p class="signup-link"><span data-i18n="register.have_account">Ai deja cont?</span> <a href="auth.html" data-i18n="auth.btn">Sign In</a></p>
             </div>
         </div>
     </main>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script>
         (function () {
@@ -107,28 +111,28 @@
                 errEl.style.display = 'none';
 
                 if (username.length < 3) {
-                    errEl.textContent = 'Username-ul trebuie sa aiba minim 3 caractere.';
+                    errEl.textContent = t('register.error_username');
                     errEl.style.display = 'block';
                     return;
                 }
                 if (password.length < 8) {
-                    errEl.textContent = 'Parola trebuie sa aiba minim 8 caractere.';
+                    errEl.textContent = t('register.error_pass_short');
                     errEl.style.display = 'block';
                     return;
                 }
                 if (password !== confirmPassword) {
-                    errEl.textContent = 'Parolele nu se potrivesc.';
+                    errEl.textContent = t('register.error_pass_match');
                     errEl.style.display = 'block';
                     return;
                 }
                 if (!termsChecked) {
-                    errEl.textContent = 'Trebuie sa accepti Termenii si Conditiile.';
+                    errEl.textContent = t('register.error_terms');
                     errEl.style.display = 'block';
                     return;
                 }
 
                 btn.disabled = true;
-                btn.textContent = 'Se creeaza contul...';
+                btn.textContent = t('register.loading');
 
                 try {
                     const body = { username, email, password };
@@ -139,10 +143,10 @@
                     localStorage.setItem('cat_user', JSON.stringify(data.user));
                     window.location.href = 'account/account.html';
                 } catch (err) {
-                    errEl.textContent = err.message || 'Eroare la inregistrare. Incearca din nou.';
+                    errEl.textContent = err.message || t('register.error_default');
                     errEl.style.display = 'block';
                     btn.disabled = false;
-                    btn.textContent = 'Creeaza cont';
+                    btn.textContent = t('register.btn');
                 }
             });
         })();

@@ -36,17 +36,17 @@
     text-decoration: none;
     font-size: var(--font-body);
     position: relative;
-    opacity: 0.85;
+    opacity: 85%;
     transition: opacity 0.2s;
 }
 
 .nav-group a:hover {
-    opacity: 1;
+    opacity: 100%;
 }
 
 .nav-group a.active,
 .nav-group a[href="campings.html"] {
-    opacity: 1;
+    opacity: 100%;
     font-weight: 600;
 }
 
@@ -96,7 +96,7 @@
     transition: all 0.3s ease;
 }
 
-@media only screen and (max-width: 782px) {
+@media only screen and (width <= 782px) {
     .main-nav {
         display: flex;
         flex-direction: row;
@@ -351,7 +351,7 @@
     cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .campings-layout {
         flex-direction: column;
     }
@@ -367,29 +367,24 @@
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    padding-bottom: 8px; /* Loc pentru dungă */
-    background-color: #E3DDD1; /* Culoarea de fundal a cardului */
+    padding-bottom: 8px;
+    background-color: #E3DDD1;
 }
 
-/* Dunga colorată la bază */
 .cat-card::after {
     content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 8px; /* Înălțimea dungii */
-    z-index: 1;
+    height: 8px;
+    display: block;
+    z-index: 99;
 }
 
-/* 1. Aprobat = Verde solid */
-.cat-card.cs-approved::after { background-color: #2D4C36; }
-
-/* 2. Pending = Portocaliu transparent */
-.cat-card.cs-pending::after { background-color: rgba(245, 166, 35, 0.5); }
-
-/* 3. Respins/Feedback = Portocaliu solid */
-.cat-card.cs-rejected::after { background-color: #F5A623; }
+.cat-card.cs-approved::after { background-color: #2D4C36 !important; }
+.cat-card.cs-pending::after { background-color: rgb(245 166 35 / 50%) !important; }
+.cat-card.cs-rejected::after { background-color: #F5A623 !important; }
 
 
 /* Containerul iconiței de status - Poziționat absolut în colț */
@@ -398,11 +393,11 @@
     top: 10px;
     right: 10px;
     z-index: 2; /* Să stea deasupra imaginii */
-    background: rgba(255, 255, 255, 0.8);
+    background: rgb(255 255 255 / 80%);
     padding: 6px;
     border-radius: 50%;
     font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 /* Culorile iconițelor */
@@ -411,29 +406,23 @@
 .status-indicator.rejected { color: #DC2626; }
 
 
-/* 1. Containerul părinte trebuie să aibă poziționare relativă */
-.cat-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    /* Padding-ul de jos ajută ca dunga să nu acopere conținutul */
-    padding-bottom: 8px;
-    /* ... restul stilurilor tale existente ... */
+.btn-recommend {
+    background-color: var(--color-teal);
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
 }
 
-/* 2. Dunga de jos - forțată să apară */
-.cat-card::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 8px; /* Înălțime puțin mai mare să fie vizibilă */
-    display: block;
-    z-index: 99; /* Forțăm să stea deasupra oricărui conținut */
+.btn-recommend:hover {
+    opacity: 88%;
 }
 
-/* 3. Culorile specifice (Trebuie să coincidă cu clasele din JS-ul tău) */
-.cat-card.cs-approved::after { background-color: #2D4C36 !important; }
-.cat-card.cs-pending::after { background-color: rgba(245, 166, 35, 0.5) !important; }
-.cat-card.cs-rejected::after { background-color: #F5A623 !important; }
+.btn-recommend:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+}

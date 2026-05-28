@@ -8,18 +8,19 @@
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/campings.css">
 </head>
-<body>
+<body data-page-title="campings.title">
     <header class="top-header">
         <nav class="main-nav">
             <div class="nav-group">
-                <a href="../index.html">Acasa</a>
-                <a href="campings.html">Exploreaza</a>
-                <a href="map.html">Harta</a>
+                <a href="../index.html" data-i18n="nav.home">Acasa</a>
+                <a href="campings.html" data-i18n="nav.explore">Exploreaza</a>
+                <a href="map.html" data-i18n="nav.map">Harta</a>
             </div>
             <div class="logo">CaT</div>
             <div class="nav-group">
-                <a href="auth.html">Autentificare</a>
-                <a href="account/account.html">Contul Meu</a>
+                <a href="auth.html" data-i18n="nav.login">Autentificare</a>
+                <a href="account/account.html" data-i18n="nav.account">Contul Meu</a>
+                <span class="lang-toggle-container"></span>
             </div>
             <button class="hamburger-menu" aria-label="Meniu">
                 <span class="bar"></span>
@@ -33,14 +34,14 @@
         <aside class="filters-sidebar">
             <form id="filters-form">
                 <div class="filter-group">
-                    <h4>Cautare</h4>
-                    <input type="text" id="filter-search" placeholder="Cauta dupa nume...">
+                    <h4 data-i18n="campings.search_label">Cautare</h4>
+                    <input type="text" id="filter-search" data-i18n-ph="campings.search_ph" placeholder="Cauta dupa nume...">
                 </div>
 
                 <div class="filter-group">
-                    <h4>Regiune</h4>
+                    <h4 data-i18n="campings.region_label">Regiune</h4>
                     <select id="filter-region">
-                        <option value="">Toate</option>
+                        <option value="" data-i18n="campings.region_all">Toate</option>
                         <option value="Transilvania">Transilvania</option>
                         <option value="Moldova">Moldova</option>
                         <option value="Dobrogea">Dobrogea</option>
@@ -53,16 +54,16 @@
                 </div>
 
                 <div class="filter-group">
-                    <h4>Tip Camping</h4>
-                    <label><input type="checkbox" name="type" value="tent"> Cort</label>
-                    <label><input type="checkbox" name="type" value="rv"> Autorulota</label>
-                    <label><input type="checkbox" name="type" value="cabin"> Casuta</label>
-                    <label><input type="checkbox" name="type" value="glamping"> Glamping</label>
-                    <label><input type="checkbox" name="type" value="wild"> Salbatic</label>
+                    <h4 data-i18n="campings.type_label">Tip Camping</h4>
+                    <label><input type="checkbox" name="type" value="tent"> <span data-i18n="map.type_tent">Cort</span></label>
+                    <label><input type="checkbox" name="type" value="rv"> <span data-i18n="map.type_rv">Autorulota</span></label>
+                    <label><input type="checkbox" name="type" value="cabin"> <span data-i18n="map.type_cabin">Casuta</span></label>
+                    <label><input type="checkbox" name="type" value="glamping"> <span data-i18n="map.type_glamping">Glamping</span></label>
+                    <label><input type="checkbox" name="type" value="wild"> <span data-i18n="map.type_wild">Salbatic</span></label>
                 </div>
 
                 <div class="filter-group">
-                    <h4>Pret / noapte</h4>
+                    <h4 data-i18n="campings.price_label">Pret / noapte</h4>
                     <div class="price-inputs">
                         <input type="number" id="filter-min-price" placeholder="Min" min="0">
                         <span>-</span>
@@ -71,26 +72,26 @@
                 </div>
 
                 <div class="filter-group">
-                    <h4>Rating Minim</h4>
+                    <h4 data-i18n="campings.rating_label">Rating Minim</h4>
                     <select id="filter-min-rating">
-                        <option value="">Oricare</option>
-                        <option value="4">4+ Stele</option>
-                        <option value="3">3+ Stele</option>
-                        <option value="2">2+ Stele</option>
+                        <option value="" data-i18n="campings.rating_any">Oricare</option>
+                        <option value="4">4+ <span data-i18n="campings.stars">Stele</span></option>
+                        <option value="3">3+ <span data-i18n="campings.stars">Stele</span></option>
+                        <option value="2">2+ <span data-i18n="campings.stars">Stele</span></option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn-dark" style="width: 100%;">Aplica Filtre</button>
+                <button type="submit" class="btn-dark" style="width: 100%;" data-i18n="campings.apply">Aplica Filtre</button>
+                <button type="button" id="btn-recommend" class="btn-recommend" data-i18n="campings.recommend" style="display:none; width:100%; margin-top:8px;">Recomanda pentru mine</button>
             </form>
         </aside>
 
         <section class="campings-main">
             <div class="search-header">
-                <h2>Rezultate (<span id="results-count">0</span>)</h2>
+                <h1><span data-i18n="campings.results">Rezultate</span> (<span id="results-count">0</span>)</h1>
             </div>
 
             <div class="campings-grid" id="campings-grid">
-                <!-- Skeleton Loader initially -->
                 <div class="camping-card skeleton">
                     <div class="card-image skeleton"></div>
                     <div class="card-content">
@@ -102,13 +103,14 @@
             </div>
 
             <div class="pagination">
-                <button id="btn-prev" disabled>Inapoi</button>
+                <button id="btn-prev" disabled data-i18n="campings.prev">Inapoi</button>
                 <span id="page-info">Pagina 1</span>
-                <button id="btn-next" disabled>Inainte</button>
+                <button id="btn-next" disabled data-i18n="campings.next">Inainte</button>
             </div>
         </section>
     </main>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/campings.js"></script>
 </body>

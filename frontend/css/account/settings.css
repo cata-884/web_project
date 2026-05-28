@@ -164,7 +164,7 @@
 }
 
 /* responsive mobil */
-@media (max-width: 500px) {
+@media (width <= 500px) {
     .form-row.split {
         grid-template-columns: 1fr;
         gap: 16px;

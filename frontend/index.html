@@ -10,22 +10,23 @@
     <link rel="stylesheet" href="css/landing.css">
 </head>
 
-<body>
+<body data-page-title="home.title">
 
     <header class="top-header">
         <nav class="main-nav">
             <div class="nav-group">
-                <a href="#about">Despre aplicatie</a>
-                <a href="#reviews">Recenzii</a>
-                <a href="pages/campings.html">Exploreaza Campinguri</a>
+                <a href="#about" data-i18n="nav.about">Despre aplicatie</a>
+                <a href="#reviews" data-i18n="nav.reviews">Recenzii</a>
+                <a href="pages/campings.html" data-i18n="nav.explore_full">Exploreaza Campinguri</a>
             </div>
 
             <div class="logo">CaT</div>
 
             <div class="nav-group">
-                <a href="pages/map.html">Harta</a>
-                <a href="#team">Echipa noastra</a>
-                <a href="#contact">Contact</a>
+                <a href="pages/map.html" data-i18n="nav.map">Harta</a>
+                <a href="#team" data-i18n="nav.team">Echipa noastra</a>
+                <a href="#contact" data-i18n="nav.contact">Contact</a>
+                <span class="lang-toggle-container"></span>
             </div>
             <button class="hamburger-menu">
                 <span class="bar"></span>
@@ -38,28 +39,29 @@
     <main>
         <section class="hero-section">
             <div class="hero-content">
-                <h1>Descopera cele mai bune campinguri</h1>
-                <p>Gaseste, rezerva si recenzeaza campinguri din toata tara. O platforma centralizata pentru iubitorii
+                <h1 data-i18n="home.hero_title">Descopera cele mai bune campinguri</h1>
+                <p data-i18n="home.hero_sub">Gaseste, rezerva si recenzeaza campinguri din toata tara. O platforma
+                    centralizata pentru iubitorii
                     de natura, cu harta interactiva, recenzii reale si rezervari simple.</p>
-                <a href="pages/auth.html" class="btn-primary">Incepe acum</a>
+                <a href="pages/auth.html" class="btn-primary" data-i18n="home.hero_cta">Incepe acum</a>
             </div>
 
             <div class="stats-grid">
                 <article>
                     <h2>500+</h2>
-                    <p>Locatii de camping</p>
+                    <p data-i18n="home.stat_locations">Locatii de camping</p>
                 </article>
                 <article>
                     <h2>1.2K+</h2>
-                    <p>Recenzii</p>
+                    <p data-i18n="home.stat_reviews">Recenzii</p>
                 </article>
                 <article>
                     <h2>800+</h2>
-                    <p>Rezervari</p>
+                    <p data-i18n="home.stat_bookings">Rezervari</p>
                 </article>
                 <article>
                     <h2>2K+</h2>
-                    <p>Utilizatori activi</p>
+                    <p data-i18n="home.stat_users">Utilizatori activi</p>
                 </article>
             </div>
         </section>
@@ -67,48 +69,54 @@
 
             <div class="about-visual">
                 <div class="visual-content">
-                    <h2>Tot ce ai nevoie<br>pentru aventura ta</h2>
-                    <p>Uita de cautari interminabile pe zeci de site-uri. CaT iti ofera un spatiu centralizat unde
+                    <h2 data-i18n-html="home.about_title">Tot ce ai nevoie<br>pentru aventura ta</h2>
+                    <p data-i18n="home.about_sub">Uita de cautari interminabile pe zeci de site-uri. CaT iti ofera un
+                        spatiu centralizat unde
                         gasesti, compari si rezervi campinguri rapid, cu informatii reale de la alti camperi.</p>
                 </div>
             </div>
 
             <div class="about-cards-stack">
                 <article class="feature-card pos-0">
-                    <h3>Catalog de campinguri</h3>
-                    <p>Rasfoieste sute de locatii cu toate detaliile importante: facilitati, pret, capacitate, reguli si
+                    <h3 data-i18n="home.f1_title">Catalog de campinguri</h3>
+                    <p data-i18n="home.f1_desc">Rasfoieste sute de locatii cu toate detaliile importante: facilitati,
+                        pret, capacitate, reguli si
                         imagini. Salveaza-ti favoritele in colectii personale pentru acces rapid.</p>
                     <div class="card-img">
                         <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Catalog campinguri">
                     </div>
-                    <a href="#" class="btn-dark card-btn">In curand &gt;</a>
+                    <a href="#" class="btn-dark card-btn" data-i18n="home.f1_btn">In curand &gt;</a>
                 </article>
 
                 <article class="feature-card pos-1">
-                    <h3>Harta interactiva</h3>
-                    <p>Vizualizeaza toate campingurile pe harta si filtreaza dupa zona, facilitati sau rating. Gaseste
+                    <h3 data-i18n="home.f2_title">Harta interactiva</h3>
+                    <p data-i18n="home.f2_desc">Vizualizeaza toate campingurile pe harta si filtreaza dupa zona,
+                        facilitati sau rating. Gaseste
                         exact locatia potrivita pentru urmatoarea ta escapada in natura.</p>
                     <div class="card-img">
                         <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Harta interactiva">
                     </div>
-                    <a href="pages/map.html" class="btn-dark card-btn">Deschide harta &gt;</a>
+                    <a href="pages/map.html" class="btn-dark card-btn" data-i18n="home.f2_btn">Deschide harta &gt;</a>
                 </article>
 
                 <article class="feature-card pos-2">
-                    <h3>Rezervari si recenzii</h3>
-                    <p>Rezerva locul direct din platforma si lasa o recenzie dupa experienta ta. Opiniile reale ale
+                    <h3 data-i18n="home.f3_title">Rezervari si recenzii</h3>
+                    <p data-i18n="home.f3_desc">Rezerva locul direct din platforma si lasa o recenzie dupa experienta
+                        ta. Opiniile reale ale
                         altor camperi te ajuta sa faci alegerea potrivita de fiecare data.</p>
                     <div class="card-img">
                         <img src="assets/Gemini_Generated_Image_dytosddytosddyto.png" alt="Rezervari si recenzii">
                     </div>
-                    <a href="pages/campings.html" class="btn-dark card-btn">Rezerva acum &gt;</a>
+                    <a href="pages/campings.html" class="btn-dark card-btn" data-i18n="home.f3_btn">Rezerva acum
+                        &gt;</a>
                 </article>
             </div>
         </section>
         <section class="reviews-section" id="reviews">
             <div class="reviews-header">
-                <h2>Ce spun camperii nostri</h2>
-                <p>Nu ne crede pe cuvant. Descopera cum studenti, familii si aventurieri folosesc CaT pentru a gasi
+                <h2 data-i18n="home.reviews_title">Ce spun camperii nostri</h2>
+                <p data-i18n="home.reviews_sub">Nu ne crede pe cuvant. Descopera cum studenti, familii si aventurieri
+                    folosesc CaT pentru a gasi
                     locurile perfecte, a planifica escapade si a impartasi experientele lor cu comunitatea.</p>
             </div>
 
@@ -120,25 +128,28 @@
                 <div class="carousel-wrapper">
                     <div class="reviews-carousel">
                         <article class="review-card" id="review1">
-                            <h4>Andrei Ionescu</h4>
+                            <h3>Andrei Ionescu</h3>
                             <img src="assets/Review.jpg" alt="Andrei Ionescu" class="avatar">
-                            <p>Am gasit campingul perfect pentru weekend-ul de vara prin CaT. Filtrele dupa facilitati
+                            <p data-i18n="home.r1_text">Am gasit campingul perfect pentru weekend-ul de vara prin CaT.
+                                Filtrele dupa facilitati
                                 m-au ajutat enorm — stiam exact la ce sa ma astept cand am ajuns. Rezervarea a durat
                                 doua minute.</p>
                         </article>
 
                         <article class="review-card" id="review2">
-                            <h4>Maria Popescu</h4>
+                            <h3>Maria Popescu</h3>
                             <img src="assets/Review.jpg" alt="Maria Popescu" class="avatar">
-                            <p>Ca mama cu doi copii mici, siguranta si facilitatile conteaza enorm. Recenziile de pe CaT
+                            <p data-i18n="home.r2_text">Ca mama cu doi copii mici, siguranta si facilitatile conteaza
+                                enorm. Recenziile de pe CaT
                                 sunt reale si detaliate. Am gasit un camping cu loc de joaca si dusuri calde exact cum
                                 aveam nevoie.</p>
                         </article>
 
                         <article class="review-card" id="review3">
-                            <h4>Bogdan Muresan</h4>
+                            <h3>Bogdan Muresan</h3>
                             <img src="assets/Review.jpg" alt="Bogdan Muresan" class="avatar">
-                            <p>Harta interactiva e o minune. Am planificat un traseu de o saptamana prin Apuseni si am
+                            <p data-i18n="home.r3_text">Harta interactiva e o minune. Am planificat un traseu de o
+                                saptamana prin Apuseni si am
                                 identificat campinguri la fiecare etapa. Nu mai pot pleca in natura fara CaT.</p>
                         </article>
                     </div>
@@ -163,19 +174,20 @@
             <div class="story-container">
 
                 <div class="story-left">
-                    <h2>Nascuti din dragoste<br>pentru natura.</h2>
+                    <h2 data-i18n-html="home.story_title">Nascuti din dragoste<br>pentru natura.</h2>
                     <div class="story-image-box">
                         <img src="assets/About1.jpg" alt="Natura si camping" class="img-large">
                     </div>
                 </div>
 
                 <div class="story-right">
-                    <p>Am construit CaT dintr-o frustrare comuna: informatiile despre campinguri erau imprastiate pe
+                    <p data-i18n="home.story_desc">Am construit CaT dintr-o frustrare comuna: informatiile despre
+                        campinguri erau imprastiate pe
                         zeci de site-uri, recensziile erau false sau invechite, iar rezervarile se faceau prin telefon.
                         Ne-am dorit o platforma moderna unde comunitatea de camperi sa poata gasi, evalua si rezerva
                         locatii de incredere. Misiunea noastra e simpla: sa facem natura mai accesibila pentru toata
                         lumea.</p>
-                    <a href="pages/aboutUs.html" class="btn-dark">Echipa noastra </a>
+                    <a href="pages/aboutUs.html" class="btn-dark" data-i18n="home.story_btn">Echipa noastra </a>
                     <div class="story-image-box">
                         <img class="img-small" src="assets/About2.jpg" alt="Echipa in natura">
                     </div>
@@ -188,19 +200,21 @@
 
                 <div class="contact-visual-card">
                     <div class="visual-content">
-                        <h2>Ia legatura cu noi</h2>
-                        <p>Ai o intrebare despre platforma, vrei sa raportezi un camping sau sa ne dai feedback? Echipa
+                        <h2 data-i18n="home.contact_title">Ia legatura cu noi</h2>
+                        <p data-i18n="home.contact_sub">Ai o intrebare despre platforma, vrei sa raportezi un camping
+                            sau sa ne dai feedback? Echipa
                             noastra e mereu disponibila.</p>
 
                         <div class="contact-info">
-                            <h3>Email</h3>
-                            <p>Scrie-ne pentru intrebari generale sau suport tehnic</p>
+                            <h3 data-i18n="home.contact_email_label">Email</h3>
+                            <p data-i18n="home.contact_email_desc">Scrie-ne pentru intrebari generale sau suport tehnic
+                            </p>
                             <a href="mailto:contact@cat-camping.ro">contact@cat-camping.ro</a>
                         </div>
 
                         <div class="contact-info">
-                            <h3>Telefon</h3>
-                            <p>Ai nevoie de ajutor urgent cu contul tau? Suna-ne</p>
+                            <h3 data-i18n="home.contact_phone_label">Telefon</h3>
+                            <p data-i18n="home.contact_phone_desc">Ai nevoie de ajutor urgent cu contul tau? Suna-ne</p>
                             <a href="tel:+40123456">+40 000 123 456</a>
                         </div>
                     </div>
@@ -210,33 +224,39 @@
                     <form class="contact-form" id="contact-form">
                         <div class="form-row-split">
                             <div class="form-group">
-                                <label>Nume</label>
-                                <input type="text" id="contact-last" placeholder="Popescu">
+                                <label data-i18n="home.form_last">Nume</label>
+                                <input type="text" id="contact-last" data-i18n-ph="home.form_last"
+                                    placeholder="Popescu">
                             </div>
                             <div class="form-group">
-                                <label>Prenume</label>
-                                <input type="text" id="contact-first" placeholder="Mihai">
+                                <label data-i18n="home.form_first">Prenume</label>
+                                <input type="text" id="contact-first" data-i18n-ph="home.form_first"
+                                    placeholder="Mihai">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Numar de telefon</label>
+                            <label data-i18n="home.form_phone">Numar de telefon</label>
                             <input type="tel" id="contact-phone" placeholder="e.g. +4076 123 456">
                         </div>
 
                         <div class="form-group">
-                            <label>Email</label>
+                            <label data-i18n="home.form_email">Email</label>
                             <input type="email" id="contact-email" placeholder="email@exemplu.com">
                         </div>
 
                         <div class="form-group">
-                            <label>Cum te putem ajuta?</label>
-                            <textarea id="contact-message" placeholder="Mesajul tau..."></textarea>
+                            <label data-i18n="home.form_msg">Cum te putem ajuta?</label>
+                            <textarea id="contact-message" data-i18n-ph="home.form_msg"
+                                placeholder="Mesajul tau..."></textarea>
                         </div>
 
-                        <div id="contact-feedback" style="display:none; font-size:14px; margin-bottom:8px; padding:8px 12px; border-radius:6px;"></div>
+                        <div id="contact-feedback"
+                            style="display:none; font-size:14px; margin-bottom:8px; padding:8px 12px; border-radius:6px;">
+                        </div>
 
-                        <button type="submit" class="btn-dark" id="contact-btn">Trimite</button>
+                        <button type="submit" class="btn-dark" id="contact-btn"
+                            data-i18n="home.form_submit">Trimite</button>
                     </form>
                 </div>
 
@@ -244,38 +264,39 @@
         </section>
 
     </main>
-    <footer class="main_footer">
-        <div class="footer_wave">
-            <h2 class="footer_heading">Natura la un click distanta.</h2>
-            <p class="footer_copy">Toate drepturile rezervate. CaT 2025.</p>
+    <footer class="main-footer">
+        <div class="footer-wave">
+            <h2 class="footer-heading" data-i18n="footer.tagline">Natura la un click distanta.</h2>
+            <p class="footer-copy" data-i18n="footer.copy">Toate drepturile rezervate. CaT 2025.</p>
 
         </div>
-        <div class="footer_grid">
-            <div class="footer_col">
-                <h3 class="footer_logo">CaT</h3>
-                <p class="footer_label">Adresa:</p>
-                <p class="footer_text">Romania</p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3 class="footer-logo">CaT</h3>
+                <p class="footer-label" data-i18n="footer.address">Adresa:</p>
+                <p class="footer-text">Romania</p>
             </div>
-            <div class="footer_col">
-                <p class="footer_label">Telefon:</p>
-                <p class="footer_text">+40 000 123 456</p>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.phone">Telefon:</p>
+                <p class="footer-text">+40 000 123 456</p>
             </div>
-            <div class="footer_col">
-                <p class="footer_label">Linkuri:</p>
-                <a href="#about" class="footer_link">Despre aplicatie</a>
-                <a href="#contact" class="footer_link">Contact</a>
-                <a href="#reviews" class="footer_link">Recenzii</a>
-                <a href="#team" class="footer_link">Echipa</a>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.links">Linkuri:</p>
+                <a href="#about" class="footer-link" data-i18n="footer.about">Despre aplicatie</a>
+                <a href="#contact" class="footer-link" data-i18n="footer.contact">Contact</a>
+                <a href="#reviews" class="footer-link" data-i18n="footer.reviews">Recenzii</a>
+                <a href="#team" class="footer-link" data-i18n="footer.team">Echipa</a>
             </div>
-            <div class="footer_col">
-                <p class="footer_label">Retele sociale:</p>
-                <div class="social_icons">
-                    <div class="icon_placeholder">f</div>
-                    <div class="icon_placeholder">ig</div>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.social">Retele sociale:</p>
+                <div class="social-icons">
+                    <div class="icon-placeholder"><a href="https://www.facebook.com/" style="color:white">F</a></div>
+                    <div class="icon-placeholder"><a href="https://www.instagram.com/" style="color:white">I</a></div>
                 </div>
             </div>
         </div>
     </footer>
+    <script src="js/i18n.js"></script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 </body>

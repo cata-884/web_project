@@ -6,76 +6,72 @@
     <title>Harta Campinguri - CaT</title>
     <meta name="description" content="Exploreaza campingurile din Romania pe harta interactiva. Filtreaza dupa tip, pret si rating.">
 
-    <!-- Global styles -->
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
 
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin="">
 
-    <!-- MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
 
-    <!-- Page CSS -->
     <link rel="stylesheet" href="../css/map.css">
 </head>
-<body>
+<body data-page-title="map.title">
     <div class="map-page">
 
-        <!-- Mobile toggle -->
-        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        <button class="sidebar-toggle" id="sidebar-toggle"></button>
 
-        <!-- Overlay for mobile -->
         <div class="map-overlay" id="map-overlay"></div>
 
-        <!-- LEFT SIDEBAR -->
         <aside class="map-sidebar">
             <div class="sidebar-header">
-                <div class="logo">CaT</div>
+                <div class="sidebar-header-top">
+                    <div class="logo">CaT</div>
+                    <span class="lang-toggle-container"></span>
+                </div>
                 <nav class="sidebar-nav">
-                    <a href="../index.html">Acasa</a>
-                    <a href="campings.html">Exploreaza</a>
-                    <a href="map.html" class="active-link">Harta</a>
-                    <a href="account/account.html">Cont</a>
+                    <a href="../index.html" data-i18n="nav.home">Acasa</a>
+                    <a href="campings.html" data-i18n="nav.explore">Exploreaza</a>
+                    <a href="map.html" class="active-link" data-i18n="nav.map">Harta</a>
+                    <a href="account/account.html" data-i18n="map.nav_account">Cont</a>
                 </nav>
             </div>
 
             <div class="sidebar-content">
-                <!-- Filters -->
+                <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0" data-i18n="map.title">Harta campinguri</h1>
                 <div class="map-filters">
-                    <h3>Filtre</h3>
+                    <h2 data-i18n="map.filters">Filtre</h2>
 
                     <div class="filter-section">
-                        <h4>Tip camping</h4>
+                        <h3 data-i18n="map.type_label">Tip camping</h3>
                         <div class="type-checkboxes">
                             <label>
                                 <input type="checkbox" value="tent">
-                                <span>Cort</span>
+                                <span data-i18n="map.type_tent">Cort</span>
                             </label>
                             <label>
                                 <input type="checkbox" value="wild">
-                                <span>Salbatic</span>
+                                <span data-i18n="map.type_wild">Salbatic</span>
                             </label>
                             <label>
                                 <input type="checkbox" value="rv">
-                                <span>Autorulota</span>
+                                <span data-i18n="map.type_rv">Autorulota</span>
                             </label>
                             <label>
                                 <input type="checkbox" value="cabin">
-                                <span>Casuta</span>
+                                <span data-i18n="map.type_cabin">Casuta</span>
                             </label>
                             <label>
                                 <input type="checkbox" value="glamping">
-                                <span>Glamping</span>
+                                <span data-i18n="map.type_glamping">Glamping</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="filter-section">
-                        <h4>Pret maxim / noapte</h4>
+                        <h3 data-i18n="map.price_label">Pret maxim / noapte</h3>
                         <div class="price-slider-group">
                             <input type="range" id="price-slider" min="0" max="1000" value="1000" step="10">
                             <div class="price-display" id="price-display">0 — 1000 RON</div>
@@ -83,46 +79,42 @@
                     </div>
 
                     <div class="filter-section">
-                        <h4>Rating minim</h4>
+                        <h3 data-i18n="map.rating_label">Rating minim</h3>
                         <select class="rating-select" id="rating-filter">
-                            <option value="">Oricare</option>
-                            <option value="2">2+ ★</option>
-                            <option value="3">3+ ★</option>
-                            <option value="4">4+ ★</option>
-                            <option value="4.5">4.5+ ★</option>
+                            <option value="" data-i18n="map.rating_any">Oricare</option>
+                            <option value="2">2+ </option>
+                            <option value="3">3+ </option>
+                            <option value="4">4+ </option>
+                            <option value="4.5">4.5+ </option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Visible results list -->
                 <div class="results-header">
-                    <h3>Locatii in aceasta zona</h3>
+                    <h2 data-i18n="map.results_title">Locatii in aceasta zona</h2>
                     <span class="count-badge" id="visible-count">0</span>
                 </div>
 
                 <ul class="results-list" id="results-list">
-                    <div class="results-loading"></div>
+                    <li class="results-loading"></li>
                 </ul>
             </div>
         </aside>
 
-        <!-- MAP -->
         <div class="map-container">
             <div id="map"></div>
-            <button class="locate-btn" id="locate-me" title="Localizeaza-ma">+</button>
+            <button class="locate-btn" id="locate-me" data-i18n-title="map.locate_me" title="Localizeaza-ma">+</button>
         </div>
 
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
 
-    <!-- MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-    <!-- App scripts -->
+    <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/map.js"></script>
 </body>

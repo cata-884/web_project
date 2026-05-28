@@ -53,6 +53,13 @@
     opacity: 80%;
 }
 
+.wishlist-meta {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--color-teal);
+    font-weight: 600;
+}
+
 /* iconita inima */
 .wishlist-heart {
     font-size: 28px;

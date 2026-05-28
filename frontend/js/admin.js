@@ -4,12 +4,14 @@ const ADMIN_USER_LIMIT = 20;
 let pendingFeedbackId = null;
 let pendingBanId = null;
 
-const STATUS_META = {
-    '-1': { label: 'Respins', cls: 'a-badge--1', card: 'st--1' },
-    '0': { label: 'In Asteptare', cls: 'a-badge-0', card: 'st-0' },
-    '1': { label: 'Aprobat', cls: 'a-badge-1', card: 'st-1' },
-    '2': { label: 'Respins cu Feedback', cls: 'a-badge-2', card: 'st-2' },
-};
+function STATUS_META() {
+    return {
+        '-1': { label: t('admin.status_label_rejected'), cls: 'a-badge--1', card: 'st--1' },
+        '0':  { label: t('admin.status_label_pending'),  cls: 'a-badge-0',  card: 'st-0'  },
+        '1':  { label: t('admin.status_label_approved'), cls: 'a-badge-1',  card: 'st-1'  },
+        '2':  { label: t('admin.status_label_feedback'), cls: 'a-badge-2',  card: 'st-2'  },
+    };
+}
 
 function esc(s) {
     if (s == null) return '';
@@ -24,7 +26,7 @@ function fmtDate(iso) {
 async function loadAdminCampings(status = '') {
     const grid = document.getElementById('admin-campings-grid');
     if (!grid) return;
-    grid.innerHTML = '<p class="admin-loading">Se incarca...</p>';
+    grid.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
 
     try {
         const qs = status !== '' ? `?status=${encodeURIComponent(status)}` : '';
@@ -39,12 +41,13 @@ async function loadAdminCampings(status = '') {
         }
         grid.innerHTML = campings.map(renderCampingCard).join('');
     } catch (err) {
-        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare: ${esc(err.message)}</p>`;
+        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
     }
 }
 
 function renderCampingCard(c) {
-    const st = STATUS_META[String(c.approval_status)] ?? STATUS_META['0'];
+    const meta = STATUS_META();
+    const st = meta[String(c.approval_status)] ?? meta['0'];
     const isPending = Number(c.approval_status) === 0;
 
     const docLinks = [];
@@ -120,7 +123,7 @@ async function adminCampingAction(id, action) {
         await api.post(`/api/admin/campings/${id}/${action}`, {});
         loadAdminCampings(adminCampingFilter);
     } catch (err) {
-        showToast('Eroare: ' + (err.message ?? 'Ceva a mers gresit'), 'error');
+        showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
     }
 }
 
@@ -134,7 +137,7 @@ async function loadAdminUsers(reset = false) {
     if (reset) adminUserOffset = 0;
     const grid = document.getElementById('admin-users-grid');
     if (!grid) return;
-    if (reset) grid.innerHTML = '<p class="admin-loading">Se incarca...</p>';
+    if (reset) grid.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
 
     const search = document.getElementById('admin-user-search')?.value.trim() ?? '';
     const banned = document.getElementById('admin-user-filter')?.value ?? '';
@@ -170,7 +173,7 @@ async function loadAdminUsers(reset = false) {
                 </div>`);
         }
     } catch (err) {
-        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare: ${esc(err.message)}</p>`;
+        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
     }
 }
 
@@ -216,17 +219,17 @@ async function adminUnbanUser(userId) {
     if (!ok) return;
     try {
         await api.post(`/api/admin/users/${userId}/unban`, {});
-        showToast('Ban ridicat cu succes.', 'success');
+        showToast(t('admin.unban_ok'), 'success');
         loadAdminUsers(true);
     } catch (err) {
-        showToast('Eroare: ' + (err.message ?? 'Ceva a mers gresit'), 'error');
+        showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
     }
 }
 
 async function loadAdminStats() {
     const container = document.getElementById('admin-stats-summary');
     if (!container) return;
-    container.innerHTML = '<p class="admin-loading">Se incarca...</p>';
+    container.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
 
     try {
         const d = await api.get('/api/admin/stats/summary');
@@ -266,8 +269,8 @@ async function loadAdminStats() {
             </div>` : ''}
         `;
     } catch (err) {
-        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare: ${esc(err.message)}</p>`;
-        showToast('Eroare la incarcarea statisticilor.', 'error');
+        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
+        showToast(t('admin.stats_err'), 'error');
     }
 
     loadAdminChart();
@@ -300,7 +303,7 @@ async function loadAdminMessages() {
                             <span class="msg-date-badge">${fmtDate(m.created_at)} &bull; MESAJ CONTACT</span>
                         </div>
 
-                        <div class="msg-expand-icon">↗</div>
+                        <div class="msg-expand-icon"></div>
                     </div>
 
                     <div class="msg-body">
@@ -320,7 +323,7 @@ async function loadAdminMessages() {
 async function loadAdminChart() {
     const container = document.getElementById('admin-chart-container');
     if (!container) return;
-    container.innerHTML = '<p class="admin-loading">Se incarca graficul...</p>';
+    container.innerHTML = `<p class="admin-loading">${t('admin.loading_chart')}</p>`;
 
     const type = document.getElementById('admin-chart-type')?.value ?? 'bookings_per_month';
     const token = localStorage.getItem('cat_token') ?? '';
@@ -333,7 +336,7 @@ async function loadAdminChart() {
         const svg = await res.text();
         container.innerHTML = svg;
     } catch (err) {
-        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare grafic: ${esc(err.message)}</p>`;
+        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
     }
 }
 
@@ -345,7 +348,7 @@ async function adminDownloadPdf() {
         });
         if (!res.ok) {
             const j = await res.json().catch(() => ({}));
-            showToast('Eroare: ' + (j.error ?? `HTTP ${res.status}`), 'error');
+            showToast(t('admin.err_prefix') + (j.error ?? `HTTP ${res.status}`), 'error');
             return;
         }
         const blob = await res.blob();
@@ -355,9 +358,9 @@ async function adminDownloadPdf() {
         a.download = `raport-cat-${new Date().toISOString().slice(0,10)}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('Raport descarcat.', 'success');
+        showToast(t('admin.pdf_ok'), 'success');
     } catch (err) {
-        showToast('Eroare: ' + err.message, 'error');
+        showToast(t('admin.err_prefix') + err.message, 'error');
     }
 }
 
@@ -424,14 +427,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('admin-feedback-confirm')?.addEventListener('click', async () => {
         const text = document.getElementById('admin-feedback-text').value.trim();
-        if (text.length < 10) { showToast('Minim 10 caractere.', 'warning'); return; }
+        if (text.length < 10) { showToast(t('admin.feedback_min'), 'warning'); return; }
         try {
             await api.post(`/api/admin/campings/${pendingFeedbackId}/reject-feedback`, { feedback: text });
             document.getElementById('admin-feedback-modal').style.display = 'none';
-            showToast('Feedback trimis cu succes.', 'success');
+            showToast(t('admin.feedback_ok'), 'success');
             loadAdminCampings(adminCampingFilter);
         } catch (err) {
-            showToast('Eroare: ' + (err.message ?? 'Ceva a mers gresit'), 'error');
+            showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
         }
     });
 
@@ -443,16 +446,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const daysVal = document.getElementById('admin-ban-days').value.trim();
         const days = daysVal ? parseInt(daysVal) : null;
 
-        if (reason.length < 3) { showToast('Motivul trebuie sa aiba minim 3 caractere.', 'warning'); return; }
-        if (daysVal && (!days || days < 1)) { showToast('Durata invalida.', 'warning'); return; }
+        if (reason.length < 3) { showToast(t('admin.ban_reason_min'), 'warning'); return; }
+        if (daysVal && (!days || days < 1)) { showToast(t('admin.ban_duration_invalid'), 'warning'); return; }
 
         try {
             await api.post(`/api/admin/users/${pendingBanId}/ban`, { reason, days });
             document.getElementById('admin-ban-modal').style.display = 'none';
-            showToast('Utilizator banat.', 'success');
+            showToast(t('admin.ban_ok'), 'success');
             loadAdminUsers(true);
         } catch (err) {
-            showToast('Eroare: ' + (err.message ?? 'Ceva a mers gresit'), 'error');
+            showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
         }
     });
 
@@ -462,4 +465,96 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
         });
     });
+
+    // Import — drag & drop + file select
+    const dropZone  = document.getElementById('import-drop-zone');
+    const fileInput = document.getElementById('import-file-input');
+    const submitBtn = document.getElementById('import-submit-btn');
+    const dropLabel = document.getElementById('import-drop-label');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                dropLabel.textContent = fileInput.files[0].name;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    if (dropZone) {
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const f = e.dataTransfer.files[0];
+            if (f) {
+                const dt = new DataTransfer();
+                dt.items.add(f);
+                fileInput.files = dt.files;
+                dropLabel.textContent = f.name;
+                submitBtn.disabled = false;
+            }
+        });
+    }
 });
+
+// ===== EXPORT =====
+
+function adminExport(entity, format) {
+    const token = localStorage.getItem('cat_token');
+    if (!token) { showToast(t('admin.unauth'), 'error'); return; }
+    const url = `${API_BASE}/api/admin/export/${entity}.${format}?token=${encodeURIComponent(token)}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+// ===== IMPORT =====
+
+async function adminImport() {
+    const fileInput = document.getElementById('import-file-input');
+    const resultEl  = document.getElementById('import-result');
+    const submitBtn = document.getElementById('import-submit-btn');
+
+    if (!fileInput?.files.length) { showToast(t('admin.import_no_file'), 'error'); return; }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = t('admin.import_loading');
+    resultEl.style.display = 'none';
+
+    try {
+        const token = localStorage.getItem('cat_token');
+        const resp  = await fetch(`${API_BASE}/api/admin/import/campings`, {
+            method: 'POST',
+            headers: { Authorization: 'Bearer ' + token },
+            body: formData,
+        });
+        const data = await resp.json();
+
+        if (!resp.ok) {
+            resultEl.innerHTML = `<span class="io-err">${t('admin.err_prefix')}${esc(data.error)}</span>`;
+        } else {
+            let html = `<span class="io-ok"> ${data.inserted} / ${data.total} ${t('admin.import_rows_ok')}</span>`;
+            if (data.errors?.length) {
+                html += '<ul class="import-errors">' +
+                    data.errors.map(e => `<li>Rand ${e.row}: ${esc(e.error)}</li>`).join('') +
+                    '</ul>';
+            }
+            resultEl.innerHTML = html;
+        }
+        resultEl.style.display = 'block';
+    } catch (err) {
+        resultEl.innerHTML = `<span class="io-err">${t('admin.import_net_err')}${esc(err.message)}</span>`;
+        resultEl.style.display = 'block';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = t('admin.import_btn');
+    }
+}

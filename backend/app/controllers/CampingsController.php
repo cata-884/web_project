@@ -4,12 +4,37 @@ use JetBrains\PhpStorm\NoReturn;
 
 class CampingsController extends Controller
 {
+    private const ZONE_ENV_MAP = [
+        'mountain'    => ['munte', 'pășune alpinǎ'],
+        'seaside'     => ['plajă'],
+        'delta'       => ['deltǎ'],
+        'forest_lake' => ['pădure', 'lângă lac', 'lângă râu'],
+    ];
+
     #[NoReturn]
     public function index(): void
     {
+        $rawType = $_GET['type'] ?? null;
+        $validTypes = ['wild','glamping','rv','tent','cabin'];
+        $types = [];
+        foreach ((array) $rawType as $t) {
+            if (in_array($t, $validTypes, true)) $types[] = $t;
+        }
+
+        $rawZones = (array)($_GET['zone'] ?? []);
+        $envs = [];
+        foreach ($rawZones as $zone) {
+            if (isset(self::ZONE_ENV_MAP[$zone])) {
+                foreach (self::ZONE_ENV_MAP[$zone] as $tag) {
+                    $envs[] = $tag;
+                }
+            }
+        }
+
         $filters = [
             'region'    => $_GET['region']    ?? null,
-            'type'      => $_GET['type']      ?? null,
+            'types'     => $types ?: null,
+            'envs'      => $envs  ?: null,
             'min_price' => $_GET['min_price'] ?? null,
             'max_price' => $_GET['max_price'] ?? null,
             'min_rating'=> $_GET['min_rating']?? null,
@@ -32,6 +57,14 @@ class CampingsController extends Controller
     public function show(int $id): void
     {
         $camping = $this->model->findById($id);
+        if (!$camping) $this->json(['error' => 'Camping inexistent'], 404);
+        $this->json(['camping' => $camping]);
+    }
+
+    #[NoReturn]
+    public function showBySlug(string $slug): void
+    {
+        $camping = $this->model->findBySlug($slug);
         if (!$camping) $this->json(['error' => 'Camping inexistent'], 404);
         $this->json(['camping' => $camping]);
     }

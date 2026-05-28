@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS sesiuni CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS user_sections CASCADE;
 DROP TABLE IF EXISTS section_campings CASCADE;
+DROP TABLE IF EXISTS user_preferences CASCADE;
 DROP TABLE IF EXISTS user_bans CASCADE;
 DROP TABLE IF EXISTS organizer_verifications CASCADE;
 DROP TYPE IF EXISTS user_role CASCADE;
@@ -292,3 +293,15 @@ CREATE TABLE user_bans (
 );
 
 CREATE INDEX idx_bans_user_active ON user_bans(user_id, is_active);
+
+CREATE TABLE user_preferences (
+    id             SERIAL PRIMARY KEY,
+    user_id        INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    camping_types  TEXT[] NOT NULL DEFAULT '{}',
+    travel_styles  TEXT[] NOT NULL DEFAULT '{}',
+    preferred_zones TEXT[] NOT NULL DEFAULT '{}',
+    updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    UNIQUE (user_id)
+);
+
+CREATE INDEX idx_prefs_user ON user_preferences(user_id);

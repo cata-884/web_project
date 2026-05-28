@@ -59,7 +59,7 @@
     display: none;
     flex-direction: column;
     gap: var(--spacing-form);
-    animation: fadeIn 0.4s ease-in-out;
+    animation: fade-in 0.4s ease-in-out;
 }
 
 .tab-content.active-content {
@@ -83,7 +83,7 @@
 }
 
 /* animatie */
-@keyframes fadeIn {
+@keyframes fade-in {
     from {
         opacity: 0%;
         transform: translateY(10px);

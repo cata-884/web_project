@@ -164,7 +164,7 @@ const API_BASE = window.location.protocol === 'file:' || !window.location.host
     document.head.appendChild(s);
 })();
 
-const _TOAST_ICONS = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+const _TOAST_ICONS = { success: '', error: '', warning: '', info: '' };
 const _TOAST_DURATION = { success: 3500, error: 5000, warning: 4000, info: 4000 };
 
 function _getToastContainer() {
@@ -180,9 +180,9 @@ function showToast(message, type = 'error') {
     const el = document.createElement('div');
     el.className = `cat-toast cat-toast--${type}`;
     el.innerHTML = `
-        <span class="cat-toast-icon">${_TOAST_ICONS[type] ?? 'ℹ'}</span>
+        <span class="cat-toast-icon">${_TOAST_ICONS[type] ?? ''}</span>
         <span class="cat-toast-body"><span class="cat-toast-msg">${String(message).replace(/</g,'&lt;')}</span></span>
-        <button class="cat-toast-close" aria-label="Inchide">✕</button>
+        <button class="cat-toast-close" aria-label="Inchide"></button>
         <span class="cat-toast-bar" style="animation-duration:${duration}ms"></span>
     `;
 
@@ -199,10 +199,10 @@ function showConfirm(message, { title = 'Confirmare', confirmText = 'Confirma', 
     return new Promise(resolve => {
         const overlay = document.createElement('div');
         overlay.className = 'cat-confirm-overlay';
-        const iconMap = { error: '🗑', warning: '⚠️', info: 'ℹ️', success: '✅' };
+        const iconMap = { error: '', warning: '️', info: '️', success: '' };
         overlay.innerHTML = `
             <div class="cat-confirm-box" role="dialog" aria-modal="true">
-                <span class="cat-confirm-icon">${iconMap[type] ?? '❓'}</span>
+                <span class="cat-confirm-icon">${iconMap[type] ?? ''}</span>
                 <div class="cat-confirm-title">${title}</div>
                 <div class="cat-confirm-msg">${String(message).replace(/</g,'&lt;')}</div>
                 <div class="cat-confirm-btns">

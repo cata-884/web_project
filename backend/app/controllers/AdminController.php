@@ -24,6 +24,8 @@ class AdminController extends Controller
      * GET /api/admin/users
      * Listare useri cu filtre: role, banned (true/false), search (username/email).
      * Paginare: limit, offset.
+     * 
+     * public function listUsers(): void
      */
     #[NoReturn]
     public function listUsers(): void
@@ -86,12 +88,158 @@ class AdminController extends Controller
         $countStmt->execute($params);
         $total = (int) $countStmt->fetchColumn();
 
+        // Adauga is_banned per user
+        $banStmt = $pdo->prepare(
+            "SELECT 1 FROM user_bans
+             WHERE user_id = :uid AND is_active = TRUE
+               AND (banned_until IS NULL OR banned_until > NOW())
+             LIMIT 1"
+        );
+        foreach ($users as &$u) {
+            $banStmt->execute(['uid' => $u['id']]);
+            $u['is_banned'] = (bool) $banStmt->fetchColumn();
+        }
+        unset($u);
+
         $this->json([
             'users'  => $users,
             'total'  => $total,
             'limit'  => $limit,
             'offset' => $offset,
         ]);
+    }
+
+    /**
+     * GET /api/admin/campings
+     * Listare cereri de camping cu filtru dupa approval_status si paginare.
+     */
+    #[NoReturn]
+    public function listCampings(): void
+    {
+        $this->requireAdmin();
+
+        $limit  = min(50, max(1, (int)($_GET['limit']  ?? 20)));
+        $offset = max(0,           (int)($_GET['offset'] ?? 0));
+
+        $where  = [];
+        $params = [];
+
+        if (isset($_GET['status']) && $_GET['status'] !== '') {
+            $where[]          = 'c.approval_status = :status';
+            $params['status'] = (int)$_GET['status'];
+        }
+
+        $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $pdo = DB::getConnection();
+
+        $sql = "SELECT c.id, c.name, c.slug, c.type, c.region, c.address,
+                       c.price_per_night, c.capacity,
+                       c.approval_status, c.admin_feedback,
+                       c.is_published, c.created_at,
+                       u.id          AS user_id,
+                       u.username, u.email, u.full_name, u.avatar_url,
+                       ov.id         AS verification_id,
+                       ov.last_name, ov.first_name,
+                       ov.business_type, ov.company_name, ov.registration_number,
+                       ov.address_street, ov.address_number,
+                       ov.address_city,  ov.address_zip,
+                       ov.id_document_path, ov.registration_document_path,
+                       ov.contact_phone, ov.contact_email,
+                       ov.submitted_at
+                FROM campings c
+                JOIN users u  ON u.id  = c.created_by
+                LEFT JOIN organizer_verifications ov ON ov.user_id = c.created_by
+                $whereClause
+                ORDER BY c.created_at DESC
+                LIMIT $limit OFFSET $offset";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $campings = $stmt->fetchAll();
+
+        $countSql  = "SELECT COUNT(*) FROM campings c $whereClause";
+        $countStmt = $pdo->prepare($countSql);
+        $countStmt->execute($params);
+        $total = (int)$countStmt->fetchColumn();
+
+        $this->json([
+            'campings' => $campings,
+            'total'    => $total,
+            'limit'    => $limit,
+            'offset'   => $offset,
+        ]);
+    }
+
+    /**
+     * POST /api/admin/campings/{id}/approve
+     * Seteaza approval_status=1 si is_published=true.
+     */
+    #[NoReturn]
+    public function approveCamping(int $id): void
+    {
+        $this->requireAdmin();
+        $pdo = DB::getConnection();
+
+        $stmt = $pdo->prepare(
+            "UPDATE campings SET approval_status = 1, is_published = TRUE WHERE id = :id RETURNING id"
+        );
+        $stmt->execute(['id' => $id]);
+
+        if (!$stmt->fetchColumn()) {
+            $this->json(['error' => 'Camping inexistent'], 404);
+        }
+        $this->json(['ok' => true, 'message' => 'Camping aprobat si publicat.']);
+    }
+
+    /**
+     * POST /api/admin/campings/{id}/reject
+     * Seteaza approval_status=-1 si is_published=false.
+     */
+    #[NoReturn]
+    public function rejectCamping(int $id): void
+    {
+        $this->requireAdmin();
+        $pdo = DB::getConnection();
+
+        $stmt = $pdo->prepare(
+            "UPDATE campings SET approval_status = -1, is_published = FALSE WHERE id = :id RETURNING id"
+        );
+        $stmt->execute(['id' => $id]);
+
+        if (!$stmt->fetchColumn()) {
+            $this->json(['error' => 'Camping inexistent'], 404);
+        }
+        $this->json(['ok' => true, 'message' => 'Camping respins.']);
+    }
+
+    /**
+     * POST /api/admin/campings/{id}/reject-feedback
+     * Body JSON: { feedback: string } — seteaza approval_status=2 + admin_feedback.
+     */
+    #[NoReturn]
+    public function rejectCampingFeedback(int $id): void
+    {
+        $this->requireAdmin();
+        $body     = $this->getJsonBody();
+        $feedback = trim($body['feedback'] ?? '');
+
+        if (strlen($feedback) < 10) {
+            $this->json(['error' => 'Feedback-ul trebuie sa contina cel putin 10 caractere.'], 400);
+        }
+
+        $pdo  = DB::getConnection();
+        $stmt = $pdo->prepare(
+            "UPDATE campings
+             SET approval_status = 2, is_published = FALSE, admin_feedback = :feedback
+             WHERE id = :id
+             RETURNING id"
+        );
+        $stmt->execute(['id' => $id, 'feedback' => $feedback]);
+
+        if (!$stmt->fetchColumn()) {
+            $this->json(['error' => 'Camping inexistent'], 404);
+        }
+        $this->json(['ok' => true, 'message' => 'Camping respins cu feedback.']);
     }
 
     /**

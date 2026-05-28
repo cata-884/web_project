@@ -93,6 +93,43 @@
         }
 
 
+        /* Wishlist button */
+        .btn-wishlist {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-family: var(--font-family-main);
+        }
+
+        .btn-wishlist:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        .btn-wishlist--active {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        .btn-wishlist--active:hover {
+            background: transparent;
+            color: var(--color-primary);
+        }
+
+        .btn-wishlist:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         /* Booking Card */
         .booking-card {
             background: #fff;
@@ -273,7 +310,7 @@
         }
 
         .review-media-video-wrap::after {
-            content: '▶';
+            content: '';
             position: absolute;
             inset: 0;
             display: flex;
@@ -457,14 +494,15 @@
     <header class="top-header">
         <nav class="main-nav">
             <div class="nav-group">
-                <a href="../index.html">Acasa</a>
-                <a href="campings.html">Exploreaza</a>
-                <a href="map.html">Harta</a>
+                <a href="../index.html" data-i18n="nav.home">Acasa</a>
+                <a href="campings.html" data-i18n="nav.explore">Exploreaza</a>
+                <a href="map.html" data-i18n="nav.map">Harta</a>
             </div>
             <div class="logo">CaT</div>
             <div class="nav-group">
-                <a href="auth.html">Autentificare</a>
-                <a href="account/account.html">Contul Meu</a>
+                <a href="auth.html" data-i18n="nav.login">Autentificare</a>
+                <a href="account/account.html" data-i18n="nav.account">Contul Meu</a>
+                <span class="lang-toggle-container"></span>
             </div>
             <button class="hamburger-menu" aria-label="Meniu">
                 <span class="bar"></span>
@@ -479,13 +517,14 @@
     </main>
 
     <div id="media-lightbox">
-        <button id="media-lightbox-close">✕</button>
+        <button id="media-lightbox-close"></button>
         <div id="media-lightbox-content"></div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/camping-detail.js"></script>
 </body>

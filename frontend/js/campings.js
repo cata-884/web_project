@@ -1,5 +1,6 @@
 let currentPage = 1;
 const limit = 12;
+let activeZones = [];
 
 function debounce(fn, delay) {
     let timer;
@@ -14,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (authLink) authLink.remove();
         if (hartaLink && rightNavGroup) rightNavGroup.prepend(hartaLink);
+
+        const btnRecommend = document.getElementById('btn-recommend');
+        if (btnRecommend) btnRecommend.style.display = 'block';
     }
 
     const filtersForm = document.getElementById('filters-form');
@@ -33,6 +37,37 @@ document.addEventListener('DOMContentLoaded', () => {
             loadCampings();
         }, 400));
     }
+
+    const btnRecommend = document.getElementById('btn-recommend');
+    if (btnRecommend) {
+        btnRecommend.addEventListener('click', async () => {
+            btnRecommend.disabled = true;
+            const orig = btnRecommend.textContent;
+            btnRecommend.textContent = '...';
+            try {
+                const prefs = await api.get('/api/preferences');
+
+                // aplica tipuri de camping
+                document.querySelectorAll('input[name="type"]').forEach(cb => {
+                    cb.checked = (prefs.camping_types || []).includes(cb.value);
+                });
+
+                // stocheaza zonele pentru a fi trimise la backend
+                activeZones = prefs.preferred_zones || [];
+
+                currentPage = 1;
+                loadCampings();
+            } catch (err) {
+                console.error('Preferinte indisponibile', err);
+            } finally {
+                btnRecommend.disabled = false;
+                btnRecommend.textContent = orig;
+            }
+        });
+    }
+
+    // la orice submit manual, resetam zonele active din recomandare
+    filtersForm.addEventListener('submit', () => { activeZones = []; });
 
     btnPrev.addEventListener('click', () => {
         if (currentPage > 1) {
@@ -77,14 +112,15 @@ async function loadCampings() {
     if (minPrice) params.append('min_price', minPrice);
     if (maxPrice) params.append('max_price', maxPrice);
     if (minRating) params.append('min_rating', minRating);
-    if (types.length === 1) params.append('type', types[0]);
+    types.forEach(t => params.append('type[]', t));
+    activeZones.forEach(z => params.append('zone[]', z));
 
     try {
         const response = await api.get(`/api/campings?${params.toString()}`);
         renderCampings(response);
     } catch (err) {
         console.error("Failed to load campings", err);
-        grid.innerHTML = `<p style="color: red;">Eroare la încărcarea datelor.</p>`;
+        grid.innerHTML = `<p style="color: red;">${t('campings.load_err')}</p>`;
     }
 }
 
@@ -99,11 +135,11 @@ function renderCampings(data) {
     resultsCount.textContent = data.total || 0;
 
     if (!data.campings || data.campings.length === 0) {
-        grid.innerHTML = `<p>Nu s-au găsit campinguri conform filtrelor.</p>`;
+        grid.innerHTML = `<p>${t('campings.no_results')}</p>`;
     } else {
         data.campings.forEach(c => {
             const defaultImg = '../assets/About1.jpg'; // fallback image
-            const ratingStr = c.rating_avg ? `${parseFloat(c.rating_avg).toFixed(1)} ★` : 'Nou';
+            const ratingStr = c.rating_avg ? `${parseFloat(c.rating_avg).toFixed(1)} ` : 'Nou';
 
             const card = document.createElement('div');
             card.className = 'camping-card';
@@ -112,20 +148,20 @@ function renderCampings(data) {
                 <div class="card-content">
                     <span class="card-type">${c.type}</span>
                     <h3 class="card-title">${c.name}</h3>
-                    <p class="card-region">📍 ${c.region || 'Locație necunoscută'}</p>
+                    <p class="card-region"> ${c.region || 'Locație necunoscută'}</p>
                     <div class="card-bottom">
                         <div class="card-price">${c.price_per_night} RON <span>/ noapte</span></div>
                         <div class="card-rating">${ratingStr}</div>
                     </div>
                 </div>
-<a href="/cat/public/pages/camping/${c.slug}" class="btn-details">Vezi Detalii</a>
+<a href="camping.html?slug=${c.slug}" class="btn-details">Vezi Detalii</a>
             `;
             grid.appendChild(card);
         });
     }
 
     // Pagination controls
-    pageInfo.textContent = `Pagina ${currentPage}`;
+    pageInfo.textContent = `${t('campings.page')} ${currentPage}`;
     btnPrev.disabled = currentPage === 1;
     btnNext.disabled = (currentPage * limit) >= (data.total || 0);
 }

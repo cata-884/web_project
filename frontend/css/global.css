@@ -63,7 +63,53 @@ h1, h2, h3, h4 {
     font-weight: 700;
 }
 
-h1 { font-size: var(--font-h1); color: var(--text-main); }
-h2 { font-size: var(--font-h2); color: var(--text-main); }
-h3 { font-size: var(--font-h3); color: var(--text-main); }
-h4 { font-size: var(--font-h4); color: var(--text-main); }
+h1 {
+    font-size: var(--font-h1);
+    color: var(--text-main);
+}
+
+h2 {
+    font-size: var(--font-h2);
+    color: var(--text-main);
+}
+
+h3 {
+    font-size: var(--font-h3);
+    color: var(--text-main);
+}
+
+h4 {
+    font-size: var(--font-h4);
+    color: var(--text-main);
+}
+
+/* ---- i18n language toggle ---- */
+.lang-toggle-container {
+    display: flex;
+    align-items: center;
+}
+.lang-toggle-btn {
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 40%);
+    color: var(--text-light, #fff);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, border-color 0.2s;
+}
+.lang-toggle-btn:hover {
+    background: rgb(255 255 255 / 15%);
+    border-color: rgb(255 255 255 / 70%);
+}
+
+/* dark variant for account/auth pages */
+.lang-toggle-btn.dark {
+    border-color: rgb(0 0 0 / 25%);
+    color: var(--color-text, #333);
+}
+.lang-toggle-btn.dark:hover {
+    background: rgb(0 0 0 / 6%);
+}

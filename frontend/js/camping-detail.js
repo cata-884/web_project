@@ -1,6 +1,8 @@
 let currentCamping = null;
 let currentPricePerNight = 0;
 let userBookings = [];
+let wishlistSectionId = null;
+let campingInWishlist = false;
 
 function openLightbox(type, url) {
     const lb = document.getElementById('media-lightbox');
@@ -58,21 +60,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (hartaLink && rightNavGroup) rightNavGroup.prepend(hartaLink);
     }
 
-    //  EXTRAEM SLUG-UL DIN URL-UL NOU (ex: /pages/camping/valea-verde)
-    const pathSegments = window.location.pathname.split('/');
-    const slug = pathSegments[pathSegments.length - 1];
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+    const id = params.get('id');
 
-    if (!slug || slug === 'camping.html') {
+    if (!slug && !id) {
         document.getElementById('detail-main').innerHTML = '<h2 style="color:red; text-align:center; padding:50px;">Camping invalid sau adresă greșită.</h2>';
         return;
     }
 
     try {
-        //  APELAM NOUL ENDPOINT API EXTREM DE RAPID
-        const res = await api.get(`/api/campings/slug/${slug}`);
-
-        // În controller, noi am pus datele în cheia 'data'
-        currentCamping = res.data;
+        const res = id
+            ? await api.get(`/api/campings/${id}`)
+            : await api.get(`/api/campings/by-slug/${encodeURIComponent(slug)}`);
+        currentCamping = res.camping;
 
         if (!currentCamping) throw new Error("Camping not found");
 
@@ -92,9 +93,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // AFISAM EROAREA (404) DACA URL-UL E GRESIT
         document.getElementById('detail-main').innerHTML =
             `<div style="padding:40px;text-align:center">
-                <h2 style="color:#EF6A00">404 - Campingul nu a fost găsit</h2>
-                <p style="color:#666;margin-top:8px">Camping-ul "${escapeHtml(slug)}" nu există sau nu este public.</p>
-                <a href="/cat/public/pages/campings.html" style="display:inline-block;margin-top:16px" class="btn-dark">← Înapoi la lista de campinguri</a>
+                <h2 style="color:#EF6A00">${t('camping.load_err')}</h2>
+                <p style="color:#666;margin-top:8px">Camping-ul "${slug}" nu există sau nu este public.</p>
+                <a href="campings.html" style="display:inline-block;margin-top:16px" class="btn-dark">← Înapoi la lista de campinguri</a>
             </div>`;
     }
 });
@@ -126,9 +127,9 @@ function renderCampingDetails() {
             <div class="camping-info">
                 <h1>${currentCamping.name}</h1>
                 <div class="rating-location">
-                    <span class="rating-badge">★ ${ratingStr}</span>
-                    <span>📍 ${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
-                    <span>🏕️ Tip: ${currentCamping.type}</span>
+                    <span class="rating-badge"> ${ratingStr}</span>
+                    <span> ${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
+                    <span>️ Tip: ${currentCamping.type}</span>
                 </div>
 
                 <div class="camping-description">
@@ -138,12 +139,12 @@ function renderCampingDetails() {
                 <div id="camping-map" class="camping-mini-map"></div>
 
                 <div id="nearby-section" class="nearby-section" style="display:none">
-                    <h3>În apropiere <small>(raza 5 km)</small></h3>
+                    <h2>În apropiere <small>(raza 5 km)</small></h2>
                     <div id="nearby-pois" class="poi-chips"></div>
                 </div>
 
                 <div class="reviews-section" id="reviews-section">
-                    <h3>Recenzii</h3>
+                    <h2>Recenzii</h2>
                     <div id="review-form-container" class="review-form-container">
                         <h3>Scrie o recenzie</h3>
                         <div class="star-select" id="star-select">
@@ -164,8 +165,9 @@ function renderCampingDetails() {
             </div>
 
             <aside>
+                <button id="btn-wishlist" class="btn-wishlist" style="display:none;" onclick="toggleWishlist()"></button>
                 <div class="booking-card">
-                    <h3>Rezerva acum</h3>
+                    <h3>${t('camping.book_title')}</h3>
                     <div class="booking-meta">
                         <span>${TYPE_LABELS[currentCamping.type] || currentCamping.type}</span>
                         ${currentCamping.capacity ? `<span>Max ${currentCamping.capacity} persoane</span>` : ''}
@@ -194,7 +196,7 @@ function renderCampingDetails() {
                         </div>
                     </div>
 
-                    <button class="btn-dark" style="width: 100%; margin-top: 16px;" onclick="handleBooking()">Confirma Rezervarea</button>
+                    <button class="btn-dark" style="width: 100%; margin-top: 16px;" onclick="handleBooking()">${t('camping.confirm_btn')}</button>
                 </div>
             </aside>
         </div>
@@ -215,7 +217,7 @@ function renderCampingDetails() {
         });
 
         const filesInput = document.getElementById('review-files');
-        const previewEl  = document.getElementById('review-file-preview');
+        const previewEl = document.getElementById('review-file-preview');
         if (filesInput && previewEl) {
             filesInput.addEventListener('change', () => {
                 previewEl.innerHTML = '';
@@ -231,7 +233,67 @@ function renderCampingDetails() {
 
     loadReviews();
     initMiniMap();
+    initWishlistBtn();
 }
+
+async function initWishlistBtn() {
+    const btn = document.getElementById('btn-wishlist');
+    if (!btn || !localStorage.getItem('cat_token') || !currentCamping) return;
+
+    btn.style.display = 'block';
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+        const data = await api.get('/api/sections');
+        const favSection = (data?.sections || []).find(s => s.name === 'Favorite');
+
+        if (favSection) {
+            wishlistSectionId = favSection.id;
+            const campData = await api.get(`/api/sections/${favSection.id}/campings`);
+            campingInWishlist = (campData?.campings || []).some(c => c.id === currentCamping.id);
+        }
+    } catch (_) {}
+
+    updateWishlistBtn();
+}
+
+function updateWishlistBtn() {
+    const btn = document.getElementById('btn-wishlist');
+    if (!btn) return;
+    btn.disabled = false;
+    if (campingInWishlist) {
+        btn.textContent = t('camping.in_wishlist');
+        btn.classList.add('btn-wishlist--active');
+    } else {
+        btn.textContent = t('camping.add_wishlist');
+        btn.classList.remove('btn-wishlist--active');
+    }
+}
+
+window.toggleWishlist = async function () {
+    const btn = document.getElementById('btn-wishlist');
+    if (!btn || !currentCamping) return;
+    btn.disabled = true;
+
+    try {
+        if (campingInWishlist && wishlistSectionId) {
+            await api.delete(`/api/sections/${wishlistSectionId}/campings/${currentCamping.id}`);
+            campingInWishlist = false;
+        } else {
+            if (!wishlistSectionId) {
+                const created = await api.post('/api/sections', { name: 'Favorite', color: '#EF6A00' });
+                wishlistSectionId = created.section.id;
+            }
+            await api.post(`/api/sections/${wishlistSectionId}/campings`, { camping_id: currentCamping.id });
+            campingInWishlist = true;
+        }
+        updateWishlistBtn();
+    } catch (err) {
+        btn.disabled = false;
+        if (typeof showToast !== 'undefined') showToast(err.message || 'Eroare wishlist');
+    }
+};
 
 window.changeMainImage = function (thumbElement, url) {
     document.getElementById('main-gallery-img').src = url;
@@ -251,7 +313,7 @@ function calculatePrice() {
 
         if (diffDays > 0 && date2 > date1) {
             document.getElementById('price-calc-display').style.display = 'block';
-            document.getElementById('calc-nights').textContent = `${diffDays} nopti x ${currentPricePerNight} RON`;
+            document.getElementById('calc-nights').textContent = `${diffDays} ${t('camping.nights_label')} ${currentPricePerNight} RON`;
 
             const total = diffDays * currentPricePerNight;
             document.getElementById('calc-base-price').textContent = `${total} RON`;
@@ -267,12 +329,12 @@ async function handleBooking() {
     const co = document.getElementById('book-checkout').value;
 
     if (!ci || !co) {
-        alert("Selecteaza datele!");
+        window.showToast("Selecteaza datele!", 'warning');
         return;
     }
 
     if (new Date(ci) >= new Date(co)) {
-        alert("Check-out trebuie sa fie dupa check-in!");
+        window.showToast("Check-out trebuie sa fie dupa check-in!", 'warning');
         return;
     }
 
@@ -284,10 +346,10 @@ async function handleBooking() {
             total_price: parseFloat(document.getElementById('calc-total-price').textContent),
             guests: parseInt(document.getElementById('book-guests').value),
         });
-        alert("Rezervare creata cu succes!");
+        window.showToast(t('camping.book_ok'), 'success');
         window.location.href = "account/account.html";
     } catch (err) {
-        alert(err.message || "Eroare la rezervare. Esti autentificat?");
+        window.showToast(err.message || t('camping.book_err'), 'error');
     }
 }
 
@@ -354,7 +416,7 @@ async function loadReviews() {
                     <div class="review-item" id="review-${r.id}">
                         <div class="review-header">
                             <span class="review-author">${r.username || 'Utilizator'}</span>
-                            <span class="review-rating">★ ${r.rating}</span>
+                            <span class="review-rating"> ${r.rating}</span>
                             ${actionsHTML}
                         </div>
                         <div class="review-body" id="review-body-${r.id}">
@@ -407,12 +469,12 @@ window.openEditReview = function (id) {
 
     const existingMediaHTML = d.media.map(m => {
         let preview = '';
-        if (m.type === 'image') preview = `<img src="${m.url}" class="edit-media-thumb">`;
+        if (m.type === 'image') preview = `<img src="${m.url}" class="edit-media-thumb" alt="">`;
         else if (m.type === 'audio') preview = `<audio controls src="${m.url}" class="edit-media-audio"></audio>`;
         else if (m.type === 'video') preview = `<video controls src="${m.url}" class="edit-media-video"></video>`;
         return `<div class="edit-media-item" id="edit-media-item-${m.id}">
             ${preview}
-            <button class="btn-review-delete edit-media-delete" data-media-id="${m.id}">✕</button>
+            <button class="btn-review-delete edit-media-delete" data-media-id="${m.id}"></button>
         </div>`;
     }).join('');
 
@@ -452,7 +514,7 @@ window.openEditReview = function (id) {
                 document.getElementById(`edit-media-item-${mid}`)?.remove();
                 reviewDataMap[id].media = reviewDataMap[id].media.filter(m => m.id !== mid);
             } catch (err) {
-                alert(err.message || 'Eroare la stergere media.');
+                window.showToast(err.message || t('camping.delete_media_err'), 'error');
             }
         });
     });
@@ -478,24 +540,25 @@ window.saveEditReview = async function (id) {
         if (files.length > 0) {
             const errors = await uploadMediaFiles(id, files);
             if (errors.length) {
-                alert("Salvat, dar unele fisiere au esuat:\n" + errors.join('\n'));
+                window.showToast("Salvat, dar unele fisiere au esuat: " + errors.join(', '), 'warning');
             }
         }
 
         loadReviews();
     } catch (err) {
-        alert(err.message || 'Eroare la salvare.');
+        window.showToast(err.message || t('camping.save_review_err'), 'error');
     }
 };
 
 window.deleteReview = async function (id) {
-    if (!confirm('Stergi aceasta recenzie?')) return;
+    const confirmed = await window.showConfirm(t('camping.delete_review_confirm'), { type: 'danger' });
+    if (!confirmed) return;
     try {
         await api.delete(`/api/reviews/${id}`);
         loadReviews();
         checkReviewEligibility();
     } catch (err) {
-        alert(err.message || 'Eroare la stergere.');
+        window.showToast(err.message || t('camping.delete_review_err'), 'error');
     }
 };
 
@@ -528,7 +591,7 @@ window.submitReview = async function () {
     const files = document.getElementById('review-files')?.files || [];
 
     if (!rating) {
-        alert("Selecteaza o nota!");
+        window.showToast("Selecteaza o nota!", 'warning');
         return;
     }
 
@@ -542,13 +605,13 @@ window.submitReview = async function () {
         if (reviewId && files.length > 0) {
             const errors = await uploadMediaFiles(reviewId, files);
             if (errors.length) {
-                alert("Recenzie adaugata, dar unele fisiere au esuat:\n" + errors.join('\n'));
+                window.showToast("Recenzie adaugata, dar unele fisiere au esuat: " + errors.join(', '), 'warning');
             }
         }
 
         window.location.reload();
     } catch (err) {
-        alert(err.message || "Eroare la recenzie.");
+        window.showToast(err.message || t('camping.review_err'), 'error');
     }
 };
 
@@ -585,11 +648,11 @@ function initMiniMap() {
 }
 
 const POI_CONFIG = {
-    'natural=peak': { emoji: '⛰️', label: 'Vârf' },
-    'amenity=drinking_water': { emoji: '💧', label: 'Apă potabilă' },
-    'tourism=viewpoint': { emoji: '🔭', label: 'Belvedere' },
-    'amenity=parking': { emoji: '🅿️', label: 'Parcare' },
-    'leisure=picnic_table': { emoji: '🍽️', label: 'Picnic' },
+    'natural=peak': { emoji: '️', label: 'Vârf' },
+    'amenity=drinking_water': { emoji: '', label: 'Apă potabilă' },
+    'tourism=viewpoint': { emoji: '', label: 'Belvedere' },
+    'amenity=parking': { emoji: '', label: 'Parcare' },
+    'leisure=picnic_table': { emoji: '️', label: 'Picnic' },
 };
 
 function classifyPOI(tags) {

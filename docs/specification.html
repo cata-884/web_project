@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="ro" prefix="schema: https://schema.org/">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CaT — Software Requirements Specification</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --color-primary: #2d6a4f;
+      --color-accent: #e76f51;
+      --color-teal: #40916c;
+      --bg: #ffffff;
+      --bg-alt: #f8faf9;
+      --text: #1a1a1a;
+      --text-muted: #6b7280;
+      --border: #d1d5db;
+      --radius: 8px;
+      --max-width: 860px;
+      --font: 'Georgia', serif;
+      --font-mono: 'Courier New', monospace;
+    }
+
+    body {
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ---- Layout ---- */
+    .page-wrap {
+      display: flex;
+      gap: 0;
+    }
+
+    nav.toc {
+      position: sticky;
+      top: 0;
+      width: 240px;
+      flex-shrink: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      padding: 32px 16px;
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+
+    nav.toc h2 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    nav.toc ol {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav.toc li {
+      margin-bottom: 2px;
+    }
+
+    nav.toc a {
+      display: block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    nav.toc a:hover {
+      background: var(--border);
+    }
+
+    nav.toc .toc-sub {
+      padding-left: 16px;
+      margin-top: 2px;
+    }
+
+    nav.toc .toc-sub a {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    article {
+      flex: 1;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 48px 40px 80px;
+    }
+
+    /* ---- Header ---- */
+    header[role="doc-title"] {
+      border-bottom: 3px solid var(--color-primary);
+      padding-bottom: 32px;
+      margin-bottom: 48px;
+    }
+
+    header[role="doc-title"] .doc-type {
+      display: inline-block;
+      background: var(--color-primary);
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 12px;
+    }
+
+    h1.doc-title {
+      font-size: 2rem;
+      line-height: 1.25;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+
+    .doc-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .doc-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .meta-item {
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+
+    .meta-item .label {
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+    }
+
+    /* ---- Sections ---- */
+    section {
+      margin-bottom: 56px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--color-primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      color: var(--color-teal);
+      margin: 28px 0 10px;
+    }
+
+    h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin: 20px 0 8px;
+      color: var(--text);
+    }
+
+    p {
+      margin-bottom: 14px;
+    }
+
+    /* ---- Lists ---- */
+    ul,
+    ol {
+      margin: 8px 0 16px 24px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    dl {
+      margin: 16px 0;
+    }
+
+    dt {
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    dd {
+      margin-left: 20px;
+      color: var(--text-muted);
+    }
+
+    /* ---- Tables ---- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: sans-serif;
+      font-size: 14px;
+      margin: 16px 0 24px;
+    }
+
+    th {
+      background: var(--color-primary);
+      color: #fff;
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: var(--bg-alt);
+    }
+
+    /* ---- Callout boxes ---- */
+    .callout {
+      border-left: 4px solid var(--color-primary);
+      background: var(--bg-alt);
+      padding: 14px 18px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 20px 0;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    .callout.warning {
+      border-color: var(--color-accent);
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ---- Wireframe figures ---- */
+    figure {
+      margin: 24px 0 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    figcaption {
+      font-family: sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-alt);
+    }
+
+    figure svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+    }
+
+    /* ---- Use case cards ---- */
+    .uc-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .uc-header {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 10px 16px;
+      font-family: sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .uc-body {
+      padding: 16px;
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+
+    .uc-body table td:first-child {
+      font-weight: 600;
+      width: 160px;
+      color: var(--text-muted);
+      background: none;
+    }
+
+    .uc-body table tr:nth-child(even) td {
+      background: var(--bg-alt);
+    }
+
+    /* ---- User story cards ---- */
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .story-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+
+    .story-card .actor {
+      display: inline-block;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .story-card .actor.organizer {
+      background: var(--color-teal);
+    }
+
+    .story-card .actor.admin {
+      background: var(--color-accent);
+    }
+
+    .story-card .story-text {
+      line-height: 1.5;
+    }
+
+    /* ---- Priority badge ---- */
+    .badge {
+      display: inline-block;
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .badge-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-low {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 800px) {
+      nav.toc {
+        display: none;
+      }
+
+      article {
+        padding: 32px 20px 60px;
+      }
+    }
+
+    @media print {
+      nav.toc {
+        display: none;
+      }
+
+      article {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <!-- Table of Contents -->
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Cuprins</h2>
+      <ol>
+        <li><a href="#s1">1. Introducere</a>
+          <ol class="toc-sub">
+            <li><a href="#s1-1">1.1 Scop</a></li>
+            <li><a href="#s1-2">1.2 Domeniu</a></li>
+            <li><a href="#s1-3">1.3 Definitii &amp; Acronime</a></li>
+            <li><a href="#s1-4">1.4 Referinte</a></li>
+            <li><a href="#s1-5">1.5 Prezentare generala</a></li>
+          </ol>
+        </li>
+        <li><a href="#s2">2. Descriere generala</a>
+          <ol class="toc-sub">
+            <li><a href="#s2-1">2.1 Perspectiva produsului</a></li>
+            <li><a href="#s2-2">2.2 Functiile produsului</a></li>
+            <li><a href="#s2-3">2.3 Caracteristicile utilizatorilor</a></li>
+            <li><a href="#s2-4">2.4 Constrangeri</a></li>
+            <li><a href="#s2-5">2.5 Ipoteze si dependente</a></li>
+          </ol>
+        </li>
+        <li><a href="#s3">3. Cerinte functionale</a>
+          <ol class="toc-sub">
+            <li><a href="#s3-1">3.1 Autentificare</a></li>
+            <li><a href="#s3-2">3.2 Browsing campinguri</a></li>
+            <li><a href="#s3-3">3.3 Rezervari</a></li>
+            <li><a href="#s3-4">3.4 Recenzii</a></li>
+            <li><a href="#s3-5">3.5 Colectii personale</a></li>
+            <li><a href="#s3-6">3.6 Organizator</a></li>
+            <li><a href="#s3-7">3.7 Administrare</a></li>
+            <li><a href="#s3-8">3.8 Contact</a></li>
+          </ol>
+        </li>
+        <li><a href="#s4">4. Cerinte non-functionale</a>
+          <ol class="toc-sub">
+            <li><a href="#s4-1">4.1 Securitate</a></li>
+            <li><a href="#s4-2">4.2 Performanta</a></li>
+            <li><a href="#s4-3">4.3 Scalabilitate</a></li>
+            <li><a href="#s4-4">4.4 Disponibilitate</a></li>
+            <li><a href="#s4-5">4.5 Utilizabilitate</a></li>
+            <li><a href="#s4-6">4.6 Portabilitate</a></li>
+          </ol>
+        </li>
+        <li><a href="#s5">5. Interfete externe</a></li>
+        <li><a href="#s6">6. Mockup-uri &amp; wireframes</a></li>
+        <li><a href="#s7">7. User stories</a></li>
+        <li><a href="#s8">8. Use cases principale</a></li>
+      </ol>
+    </nav>
+
+    <article vocab="https://schema.org/" typeof="TechArticle">
+
+      <header role="doc-title">
+        <span class="doc-type">IEEE 830 — Software Requirements Specification</span>
+        <h1 class="doc-title" property="name">CaT — Camping &amp; Travel Platform</h1>
+        <p class="doc-subtitle">Specificatie de cerinte software</p>
+        <div class="doc-meta">
+          <div class="meta-item">
+            <div class="label">Versiune</div>
+            <div>1.0.0</div>
+          </div>
+          <div class="meta-item">
+            <div class="label">Data</div>
+            <div><time property="datePublished" datetime="2026-05-28">28 mai 2026</time></div>
+          </div>
+          <div class="meta-item">
+            <div class="label">Autori</div>
+            <div property="author">Luciu Sebastian, Rusu Catalin</div>
+          </div>
+          <div class="meta-item">
+            <div class="label">Stare</div>
+            <div>Draft v1</div>
+          </div>
+        </div>
+      </header>
+
+      <section id="s1">
+        <h2>1. Introducere</h2>
+
+        <section id="s1-1">
+          <h3>1.1 Scop</h3>
+          <p>
+            Acest document reprezinta specificatia completa a cerintelor software (SRS) pentru
+            platforma web <strong>CaT (Camping &amp; Travel)</strong>. Documentul descrie
+            comportamentul functional si non-functional al sistemului, actorii implicati,
+            constrangerile tehnice si scenariile de utilizare principale.
+          </p>
+          <p>
+            Documentul se adreseaza echipei de dezvoltare, evaluatorilor academici si oricarui
+            stakeholder care doreste sa inteleaga scopul si limitele sistemului.
+          </p>
+        </section>
+
+        <section id="s1-2">
+          <h3>1.2 Domeniu</h3>
+          <p>
+            <strong>CaT</strong> este o aplicatie web de tip marketplace pentru descoperirea,
+            listarea si rezervarea locatiilor de camping din Romania. Platforma conecteaza
+            turisti cu organizatori de campinguri, ofera o harta interactiva, un sistem de
+            recenzii cu media atasata si un panou de administrare complet.
+          </p>
+          <p>Sistemul <em>nu</em> include procesarea platilor online (pretul este calculat si
+            afisat, dar tranzactia se finalizeaza offline), si <em>nu</em> gestioneaza
+            logistica transportului.</p>
+        </section>
+
+        <section id="s1-3">
+          <h3>1.3 Definitii, Acronime si Abrevieri</h3>
+          <dl>
+            <dt>CaT</dt>
+            <dd>Camping &amp; Travel — numele platformei.</dd>
+            <dt>SRS</dt>
+            <dd>Software Requirements Specification.</dd>
+            <dt>Actor</dt>
+            <dd>Entitate (om sau sistem extern) care interactioneaza cu platforma.</dd>
+            <dt>Organizator</dt>
+            <dd>Utilizator cu rol verificat care poate publica locatii de camping.</dd>
+            <dt>Admin</dt>
+            <dd>Utilizator cu drepturi depline de administrare a platformei.</dd>
+            <dt>Camping</dt>
+            <dd>Locatie de cazare in natura listata pe platforma (cort, glamping, rulota, cabana, salbatic).</dd>
+            <dt>Sectiune</dt>
+            <dd>Colectie personala de campinguri creata de un utilizator inregistrat.</dd>
+            <dt>JWT / Bearer Token</dt>
+            <dd>Token de autentificare transmis in antetul HTTP <code>Authorization</code>.</dd>
+            <dt>OAuth 2.0</dt>
+            <dd>Protocol de autorizare folosit pentru conectarea cu contul Google.</dd>
+            <dt>LAMPP</dt>
+            <dd>Stack Linux + Apache + MySQL + PHP utilizat in deployment-ul local.</dd>
+            <dt>API REST</dt>
+            <dd>Interfata HTTP cu resurse la adrese predictibile si verbe standard (GET, POST, PATCH, DELETE).</dd>
+          </dl>
+        </section>
+
+        <section id="s1-4">
+          <h3>1.4 Referinte</h3>
+          <ul>
+            <li>IEEE Std 830-1998, <em>Recommended Practice for Software Requirements Specifications</em></li>
+            <li>OWASP Top 10 (2021), <em>Web Application Security Risks</em></li>
+            <li>RFC 7519 — JSON Web Tokens (JWT)</li>
+            <li>RFC 6749 — The OAuth 2.0 Authorization Framework</li>
+            <li>Leaflet.js 1.9.4 — Biblioteca de harti interactive</li>
+            <li>PHP 8.x — Limbaj de programare backend</li>
+          </ul>
+        </section>
+
+        <section id="s1-5">
+          <h3>1.5 Prezentare generala a documentului</h3>
+          <p>
+            Sectiunea 2 descrie contextul general al produsului si caracteristicile utilizatorilor.
+            Sectiunea 3 detaliaza cerintele functionale per modul. Sectiunea 4 acopera cerintele
+            non-functionale. Sectiunile 5–8 contin interfetele externe, wireframe-urile, user
+            stories si use case-urile principale.
+          </p>
+        </section>
+      </section>
+
+      <section id="s2">
+        <h2>2. Descriere generala a produsului</h2>
+
+        <section id="s2-1">
+          <h3>2.1 Perspectiva produsului</h3>
+          <p>
+            CaT este o aplicatie web autonoma, accesibila dintr-un browser modern fara
+            instalare locala. Backend-ul PHP expune un API REST consumat exclusiv de
+            frontend-ul JavaScript SPA (Single Page Application) cu navigare intre pagini HTML
+            statice. Datele sunt stocate intr-o baza MySQL gestionata de LAMPP.
+          </p>
+          <p>
+            Sistemul interactioneaza cu doua servicii externe: <strong>Google OAuth 2.0</strong>
+            (autentificare alternativa) si <strong>OpenStreetMap/Leaflet</strong>
+            (afisarea hartii interactive).
+          </p>
+
+          <figure>
+            <div class="wireframe">
+              <img src="assets/model.png" alt="Modelul logic al bazei de date CaT" class="img-fluid">
+            </div>
+            <figcaption>Figura 1 — Modelul logic al bazei de date CaT</figcaption>
+          </figure>
+        </section>
+
+        <section id="s2-2">
+          <h3>2.2 Functiile principale ale produsului</h3>
+          <ul>
+            <li><strong>Autentificare</strong> — inregistrare, login cu email/parola sau cont Google, gestionare profil
+              si preferinte.</li>
+            <li><strong>Catalog campinguri</strong> — listare, filtrare si cautare dupa tip, regiune, pret si rating.
+            </li>
+            <li><strong>Harta interactiva</strong> — vizualizare campinguri pe harta OSM cu filtrare si cautare locatie.
+            </li>
+            <li><strong>Rezervari</strong> — verificare disponibilitate, creare si anulare rezervari, istoric.</li>
+            <li><strong>Recenzii</strong> — text + rating stele + media (imagini, audio, video), editare si stergere.
+            </li>
+            <li><strong>Colectii personale</strong> — organizare campinguri favorite in sectiuni cu nume si culori.</li>
+            <li><strong>Modul organizator</strong> — aplicatie de verificare, creare si publicare campinguri.</li>
+            <li><strong>Panou admin</strong> — gestionare utilizatori, aprobare campinguri, statistici, export/import
+              date.</li>
+            <li><strong>Contact</strong> — formular de mesaje intre vizitatori si echipa platformei.</li>
+          </ul>
+        </section>
+
+        <section id="s2-3">
+          <h3>2.3 Actorii sistemului si caracteristicile lor</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Actor</th>
+                <th>Rol</th>
+                <th>Acces</th>
+                <th>Cunostinte tehnice</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Vizitator</strong></td>
+                <td>Utilizator neautentificat</td>
+                <td>Citeste campinguri, harta, pagina de prezentare; trimite mesaj contact</td>
+                <td>Utilizator web general</td>
+              </tr>
+              <tr>
+                <td><strong>Utilizator</strong></td>
+                <td>Cont inregistrat, rol <code>user</code></td>
+                <td>Toate functiile de vizitator + rezervari, recenzii, colectii, profil</td>
+                <td>Utilizator web general</td>
+              </tr>
+              <tr>
+                <td><strong>Organizator</strong></td>
+                <td>Cont verificat, rol <code>organizer</code></td>
+                <td>Toate functiile utilizator + creare, editare, publicare campinguri proprii</td>
+                <td>Utilizator cu cunostinte de baza privind listarea online</td>
+              </tr>
+              <tr>
+                <td><strong>Administrator</strong></td>
+                <td>Cont cu rol <code>admin</code></td>
+                <td>Acces complet: aprobare campinguri, gestionare utilizatori, statistici, export/import</td>
+                <td>Operator de platforma cu cunostinte tehnice medii</td>
+              </tr>
+              <tr>
+                <td><strong>Google OAuth</strong></td>
+                <td>Serviciu extern de autentificare</td>
+                <td>Furnizeaza identitate verificata (email, nume, avatar)</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="s2-4">
+          <h3>2.4 Constrangeri</h3>
+          <ul>
+            <li><strong>Tehnice:</strong> PHP 8.x, MySQL 8.x, Apache 2.4, JavaScript ES2020+; fara framework JS extern
+              major (React/Vue).</li>
+            <li><strong>Browser:</strong> Compatibilitate cu ultimele doua versiuni majore din Chrome, Firefox, Safari,
+              Edge.</li>
+            <li><strong>Upload media:</strong> Fisierele incarcate sunt stocate pe disc local (<code>/uploads/</code>);
+              nu exista integrare CDN.</li>
+            <li><strong>Plati:</strong> Sistemul nu proceseaza plati online; pretul este informativ.</li>
+            <li><strong>Localizare:</strong> Interfata in limba romana (principala) cu suport i18n extensibil.</li>
+            <li><strong>Reglementari:</strong> Aplicatia trebuie sa respecte GDPR pentru datele utilizatorilor din UE.
+            </li>
+          </ul>
+        </section>
+
+        <section id="s2-5">
+          <h3>2.5 Ipoteze si dependente</h3>
+          <ul>
+            <li>Serverul are acces la internet pentru incarcarea Leaflet.js si Google OAuth.</li>
+            <li>Baza de date MySQL este accesibila pe <code>localhost</code> cu credentialele configurate in
+              <code>backend/config/app.php</code>.
+            </li>
+            <li>Directorul <code>public/uploads/</code> este accesibil la scriere de catre procesul Apache.</li>
+            <li>Credentialele Google OAuth (client ID + secret) sunt configurate inainte de activarea autentificarii
+              Google.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ================================================================
+       SECTION 3 — FUNCTIONAL REQUIREMENTS
+       ================================================================ -->
+      <section id="s3">
+        <h2>3. Cerinte functionale</h2>
+
+        <div class="callout">
+          <strong>Conventie de identificare</strong>
+          Fiecare cerinta este identificata prin codul <code>FR-[modul]-[nr]</code>.
+          Prioritatea este marcata: <span class="badge badge-high">High</span>
+          <span class="badge badge-medium">Medium</span>
+          <span class="badge badge-low">Low</span>.
+        </div>
+
+        <!-- 3.1 Auth -->
+        <section id="s3-1">
+          <h3>3.1 Autentificare si gestionare cont</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-AUTH-01</td>
+                <td>Vizitatorul poate crea un cont nou cu username, email si parola. Sistemul valideaza unicitatea
+                  email-ului si a username-ului.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-AUTH-02</td>
+                <td>Utilizatorul se poate autentifica cu email si parola. La succes primeste un Bearer Token stocat in
+                  <code>localStorage</code>.
+                </td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-AUTH-03</td>
+                <td>Utilizatorul se poate autentifica prin contul Google (OAuth 2.0). La prima conectare se creeaza
+                  automat un cont local.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-AUTH-04</td>
+                <td>Utilizatorul autentificat poate actualiza profilul: prenume, nume, username, bio, poza de profil si
+                  poza de cover.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-AUTH-05</td>
+                <td>Utilizatorul se poate deconecta. Token-ul de sesiune este invalidat pe server.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-AUTH-06</td>
+                <td>Utilizatorul poate salva preferinte de camping (tip, stil de calatorie, zone preferate). Acestea
+                  sunt afisate si editabile din profil.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.2 Campings -->
+        <section id="s3-2">
+          <h3>3.2 Browsing si cautare campinguri</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-CAMP-01</td>
+                <td>Orice vizitator poate naviga lista de campinguri aprobate cu paginare.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-CAMP-02</td>
+                <td>Lista poate fi filtrata dupa: tip (cort, glamping, rulota, cabana, salbatic), pret maxim pe noapte,
+                  rating minim si regiune.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-CAMP-03</td>
+                <td>Fiecare camping are o pagina de detaliu cu galerie foto, descriere, facilitati, harta Leaflet,
+                  recenzii si card de rezervare.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-CAMP-04</td>
+                <td>Pagina de harta afiseaza toti marcatorii campingurilor aprobate. Clicul pe marker deschide un popup
+                  cu link spre detaliu.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-CAMP-05</td>
+                <td>Harta permite filtrarea campingurilor dupa tip, pret maxim si rating minim direct din sidebar.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-CAMP-06</td>
+                <td>Harta afiseaza punctele de interes (POI) in raza de 5 km fata de camping-ul selectat.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.3 Bookings -->
+        <section id="s3-3">
+          <h3>3.3 Rezervari</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-BOOK-01</td>
+                <td>Utilizatorul autentificat poate rezerva un camping selectand check-in, check-out si numarul de
+                  oaspeti. Pretul total este calculat automat.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-BOOK-02</td>
+                <td>Sistemul verifica disponibilitatea camping-ului pentru intervalul ales si refuza rezervarile care se
+                  suprapun cu altele confirmate.</td>
+                <td>Sistem</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-BOOK-03</td>
+                <td>Utilizatorul poate vizualiza istoricul rezervarilor din pagina de cont, cu filtrare dupa status.
+                </td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-BOOK-04</td>
+                <td>Utilizatorul poate anula o rezervare cu status <em>pending</em> sau <em>confirmed</em>.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-BOOK-05</td>
+                <td>Utilizatorul poate vedea detaliile complete ale unei rezervari (camping, date, pret, status) pe o
+                  pagina dedicata.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.4 Reviews -->
+        <section id="s3-4">
+          <h3>3.4 Recenzii</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-REV-01</td>
+                <td>Utilizatorul autentificat care nu a lasat inca o recenzie poate adauga o recenzie (rating 1-5 stele
+                  + text) la un camping.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-REV-02</td>
+                <td>La adaugarea recenziei se pot atasa fisiere (imagini, audio, video). Fisierele sunt incarcate prin
+                  multipart/form-data.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-REV-03</td>
+                <td>Utilizatorul poate edita propria recenzie (text, rating, media). Media existenta poate fi stearsa
+                  individual.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-REV-04</td>
+                <td>Utilizatorul poate sterge propria recenzie, dupa confirmare explicita.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-REV-05</td>
+                <td>Ratingul mediu al camping-ului se recalculeaza automat la adaugarea, editarea sau stergerea unei
+                  recenzii.</td>
+                <td>Sistem</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-REV-06</td>
+                <td>Media atasata recenziei poate fi vizualizata in lightbox (imagini si video) sau redata direct
+                  (audio).</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.5 Sections -->
+        <section id="s3-5">
+          <h3>3.5 Colectii personale (Sectiuni)</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-SEC-01</td>
+                <td>Utilizatorul poate crea colectii personale de campinguri cu un nume si o culoare de identificare.
+                </td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-SEC-02</td>
+                <td>Utilizatorul poate adauga si elimina campinguri dintr-o colectie.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-SEC-03</td>
+                <td>Utilizatorul poate redenumi si sterge o colectie proprie.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+              <tr>
+                <td>FR-SEC-04</td>
+                <td>Colectiile sunt vizibile exclusiv utilizatorului proprietar; nu sunt publice.</td>
+                <td>Sistem</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.6 Organizer -->
+        <section id="s3-6">
+          <h3>3.6 Modulul organizator</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-ORG-01</td>
+                <td>Utilizatorul poate aplica pentru rolul de organizator completand un formular cu date despre afacere
+                  si documente legale.</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ORG-02</td>
+                <td>Utilizatorul poate verifica statusul aplicatiei sale (pending, aprobat, respins).</td>
+                <td>Utilizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-ORG-03</td>
+                <td>Organizatorul aprobat poate crea un camping nou cu: nume, descriere, tip, adresa, coordonate GPS,
+                  pret/noapte, capacitate, facilitati si mediu.</td>
+                <td>Organizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ORG-04</td>
+                <td>Camping-ul nou creat primeste statusul <em>pending</em> si trebuie aprobat de un admin inainte de
+                  publicare.</td>
+                <td>Sistem</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ORG-05</td>
+                <td>Organizatorul poate edita campingurile proprii si poate incarca media (galerie foto).</td>
+                <td>Organizator</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ORG-06</td>
+                <td>Dupa respingerea de catre admin cu feedback, organizatorul poate corecta camping-ul si il poate
+                  retrimite pentru aprobare.</td>
+                <td>Organizator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.7 Admin -->
+        <section id="s3-7">
+          <h3>3.7 Panou de administrare</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-ADM-01</td>
+                <td>Adminul poate vedea lista campingurilor <em>pending</em> si le poate aproba sau respinge (cu mesaj
+                  de feedback optional).</td>
+                <td>Admin</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-02</td>
+                <td>Adminul poate vedea lista aplicatiilor de organizator si le poate aproba sau respinge.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-03</td>
+                <td>Adminul poate gestiona utilizatorii: vizualizare, banare temporara sau permanenta si ridicare
+                  interdictie.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-high">High</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-04</td>
+                <td>Adminul poate vedea statistici ale platformei: numar utilizatori, campinguri, rezervari, recenzii —
+                  in format rezumat si grafic SVG.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-05</td>
+                <td>Adminul poate exporta date (campinguri, rezervari, recenzii, utilizatori) in format CSV sau JSON.
+                </td>
+                <td>Admin</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-06</td>
+                <td>Adminul poate importa campinguri in bulk dintr-un fisier JSON.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-07</td>
+                <td>Adminul poate vizualiza mesajele trimise prin formularul de contact.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+              <tr>
+                <td>FR-ADM-08</td>
+                <td>Adminul poate genera un raport PDF cu statistici ale platformei.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-low">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3.8 Contact -->
+        <section id="s3-8">
+          <h3>3.8 Contact</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cerinta</th>
+                <th>Actor</th>
+                <th>Prioritate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-CON-01</td>
+                <td>Orice vizitator poate trimite un mesaj de contact (nume, email, telefon optional, mesaj) din pagina
+                  principala.</td>
+                <td>Vizitator</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>FR-CON-02</td>
+                <td>Mesajele primite sunt vizibile in panoul de admin cu data si datele expeditorului.</td>
+                <td>Admin</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- ================================================================
+       SECTION 4 — NON-FUNCTIONAL REQUIREMENTS
+       ================================================================ -->
+      <section id="s4">
+        <h2>4. Cerinte non-functionale</h2>
+
+        <section id="s4-1">
+          <h3>4.1 Securitate</h3>
+
+          <h4>Autentificare si autorizare</h4>
+          <ul>
+            <li><strong>NFR-SEC-01:</strong> Toate parolele sunt stocate hashuite cu <code>bcrypt</code> (cost &ge; 10).
+              Niciodata in text clar.</li>
+            <li><strong>NFR-SEC-02:</strong> Sesiunile sunt gestionate prin Bearer Tokens cu expirare configurabila
+              (implicit 30 de zile). Token-ul este invalidat la logout pe server.</li>
+            <li><strong>NFR-SEC-03:</strong> Toate endpoint-urile care modifica date verifica rolul utilizatorului
+              autentificat. Accesul neautorizat returneaza HTTP 401/403.</li>
+            <li><strong>NFR-SEC-04:</strong> Operatiunile pe resurse proprii (editare camping, stergere recenzie)
+              verifica ownership-ul in model, nu doar in controller.</li>
+          </ul>
+
+          <h4>Validarea datelor si protectie impotriva atacurilor</h4>
+          <ul>
+            <li><strong>NFR-SEC-05:</strong> Toate interogarile SQL folosesc prepared statements PDO pentru prevenirea
+              SQL Injection (OWASP A03).</li>
+            <li><strong>NFR-SEC-06:</strong> Datele afisate in HTML sunt escapate pentru prevenirea XSS (OWASP A03).
+              Template strings JS folosesc textContent unde este posibil.</li>
+            <li><strong>NFR-SEC-07:</strong> Fisierele incarcate sunt validate dupa tip MIME si extensie. Nu se executa
+              fisiere incarcate de utilizatori.</li>
+            <li><strong>NFR-SEC-08:</strong> Header-ele HTTP de securitate sunt configurate pe server:
+              <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>.
+            </li>
+            <li><strong>NFR-SEC-09:</strong> Utilizatorii cu ban activ primesc HTTP 403 la orice request autentificat.
+            </li>
+          </ul>
+
+          <h4>GDPR si date personale</h4>
+          <ul>
+            <li><strong>NFR-SEC-10:</strong> Utilizatorii pot solicita stergerea contului. Stergerea cascadeaza
+              rezervarile si recenziile asociate.</li>
+            <li><strong>NFR-SEC-11:</strong> Datele de sesiune expirate sunt curatate periodic prin job de cleanup.</li>
+          </ul>
+        </section>
+
+        <section id="s4-2">
+          <h3>4.2 Performanta</h3>
+          <ul>
+            <li><strong>NFR-PERF-01:</strong> Pagina de catalog (<code>/api/campings</code>) trebuie sa raspunda in mai
+              putin de <strong>500 ms</strong> pentru maximum 100 de rezultate pe pagina.</li>
+            <li><strong>NFR-PERF-02:</strong> Endpoint-ul de harta (<code>/api/campings/map</code>) returneaza cel mult
+              campurile necesare marcatorilor (id, lat, lng, name, type, rating) pentru a minimiza payload-ul.</li>
+            <li><strong>NFR-PERF-03:</strong> Imaginile incarcate de utilizatori nu sunt redimensionate automat in faza
+              actuala; se recomanda limitarea la <strong>10 MB/fisier</strong> la nivel de server.</li>
+            <li><strong>NFR-PERF-04:</strong> Paginile HTML sunt servite de Apache cu compresie gzip activata.</li>
+            <li><strong>NFR-PERF-05:</strong> Interogarile de cautare folosesc indecsi pe coloanele
+              <code>approval_status</code>, <code>type</code>, <code>region</code> si <code>price_per_night</code>.
+            </li>
+          </ul>
+        </section>
+
+        <section id="s4-3">
+          <h3>4.3 Scalabilitate</h3>
+          <ul>
+            <li><strong>NFR-SCAL-01:</strong> Arhitectura stateless (token-based) permite adaugarea de instante Apache
+              fara sincronizare de sesiune.</li>
+            <li><strong>NFR-SCAL-02:</strong> Schema bazei de date poate suporta pana la <strong>100.000 de
+                campinguri</strong> si <strong>1.000.000 de rezervari</strong> fara modificari structurale, cu conditia
+              indexarii corecte.</li>
+            <li><strong>NFR-SCAL-03:</strong> Upload-ul de media este izolat intr-un modul MediaController, permitand
+              migrarea viitoare catre un serviciu de stocare extern (S3-compatibil) fara refactoring major.</li>
+          </ul>
+        </section>
+
+        <section id="s4-4">
+          <h3>4.4 Disponibilitate si fiabilitate</h3>
+          <ul>
+            <li><strong>NFR-AVAIL-01:</strong> Sistemul trebuie sa fie disponibil <strong>99%</strong> din timp in
+              intervalul de lucru (08:00–24:00).</li>
+            <li><strong>NFR-AVAIL-02:</strong> Erorile API (5xx) trebuie sa returneze un JSON cu campul
+              <code>error</code> descriptiv. Frontend-ul afiseaza un toast de eroare, nu o pagina alba.
+            </li>
+            <li><strong>NFR-AVAIL-03:</strong> Baza de date beneficiaza de backup zilnic al dump-ului MySQL.</li>
+          </ul>
+        </section>
+
+        <section id="s4-5">
+          <h3>4.5 Utilizabilitate (Usability)</h3>
+          <ul>
+            <li><strong>NFR-USE-01:</strong> Interfata este responsive si functionala pe dispozitive mobile (&ge; 360 px
+              latime) si desktop.</li>
+            <li><strong>NFR-USE-02:</strong> Notificarile catre utilizator (succes, eroare, avertisment) sunt afisate
+              prin componenta toast non-blocanta, nu prin <code>alert()</code> nativ.</li>
+            <li><strong>NFR-USE-03:</strong> Actiunile distructive (stergere recenzie, anulare rezervare) necesita
+              confirmare explicita prin dialog custom.</li>
+            <li><strong>NFR-USE-04:</strong> Interfata suporta doua teme (light / dark) commutabile din panoul de cont.
+            </li>
+            <li><strong>NFR-USE-05:</strong> Structura de titluri HTML respecta ierarhia h1 → h2 → h3 pentru
+              accesibilitate.</li>
+            <li><strong>NFR-USE-06:</strong> Textele sunt internalizate prin sistemul i18n cu fisiere de traducere JSON,
+              permitand adaugarea de noi limbi fara modificari de template.</li>
+          </ul>
+        </section>
+
+        <section id="s4-6">
+          <h3>4.6 Portabilitate si mentenabilitate</h3>
+          <ul>
+            <li><strong>NFR-PORT-01:</strong> Backend-ul ruleaza pe orice server cu PHP 8+ si MySQL 8+ (XAMPP, LAMPP,
+              hosting standard).</li>
+            <li><strong>NFR-PORT-02:</strong> Frontend-ul este compus din fisiere HTML, CSS si JS statice fara build
+              step, deployabile direct pe orice server web.</li>
+            <li><strong>NFR-MAINT-01:</strong> Migrarile de schema SQL sunt versionizate in
+              <code>backend/db/migrations/</code> si rulate in ordine numerica.
+            </li>
+            <li><strong>NFR-MAINT-02:</strong> Codul backend respecta separarea Controller–Model–Router; logica de
+              business nu exista in router sau fisiere de configurare.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section id="s5">
+        <h2>5. Interfete externe</h2>
+
+        <h3>5.1 Interfata utilizator (UI)</h3>
+        <p>Frontend-ul este livrat ca pagini HTML statice. Comunicarea cu backend-ul se face
+          exclusiv prin API REST JSON. Nu exista server-side rendering de template-uri HTML.</p>
+
+        <h3>5.2 Interfata API REST</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Grup</th>
+              <th>Prefix</th>
+              <th>Autentificare necesara</th>
+              <th>Descriere</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Auth</td>
+              <td><code>/api/auth/</code></td>
+              <td>Partial</td>
+              <td>Register, login, logout, me, OAuth Google</td>
+            </tr>
+            <tr>
+              <td>Campings</td>
+              <td><code>/api/campings/</code></td>
+              <td>Partial</td>
+              <td>CRUD campinguri, filtrare, markere harta</td>
+            </tr>
+            <tr>
+              <td>Bookings</td>
+              <td><code>/api/bookings/</code></td>
+              <td>Da</td>
+              <td>CRUD rezervari, anulare, disponibilitate</td>
+            </tr>
+            <tr>
+              <td>Reviews</td>
+              <td><code>/api/campings/{id}/reviews</code></td>
+              <td>Partial</td>
+              <td>CRUD recenzii per camping</td>
+            </tr>
+            <tr>
+              <td>Media</td>
+              <td><code>/api/{type}/{id}/media</code></td>
+              <td>Da</td>
+              <td>Upload si stergere media camping/recenzie</td>
+            </tr>
+            <tr>
+              <td>Sections</td>
+              <td><code>/api/sections/</code></td>
+              <td>Da</td>
+              <td>Colectii personale campinguri</td>
+            </tr>
+            <tr>
+              <td>Organizers</td>
+              <td><code>/api/organizers/</code></td>
+              <td>Da</td>
+              <td>Aplicatii organizator</td>
+            </tr>
+            <tr>
+              <td>Preferences</td>
+              <td><code>/api/preferences</code></td>
+              <td>Da</td>
+              <td>Preferinte utilizator</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td><code>/api/contact</code></td>
+              <td>Nu</td>
+              <td>Mesaje contact</td>
+            </tr>
+            <tr>
+              <td>Admin</td>
+              <td><code>/api/admin/</code></td>
+              <td>Admin only</td>
+              <td>Gestionare users, campinguri, stats, export/import</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Toate raspunsurile sunt in format <code>application/json</code>. Erorile returneaza
+          <code>{ "error": "mesaj descriptiv" }</code> cu codul HTTP corespunzator.
+        </p>
+
+        <h3>5.3 Servicii externe</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Serviciu</th>
+              <th>Scop</th>
+              <th>Protocol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Google OAuth 2.0</td>
+              <td>Autentificare alternativa cu cont Google</td>
+              <td>HTTPS redirect + callback</td>
+            </tr>
+            <tr>
+              <td>OpenStreetMap / Leaflet.js</td>
+              <td>Tile-uri de harta si interactiune cartografica</td>
+              <td>HTTPS CDN (tiles + JS)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="s6">
+        <h2>6. Mockup-uri si wireframe-uri</h2>
+
+        <p>Wireframe-urile de mai jos reprezinta schita structurala a paginilor principale,
+          fara detalii vizuale finale.</p>
+
+        <!-- Landing Page -->
+        <figure>
+          <div class="wireframe">
+            <img src="assets/wireframe1.png" alt="Wireframe 1 — Pagina principala (index.html)" class="img-fluid">
+          </div>
+          <figcaption>Wireframe 1 — Pagina principala (index.html)</figcaption>
+        </figure>
+
+        <!-- Catalog Campings -->
+        <figure>
+          <div class="wireframe">
+            <img src="assets/wireframe2.png" alt="Wireframe 2 — Catalog campinguri (campings.html)" class="img-fluid">
+          </div>
+          <figcaption>Wireframe 2 — Catalog campinguri (campings.html)</figcaption>
+        </figure>
+
+        <!-- Camping Detail -->
+        <figure>
+          <div class="wireframe">
+            <img src="assets/wireframe3.png" alt="Wireframe 3 — Pagina de detalii camping (camping.html)"
+              class="img-fluid">
+          </div>
+          <figcaption>Wireframe 3 — Pagina detaliu camping (camping.html)</figcaption>
+        </figure>
+
+        <!-- Map -->
+        <figure>
+          <div class="wireframe">
+            <img src="assets/wireframe4.png" alt="Wireframe 4 — Harta interactiva (map.html)" class="img-fluid">
+          </div>
+          <figcaption>Wireframe 4 — Harta interactiva (map.html)</figcaption>
+        </figure>
+
+        <figcaption>Wireframe 6 — Panou de administrare (account.html → tab Admin)</figcaption>
+        </figure>
+      </section>
+
+      <section id="s7">
+        <h2>7. User Stories</h2>
+
+        <p>User stories sunt formulate conform sablonului:
+          <em>"Ca [actor], vreau sa [actiune], astfel incat sa [beneficiu]."</em>
+        </p>
+
+        <h3>Vizitator / Utilizator neautentificat</h3>
+        <div class="story-grid">
+          <div class="story-card">
+            <span class="actor">Vizitator</span>
+            <p class="story-text">Ca vizitator, vreau sa rasfoiesc campinguri fara cont, astfel incat sa imi dau seama
+              daca platforma imi este utila inainte de a ma inregistra.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Vizitator</span>
+            <p class="story-text">Ca vizitator, vreau sa vad campingurile pe o harta interactiva, astfel incat sa gasesc
+              rapid locatii aproape de destinatia mea.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Vizitator</span>
+            <p class="story-text">Ca vizitator, vreau sa filtrez campinguri dupa tip si pret, astfel incat sa vad doar
+              optiunile relevante pentru bugetul meu.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Vizitator</span>
+            <p class="story-text">Ca vizitator, vreau sa trimit un mesaj echipei prin formularul de contact, astfel
+              incat sa pot pune o intrebare inainte de rezervare.</p>
+          </div>
+        </div>
+
+        <h3>Utilizator inregistrat</h3>
+        <div class="story-grid">
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa ma autentific cu contul Google, astfel incat sa nu trebuiasca
+              sa tin minte o parola noua.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa rezerv un camping pentru datele dorite, astfel incat sa imi
+              asigur locul inainte de a pleca.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa vad pretul total calculat automat in functie de nopti si
+              oaspeti, astfel incat sa nu fac calcule manuale.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa anulez o rezervare, astfel incat sa nu platesc pentru o
+              calatorie anulata.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa las o recenzie cu text, rating si poze, astfel incat sa ajut
+              alti turisti sa ia decizii informate.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa creez o colectie "Campinguri de munte" cu campinguri favorite,
+              astfel incat sa le regasesc usor mai tarziu.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa imi actualizez poza de profil si bio, astfel incat recenziile
+              mele sa aiba o identitate vizuala.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor">Utilizator</span>
+            <p class="story-text">Ca utilizator, vreau sa comut intre tema light si dark, astfel incat sa folosesc
+              aplicatia confortabil si noaptea.</p>
+          </div>
+        </div>
+
+        <h3>Organizator</h3>
+        <div class="story-grid">
+          <div class="story-card">
+            <span class="actor organizer">Organizator</span>
+            <p class="story-text">Ca organizator, vreau sa aplic pentru verificare cu documentele afacerii mele, astfel
+              incat sa obtin dreptul de a publica campinguri.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor organizer">Organizator</span>
+            <p class="story-text">Ca organizator, vreau sa creez o lista pentru camping-ul meu cu facilitati, mediu si
+              pret, astfel incat potentialii clienti sa aiba toate informatiile.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor organizer">Organizator</span>
+            <p class="story-text">Ca organizator, vreau sa incarc o galerie foto pentru camping, astfel incat sa atrag
+              mai multi turisti cu imagini reale.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor organizer">Organizator</span>
+            <p class="story-text">Ca organizator, vreau sa corectez camping-ul respins si sa il retrimet, astfel incat
+              sa nu pierd oportunitatea de listare.</p>
+          </div>
+        </div>
+
+        <h3>Administrator</h3>
+        <div class="story-grid">
+          <div class="story-card">
+            <span class="actor admin">Admin</span>
+            <p class="story-text">Ca admin, vreau sa aprob sau resping campinguri cu feedback, astfel incat sa mentin
+              calitatea listei platformei.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor admin">Admin</span>
+            <p class="story-text">Ca admin, vreau sa banez utilizatori abuzivi, astfel incat sa protejez comunitatea.
+            </p>
+          </div>
+          <div class="story-card">
+            <span class="actor admin">Admin</span>
+            <p class="story-text">Ca admin, vreau sa export datele in CSV, astfel incat sa le analizez in Excel sau sa
+              le import in alt sistem.</p>
+          </div>
+          <div class="story-card">
+            <span class="actor admin">Admin</span>
+            <p class="story-text">Ca admin, vreau sa vad statistici si grafice cu activitatea platformei, astfel incat
+              sa iau decizii de business informate.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+       SECTION 8 — USE CASES
+       ================================================================ -->
+      <section id="s8">
+        <h2>8. Use Cases principale</h2>
+
+        <!-- UC-01 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-01 — Inregistrare utilizator nou</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Vizitator</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Utilizatorul nu are cont existent cu acelasi email sau username.</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Vizitatorul acceseaza <code>/pages/register.html</code>.</li>
+                      <li>Completeaza formularul: username, email, parola, confirmare parola.</li>
+                      <li>Trimite formularul (POST <code>/api/auth/register</code>).</li>
+                      <li>Sistemul valideaza campurile si unicitatea.</li>
+                      <li>Sistemul creeaza contul, genereaza un Bearer Token si il returneaza.</li>
+                      <li>Frontend-ul salveaza token-ul si redirecteaza la <code>/pages/account/account.html</code>.
+                      </li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ</td>
+                  <td>Daca email-ul sau username-ul exista deja, se afiseaza toast de eroare si formularul ramane
+                    deschis.</td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Utilizatorul are cont activ si este autentificat.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UC-02 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-02 — Rezervare camping</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Utilizator autentificat</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Utilizatorul este autentificat. Camping-ul este aprobat si publicat.</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Utilizatorul acceseaza pagina de detaliu a camping-ului.</li>
+                      <li>Selecteaza data check-in, check-out si numarul de oaspeti.</li>
+                      <li>Sistemul calculeaza pretul total si il afiseaza in timp real.</li>
+                      <li>Utilizatorul apasa "Rezerva acum" (POST <code>/api/bookings</code>).</li>
+                      <li>Sistemul verifica disponibilitatea intervalului ales.</li>
+                      <li>Sistemul creeaza rezervarea cu status <em>pending</em>.</li>
+                      <li>Se afiseaza toast de succes si utilizatorul este redirectat la contul sau.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ A</td>
+                  <td>Daca datele nu sunt selectate: toast de avertisment, rezervarea nu este trimisa.</td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ B</td>
+                  <td>Daca camping-ul nu este disponibil in intervalul ales: API returneaza eroare, se afiseaza toast de
+                    eroare.</td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Rezervarea apare in istoricul utilizatorului cu status <em>pending</em>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UC-03 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-03 — Adaugare recenzie cu media</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Utilizator autentificat</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Utilizatorul este autentificat si nu a lasat deja o recenzie la acest camping.</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Utilizatorul naviga la pagina de detaliu camping.</li>
+                      <li>Sectiunea "Scrie o recenzie" este vizibila (afisata de JS dupa verificarea eligibilitatii).
+                      </li>
+                      <li>Selecteaza ratingul (1–5 stele) prin click pe stele.</li>
+                      <li>Scrie textul recenziei in textarea.</li>
+                      <li>Optionalni: selecteaza fisiere media (imagini, audio, video).</li>
+                      <li>Apasa "Trimite Recenzia" (POST <code>/api/campings/{id}/reviews</code>).</li>
+                      <li>Daca exista fisiere: upload multipart pentru fiecare (POST
+                        <code>/api/reviews/{id}/media</code>).
+                      </li>
+                      <li>Pagina se reincarca automat; recenzia apare in lista.</li>
+                      <li>Ratingul mediu al camping-ului este actualizat.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ</td>
+                  <td>Daca niciun rating nu este selectat: toast de avertisment "Selecteaza o nota!"</td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Recenzia este publicata. Ratingul mediu al camping-ului este recalculat.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UC-04 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-04 — Publicare camping de catre organizator</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Organizator</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Utilizatorul are rolul <code>organizer</code> (aplicatie aprobata de admin).</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Organizatorul acceseaza tab-ul "Organizator CaT" din contul sau.</li>
+                      <li>Completeaza formularul de creare camping: nume, descriere, tip, adresa, coordonate, pret,
+                        capacitate, facilitati, mediu.</li>
+                      <li>Incarca imagini pentru galerie.</li>
+                      <li>Trimite camping-ul (POST <code>/api/campings</code>).</li>
+                      <li>Camping-ul primeste statusul <em>pending</em>.</li>
+                      <li>Adminul aproba camping-ul (PATCH <code>/api/admin/campings/{id}/approve</code>).</li>
+                      <li>Camping-ul devine vizibil in catalog si pe harta.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ</td>
+                  <td>Admin respinge cu feedback → organizatorul corecteaza → retrimite (POST
+                    <code>/api/campings/{id}/resubmit</code>).
+                  </td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Camping-ul aprobat este vizibil publicului.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UC-05 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-05 — Banare utilizator de catre admin</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Administrator</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Adminul este autentificat. Utilizatorul tinta exista si nu este deja banat.</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Adminul acceseaza tab-ul "Gestionare utilizatori" din panoul admin.</li>
+                      <li>Cauta si selecteaza utilizatorul tinta.</li>
+                      <li>Apasa "Baneaza" si completeaza motivul si durata (sau permanent).</li>
+                      <li>Trimite cererea (POST <code>/api/admin/users/{id}/ban</code>).</li>
+                      <li>Sistemul creeaza inregistrarea ban si invalideaza toate sesiunile active ale utilizatorului.
+                      </li>
+                      <li>La urmatorul request al utilizatorului banat, API returneaza HTTP 403.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ</td>
+                  <td>Adminul poate ridica interdictia (POST <code>/api/admin/users/{id}/unban</code>).</td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Utilizatorul nu mai poate efectua actiuni autentificate pana la expirarea ban-ului.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UC-06 -->
+        <div class="uc-card">
+          <div class="uc-header">UC-06 — Export date de catre admin</div>
+          <div class="uc-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Actor principal</td>
+                  <td>Administrator</td>
+                </tr>
+                <tr>
+                  <td>Preconditii</td>
+                  <td>Adminul este autentificat cu rol <code>admin</code>.</td>
+                </tr>
+                <tr>
+                  <td>Flux principal</td>
+                  <td>
+                    <ol>
+                      <li>Adminul acceseaza sectiunea "Export / Import" din panoul admin.</li>
+                      <li>Selecteaza tipul de date (campinguri, rezervari, recenzii, utilizatori).</li>
+                      <li>Alege formatul dorit (CSV sau JSON).</li>
+                      <li>Apasa butonul de export.</li>
+                      <li>Browser-ul descarca fisierul generat de server
+                        (<code>/api/admin/export/{type}.{format}</code>).</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Flux alternativ</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Postconditii</td>
+                  <td>Fisierul cu datele solicitate este salvat pe dispozitivul adminului.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </article>
+  </div>
+</body>
+
+</html>

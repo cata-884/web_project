@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // BOOKINGS (real API)
     let allBookings = [];
 
-    const STATUS_LABELS = {
-        pending: 'In asteptare',
-        confirmed: 'Confirmata',
-        cancelled: 'Anulata',
-        completed: 'Finalizata'
-    };
+    const STATUS_LABELS = () => ({
+        pending: t('account.filter_upcoming'),
+        confirmed: t('account.filter_upcoming'),
+        cancelled: t('account.filter_cancelled'),
+        completed: t('account.filter_completed'),
+    });
 
     function bookingFilterClass(status) {
         return (status === 'pending' || status === 'confirmed') ? 'upcoming' : status;
@@ -102,13 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         if (bookingsArray.length === 0) {
-            container.innerHTML = '<p style="color:#666; font-style:italic; padding:16px 0;">Nu ai nicio rezervare momentan.</p>';
+            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.no_bookings')}</p>`;
             return;
         }
 
         container.innerHTML = bookingsArray.map(booking => {
             const filterCls = bookingFilterClass(booking.status);
-            const label = STATUS_LABELS[booking.status] || booking.status;
+            const label = STATUS_LABELS()[booking.status] || booking.status;
             const dates = formatDateRange(booking.check_in, booking.check_out, booking.guests);
             return `
                 <div class="booking-card status-${filterCls}" onclick="openBookingDetails(${booking.id})">
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="booking-dates">${dates}</p>
                         <span class="booking-status">${label}</span>
                     </div>
-                    <div class="booking-arrow">↗</div>
+                    <div class="booking-arrow"></div>
                 </div>
             `;
         }).join('');
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allBookings = data?.bookings || [];
             renderBookings(allBookings);
         } catch (err) {
-            container.innerHTML = '<p style="color:#666; font-style:italic; padding:16px 0;">Eroare la incarcarea rezervarilor.</p>';
+            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.load_bookings_err')}</p>`;
         }
     }
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
-            const label = STATUS_LABELS[booking.status] || booking.status;
+            const label = STATUS_LABELS()[booking.status] || booking.status;
             statusEl.textContent = label;
             statusEl.style.backgroundColor = '';
             statusEl.style.color = 'white';
@@ -236,21 +236,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // WISHLIST (real API - sectiunea Favorite)
     let favoritesSectionId = null;
 
+    const TYPE_LABELS_WL = { tent: 'Cort', glamping: 'Glamping', rv: 'Autorulotă', cabin: 'Căsuță', wild: 'Sălbatic' };
+
     function renderWishlist(campings) {
         const container = document.getElementById('wishlist-container');
         if (!container) return;
 
         if (!campings || campings.length === 0) {
-            container.innerHTML = '<p style="color:#666; font-style:italic; padding:16px 0;">Nu ai nicio locatie salvata. Exploreaza campingurile si adauga la favorite!</p>';
+            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.no_favorites')}</p>`;
             return;
         }
 
         container.innerHTML = campings.map(c => `
-            <div class="wishlist-card" onclick="goToCampingPage(${c.id})">
+            <div class="wishlist-card" onclick="goToCampingPage('${c.slug}')">
                 <div class="wishlist-img" style="background:#e8ede8; flex-shrink:0;"></div>
                 <div class="wishlist-info">
                     <h3>${c.name}</h3>
                     <p class="wishlist-address">${c.region || 'Romania'}</p>
+                    <p class="wishlist-meta">${TYPE_LABELS_WL[c.type] || c.type} &nbsp;•&nbsp; ${c.price_per_night ? c.price_per_night + ' RON / noapte' : ''}</p>
                 </div>
                 <div class="wishlist-heart" onclick="removeFromWishlist(event, ${c.id})" title="Sterge din Favorite">×</div>
             </div>
@@ -277,12 +280,12 @@ document.addEventListener('DOMContentLoaded', () => {
             renderWishlist(campData?.campings || []);
         } catch (err) {
             const container = document.getElementById('wishlist-container');
-            if (container) container.innerHTML = '<p style="color:#666; font-style:italic; padding:16px 0;">Eroare la incarcarea favoritelor.</p>';
+            if (container) container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.load_favorites_err')}</p>`;
         }
     }
 
-    window.goToCampingPage = function (id) {
-        window.location.href = `../../pages/camping.html?id=${id}`;
+    window.goToCampingPage = function (slug) {
+        window.location.href = `../camping.html?slug=${encodeURIComponent(slug)}`;
     };
 
     window.removeFromWishlist = async function (event, campingId) {
@@ -292,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await api.delete(`/api/sections/${favoritesSectionId}/campings/${campingId}`);
             loadWishlist();
         } catch (err) {
-            if (typeof showToast !== 'undefined') showToast('Eroare la stergerea din favorite');
+            if (typeof showToast !== 'undefined') showToast(t('account.remove_fav_err'));
         }
     };
 
@@ -363,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fullnameVal = (document.getElementById('profile-fullname')?.value || '').trim();
 
             saveProfileBtn.disabled = true;
-            saveProfileBtn.textContent = 'Salvare...';
+            saveProfileBtn.textContent = t('account.saving');
             if (msgEl) msgEl.style.display = 'none';
 
             try {
@@ -375,22 +378,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('cat_user', JSON.stringify(data.user));
                 populateUserPill(data.user);
 
-                saveProfileBtn.textContent = 'Salvat!';
+                saveProfileBtn.textContent = t('account.saved');
                 if (msgEl) {
-                    msgEl.textContent = 'Profilul a fost actualizat.';
+                    msgEl.textContent = t('account.save_ok');
                     msgEl.style.color = '#2D4C36';
                     msgEl.style.display = 'block';
                 }
                 setTimeout(() => {
                     saveProfileBtn.disabled = false;
-                    saveProfileBtn.textContent = 'Save Changes';
+                    saveProfileBtn.textContent = t('account.nav_settings');
                     if (msgEl) msgEl.style.display = 'none';
                 }, 2500);
             } catch (err) {
                 saveProfileBtn.disabled = false;
-                saveProfileBtn.textContent = 'Save Changes';
+                saveProfileBtn.textContent = t('account.nav_settings');
                 if (msgEl) {
-                    msgEl.textContent = err.message || 'Eroare la salvare.';
+                    msgEl.textContent = err.message || t('account.save_err');
                     msgEl.style.color = '#EF6A00';
                     msgEl.style.display = 'block';
                 }
@@ -426,6 +429,56 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (icon) icon.style.transform = 'rotate(180deg)';
                 }
             });
+        });
+    }
+
+    // PREFERENCES (load + save)
+    const savePrefsBtn = document.getElementById('save-prefs-btn');
+    if (savePrefsBtn) {
+        api.get('/api/preferences').then(data => {
+            ['camping_types', 'travel_styles', 'preferred_zones'].forEach(group => {
+                (data[group] || []).forEach(val => {
+                    const cb = document.querySelector(`input[name="${group}"][value="${val}"]`);
+                    if (cb) cb.checked = true;
+                });
+            });
+        }).catch(() => {});
+
+        savePrefsBtn.addEventListener('click', async () => {
+            const msgEl = document.getElementById('prefs-msg');
+            const collect = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+
+            savePrefsBtn.disabled = true;
+            const origText = savePrefsBtn.textContent;
+            savePrefsBtn.textContent = t('account.saving');
+            if (msgEl) msgEl.style.display = 'none';
+
+            try {
+                await api.post('/api/preferences', {
+                    camping_types:   collect('camping_types'),
+                    travel_styles:   collect('travel_styles'),
+                    preferred_zones: collect('preferred_zones'),
+                });
+                savePrefsBtn.textContent = t('account.saved');
+                if (msgEl) {
+                    msgEl.textContent = t('profile.save_ok');
+                    msgEl.style.color = '#2D4C36';
+                    msgEl.style.display = 'block';
+                }
+                setTimeout(() => {
+                    savePrefsBtn.disabled = false;
+                    savePrefsBtn.textContent = origText;
+                    if (msgEl) msgEl.style.display = 'none';
+                }, 2500);
+            } catch (err) {
+                savePrefsBtn.disabled = false;
+                savePrefsBtn.textContent = origText;
+                if (msgEl) {
+                    msgEl.textContent = err.message || t('account.save_err');
+                    msgEl.style.color = '#EF6A00';
+                    msgEl.style.display = 'block';
+                }
+            }
         });
     }
 
@@ -514,24 +567,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = document.getElementById('contact-message').value.trim();
 
             btn.disabled = true;
-            btn.textContent = 'Se trimite...';
+            btn.textContent = t('home.sending');
             feedback.style.display = 'none';
 
             try {
                 await api.post('/api/contact', { name, email, phone, message });
-                feedback.textContent = 'Mesaj trimis! Te vom contacta in curand.';
+                feedback.textContent = t('home.sent_ok');
                 feedback.style.background = 'rgba(45,76,54,.1)';
                 feedback.style.color = '#2D4C36';
                 feedback.style.display = 'block';
                 contactForm.reset();
             } catch (err) {
-                feedback.textContent = err.message || 'Eroare la trimitere. Incearca din nou.';
+                feedback.textContent = err.message || t('home.sent_err');
                 feedback.style.background = 'rgba(239,106,0,.08)';
                 feedback.style.color = '#EF6A00';
                 feedback.style.display = 'block';
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Trimite';
+                btn.textContent = t('home.form_submit');
             }
         });
     }

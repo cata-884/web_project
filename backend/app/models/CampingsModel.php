@@ -15,9 +15,14 @@ class CampingsModel extends Model
             $conditions[] = 'region = :region';
             $params['region'] = $filters['region'];
         }
-        if (!empty($filters['type'])) {
-            $conditions[] = 'type = :type';
-            $params['type'] = $filters['type'];
+        if (!empty($filters['types'])) {
+            $ph = [];
+            foreach ($filters['types'] as $i => $t) {
+                $key = "type_$i";
+                $ph[] = ":$key";
+                $params[$key] = $t;
+            }
+            $conditions[] = 'type IN (' . implode(',', $ph) . ')';
         }
         if (!empty($filters['min_price'])) {
             $conditions[] = 'price_per_night >= :min_price';
@@ -34,6 +39,15 @@ class CampingsModel extends Model
         if (!empty($filters['search'])) {
             $conditions[] = '(name ILIKE :q OR description ILIKE :q OR address ILIKE :q)';
             $params['q'] = '%' . $filters['search'] . '%';
+        }
+        if (!empty($filters['envs'])) {
+            $ph = [];
+            foreach ($filters['envs'] as $i => $e) {
+                $key = "env_$i";
+                $ph[] = "environment_name ILIKE :$key";
+                $params[$key] = $e;
+            }
+            $conditions[] = 'EXISTS (SELECT 1 FROM camping_environments ce WHERE ce.camping_id = campings.id AND (' . implode(' OR ', $ph) . '))';
         }
 
         $where  = implode(' AND ', $conditions);
@@ -61,9 +75,14 @@ class CampingsModel extends Model
             $conditions[] = 'region = :region';
             $params['region'] = $filters['region'];
         }
-        if (!empty($filters['type'])) {
-            $conditions[] = 'type = :type';
-            $params['type'] = $filters['type'];
+        if (!empty($filters['types'])) {
+            $ph = [];
+            foreach ($filters['types'] as $i => $t) {
+                $key = "type_$i";
+                $ph[] = ":$key";
+                $params[$key] = $t;
+            }
+            $conditions[] = 'type IN (' . implode(',', $ph) . ')';
         }
         if (!empty($filters['min_price'])) {
             $conditions[] = 'price_per_night >= :min_price';
@@ -80,6 +99,15 @@ class CampingsModel extends Model
         if (!empty($filters['search'])) {
             $conditions[] = '(name ILIKE :q OR description ILIKE :q OR address ILIKE :q)';
             $params['q'] = '%' . $filters['search'] . '%';
+        }
+        if (!empty($filters['envs'])) {
+            $ph = [];
+            foreach ($filters['envs'] as $i => $e) {
+                $key = "env_$i";
+                $ph[] = "environment_name ILIKE :$key";
+                $params[$key] = $e;
+            }
+            $conditions[] = 'EXISTS (SELECT 1 FROM camping_environments ce WHERE ce.camping_id = campings.id AND (' . implode(' OR ', $ph) . '))';
         }
 
         $where = implode(' AND ', $conditions);

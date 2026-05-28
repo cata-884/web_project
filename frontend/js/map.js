@@ -1,10 +1,10 @@
 
 const TYPE_EMOJI = {
-    tent: '🏕️',
-    wild: '⛺',
-    rv: '🚐',
-    cabin: '🏘️',
-    glamping: '✨'
+    tent: '️',
+    wild: '',
+    rv: '',
+    cabin: '️',
+    glamping: ''
 };
 
 const TYPE_LABEL = {
@@ -110,7 +110,7 @@ function renderClusterMarkers() {
     clusterGroup.clearLayers();
 
     filteredMarkers.forEach(m => {
-        const emoji = TYPE_EMOJI[m.type] || '📍';
+        const emoji = TYPE_EMOJI[m.type] || '';
 
         const icon = L.divIcon({
             className: 'emoji-marker-wrapper',
@@ -122,7 +122,7 @@ function renderClusterMarkers() {
 
         const fallbackImg = '../assets/About1.jpg';
         const imgSrc = m.image_url || fallbackImg;
-        const ratingStr = m.rating ? `★ ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
+        const ratingStr = m.rating ? ` ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
         const priceStr = m.price ? `${parseFloat(m.price).toFixed(0)} RON / noapte` : '';
 
         const popupContent = `
@@ -156,7 +156,7 @@ function renderResultsList() {
     if (visibleItems.length === 0) {
         listEl.innerHTML = `
             <div class="results-empty">
-                <span>🗺️</span>
+                <span>️</span>
                 Niciun camping în zona vizibilă.<br>Mută harta sau schimbă filtrele.
             </div>
         `;
@@ -166,8 +166,8 @@ function renderResultsList() {
     const fallbackImg = '../assets/About1.jpg';
 
     listEl.innerHTML = visibleItems.map(m => {
-        const emoji = TYPE_EMOJI[m.type] || '📍';
-        const ratingStr = m.rating ? `★ ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
+        const emoji = TYPE_EMOJI[m.type] || '';
+        const ratingStr = m.rating ? ` ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
         const imgSrc = m.image_url || fallbackImg;
 
         return `
@@ -237,15 +237,15 @@ function initLocateMe() {
             return;
         }
 
-        btn.textContent = '⏳';
+        btn.textContent = '';
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 map.flyTo([pos.coords.latitude, pos.coords.longitude], 13, { duration: 1 });
-                btn.textContent = '📍';
+                btn.textContent = '';
             },
             () => {
                 showToast('Nu s-a putut obține locația.', 'error');
-                btn.textContent = '📍';
+                btn.textContent = '';
             },
             { enableHighAccuracy: true, timeout: 8000 }
         );

@@ -6,14 +6,16 @@
     <title>Despre noi - CaT</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/landing.css">
     <link rel="stylesheet" href="../css/aboutUs.css">
+
 </head>
-<body>
+<body data-page-title="about.title">
 
     <main class="about-page-wrapper">
 
         <section class="about-card">
-            <h2>Echipa noastra</h2>
+            <h1 data-i18n="about.team">Echipa noastra</h1>
 
             <div class="tab-buttons">
                 <button class="btn-tab active" id="btn-luciu">Luciu Sebastian</button>
@@ -22,7 +24,6 @@
 
             <div class="tab-content active-content" id="content-luciu">
                 <p>*descriere*</p>
-
                 <img src="../assets/profil.jpg" alt="Luciu Sebastian" class="img-about">
             </div>
             <div class="tab-content" id="content-catalin">
@@ -33,39 +34,53 @@
         </section>
 
     </main>
-<script src="../js/main.js"></script>
-<footer class="main_footer">
-    <div class="footer_wave">
-            <h2 class="footer_heading">Natura la un click distanta.</h2>
-                        <p class="footer_copy">Toate drepturile rezervate. CaT 2025.</p>
 
-    </div>
-    <div class="footer_grid">
-        <div class="footer_col">
-            <h3 class="footer_logo">CaT</h3>
-            <p class="footer_label">Adresa:</p>
-            <p class="footer_text">Romania</p>
+    <footer class="main-footer">
+        <div class="footer-wave">
+            <h2 class="footer-heading" data-i18n="footer.tagline">Natura la un click distanta.</h2>
+            <p class="footer-copy" data-i18n="footer.copy">Toate drepturile rezervate. CaT 2025.</p>
         </div>
-        <div class="footer_col">
-            <p class="footer_label">Telefon:</p>
-            <p class="footer_text">+40 000 123 456</p>
-        </div>
-        <div class="footer_col">
-            <p class="footer_label">Linkuri:</p>
-            <a href="../index.html#about" class="footer_link">Despre aplicatie</a>
-            <a href="../index.html#contact" class="footer_link">Contact</a>
-            <a href="../index.html#reviews" class="footer_link">Recenzii</a>
-            <a href="../index.html#team" class="footer_link">Echipa</a>
-        </div>
-        <div class="footer_col">
-            <p class="footer_label">Retele sociale:</p>
-            <div class="social_icons">
-                <div class="icon_placeholder">f</div>
-                <div class="icon_placeholder">ig</div>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3 class="footer-logo">CaT</h3>
+                <p class="footer-label" data-i18n="footer.address">Adresa:</p>
+                <p class="footer-text">Romania</p>
+            </div>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.phone">Telefon:</p>
+                <p class="footer-text">+40 000 123 456</p>
+            </div>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.links">Linkuri:</p>
+                <a href="../index.html#about" class="footer-link" data-i18n="footer.about">Despre aplicatie</a>
+                <a href="../index.html#contact" class="footer-link" data-i18n="footer.contact">Contact</a>
+                <a href="../index.html#reviews" class="footer-link" data-i18n="footer.reviews">Recenzii</a>
+                <a href="../index.html#team" class="footer-link" data-i18n="footer.team">Echipa</a>
+            </div>
+            <div class="footer-col">
+                <p class="footer-label" data-i18n="footer.social">Retele sociale:</p>
+                <div class="social-icons">
+                    <div class="icon-placeholder"><a href="https://www.facebook.com/" style="color:white">F</a></div>
+                    <div class="icon-placeholder"><a href="https://www.instagram.com/" style="color:white">I</a></div>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
-</body>
+    </footer>
 
+    <script src="../js/i18n.js"></script>
+    <script>
+        document.getElementById('btn-luciu')?.addEventListener('click', () => {
+            document.getElementById('content-luciu').classList.add('active-content');
+            document.getElementById('content-catalin').classList.remove('active-content');
+            document.getElementById('btn-luciu').classList.add('active');
+            document.getElementById('btn-catalin').classList.remove('active');
+        });
+        document.getElementById('btn-catalin')?.addEventListener('click', () => {
+            document.getElementById('content-catalin').classList.add('active-content');
+            document.getElementById('content-luciu').classList.remove('active-content');
+            document.getElementById('btn-catalin').classList.add('active');
+            document.getElementById('btn-luciu').classList.remove('active');
+        });
+    </script>
+</body>
 </html>

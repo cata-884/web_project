@@ -253,16 +253,28 @@ BEGIN
     -- mediu și facilități
     RAISE NOTICE 'Seeding environments and facilities...';
 
+    -- Medii specifice per camping (pentru recomandari corecte)
+    -- 1=Transfagarasan(tent), 2=Bicaz(glamping), 3=Padis(wild), 4=Bucegi(rv)
+    -- 5=Delta(cabin), 6=VamaVeche(tent), 7=Retezat(cabin), 8=Ceahlau(tent)
+    -- 9=CheileT(tent), 10=LaculAna(glamping)
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[1],  'munte');        EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[1],  'pășune alpinǎ'); EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[2],  'munte');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[3],  'munte');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[3],  'pădure');        EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[4],  'munte');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[5],  'deltǎ');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[5],  'lângă lac');     EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[6],  'plajă');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[7],  'munte');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[7],  'pădure');        EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[8],  'munte');         EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[9],  'pădure');        EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[9],  'lângă râu');     EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[10], 'pădure');        EXCEPTION WHEN unique_violation THEN NULL; END;
+    BEGIN INSERT INTO camping_environments VALUES (DEFAULT, v_camping_ids[10], 'lângă lac');     EXCEPTION WHEN unique_violation THEN NULL; END;
+
     FOREACH v_camping_id IN ARRAY v_camping_ids LOOP
-        -- Mediu (1-2 aleatorii)
-        v_num_items := 1 + floor(random() * 2)::INT;
-        FOR i IN 1..v_num_items LOOP
-            v_idx := 1 + floor(random() * array_length(l_environments, 1))::INT;
-            BEGIN
-                INSERT INTO camping_environments (camping_id, environment_name)
-                VALUES (v_camping_id, l_environments[v_idx]);
-            EXCEPTION WHEN unique_violation THEN NULL; END;
-        END LOOP;
 
         -- Facilități (2-5 aleatorii)
         v_num_items := 2 + floor(random() * 4)::INT;
