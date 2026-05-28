@@ -13,13 +13,11 @@ max_attempts=30
 until docker compose exec -T db pg_isready -U postgres -d web_project_db >/dev/null 2>&1; do
     attempts=$((attempts + 1))
     if [ "$attempts" -ge "$max_attempts" ]; then
-        echo "EROARE: Baza de date nu a devenit disponibilă la timp."
+        echo "EROARE: Baza de date nu a devenit disponibila la timp."
         exit 1
     fi
     sleep 2
 done
-
-echo "Rulare migrații în interiorul containerului..."
 
 docker compose exec -T backend php script/migrate.php
 if [ $? -ne 0 ]; then

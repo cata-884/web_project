@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/auth.css">
 </head>
+
 <body data-page-title="register.title">
 
     <main class="auth-layout">
@@ -21,53 +23,67 @@
                     <span class="lang-toggle-container"></span>
                 </div>
                 <h1 data-i18n="register.heading">Creeaza cont</h1>
-                <p class="subtitle" data-i18n="register.subtitle">Un singur cont pentru a explora si rezerva campinguri din Romania.</p>
+                <p class="subtitle" data-i18n="register.subtitle">Un singur cont pentru a explora si rezerva campinguri
+                    din Romania.</p>
 
                 <form id="register-form" class="login-form" novalidate>
 
                     <div class="form-group">
                         <label for="username" data-i18n="register.username_label">Username</label>
                         <div class="input-wrapper">
-                            <input type="text" id="username" name="username" data-i18n-ph="register.username_ph" placeholder="e.g., ion_popescu" required minlength="3">
+                            <input type="text" id="username" name="username" data-i18n-ph="register.username_ph"
+                                placeholder="e.g., ion_popescu" required minlength="3">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="fullname"><span data-i18n="register.fullname_label">Nume complet</span> <span style="font-weight:400; color:#999;" data-i18n="register.fullname_optional">(optional)</span></label>
+                        <label for="fullname"><span data-i18n="register.fullname_label">Nume complet</span> <span
+                                style="font-weight:400; color:#999;"
+                                data-i18n="register.fullname_optional">(optional)</span></label>
                         <div class="input-wrapper">
-                            <input type="text" id="fullname" name="fullname" data-i18n-ph="register.fullname_ph" placeholder="e.g., Ion Popescu">
+                            <input type="text" id="fullname" name="fullname" data-i18n-ph="register.fullname_ph"
+                                placeholder="e.g., Ion Popescu">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="email" data-i18n="register.email_label">Email</label>
                         <div class="input-wrapper">
-                            <input type="email" id="email" name="email" data-i18n-ph="register.email_ph" placeholder="e.g., ion@example.com" required>
+                            <input type="email" id="email" name="email" data-i18n-ph="register.email_ph"
+                                placeholder="e.g., ion@example.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password"><span data-i18n="register.pass_label">Parola</span> <span style="font-weight:400; color:#999;" data-i18n="register.pass_hint">(min. 8 caractere)</span></label>
+                        <label for="password"><span data-i18n="register.pass_label">Parola</span> <span
+                                style="font-weight:400; color:#999;" data-i18n="register.pass_hint">(min. 8
+                                caractere)</span></label>
                         <div class="input-wrapper">
-                            <input type="password" id="password" name="password" data-i18n-ph="register.pass_ph" placeholder="Creeaza o parola" required minlength="8">
+                            <input type="password" id="password" name="password" data-i18n-ph="register.pass_ph"
+                                placeholder="Creeaza o parola" required minlength="8">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="confirm-password" data-i18n="register.confirm_label">Confirma parola</label>
                         <div class="input-wrapper">
-                            <input type="password" id="confirm-password" name="confirm-password" data-i18n-ph="register.confirm_ph" placeholder="Repeta parola" required>
+                            <input type="password" id="confirm-password" name="confirm-password"
+                                data-i18n-ph="register.confirm_ph" placeholder="Repeta parola" required>
                         </div>
                     </div>
 
                     <div class="terms-group">
                         <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms"><span data-i18n="register.terms_text">Sunt de acord cu</span> <a href="#" data-i18n="register.terms_link">Termenii si Conditiile</a></label>
+                        <label for="terms"><span data-i18n="register.terms_text">Sunt de acord cu</span> <a href="#"
+                                data-i18n="register.terms_link">Termenii si Conditiile</a></label>
                     </div>
 
-                    <div id="register-error" style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;"></div>
+                    <div id="register-error"
+                        style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;">
+                    </div>
 
-                    <button type="submit" class="btn-submit" id="register-btn" data-i18n="register.btn">Creeaza cont</button>
+                    <button type="submit" class="btn-submit" id="register-btn" data-i18n="register.btn">Creeaza
+                        cont</button>
                 </form>
 
                 <div class="divider">
@@ -75,15 +91,13 @@
                 </div>
 
                 <div class="social-login">
-                    <button class="btn-social" type="button">
+                    <a href="/cat/public/api/auth/oauth/google" class="btn-social">
                         <span>G</span> Google
-                    </button>
-                    <button class="btn-social" type="button">
-                        <span>A</span> Apple
-                    </button>
+                    </a>
                 </div>
 
-                <p class="signup-link"><span data-i18n="register.have_account">Ai deja cont?</span> <a href="auth.html" data-i18n="auth.btn">Sign In</a></p>
+                <p class="signup-link"><span data-i18n="register.have_account">Ai deja cont?</span> <a href="auth.html"
+                        data-i18n="auth.btn">Sign In</a></p>
             </div>
         </div>
     </main>
@@ -152,4 +166,5 @@
         })();
     </script>
 </body>
+
 </html>
