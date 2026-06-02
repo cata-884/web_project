@@ -19,7 +19,7 @@ DROP TYPE IF EXISTS booking_status CASCADE;
 DROP TYPE IF EXISTS media_type CASCADE;
 DROP TABLE IF EXISTS contact_requests CASCADE;
 
--- CONTACT MESSAGES
+-- CONTACT REQUESTS
 CREATE TABLE contact_requests (
     id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
@@ -66,15 +66,12 @@ CREATE TABLE users (
 	full_name VARCHAR(200)
 	,avatar_url TEXT
 	,ROLE user_role NOT NULL DEFAULT 'user'
-	,oauth_provider VARCHAR(30)
-	,-- 'google' | NULL
-	oauth_id VARCHAR(255)
+	,is_oauth BOOLEAN NOT NULL DEFAULT FALSE
+	,oauth_id VARCHAR(255)
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
-	,UNIQUE (
-		oauth_provider
-		,oauth_id
-		)
 	);
+
+CREATE UNIQUE INDEX uq_users_oauth_id ON users (oauth_id) WHERE oauth_id IS NOT NULL;
 
 -- SESIUNI (Bearer tokens, pattern din proiectul BD)
 CREATE TABLE sesiuni (
@@ -94,21 +91,16 @@ CREATE TABLE campings (
 	,created_by INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
 	,name VARCHAR(200) NOT NULL
 	,slug VARCHAR(220) UNIQUE NOT NULL
-	,-- pentru URL-uri prietenoase
-	description TEXT
+	,description TEXT
 	,TYPE camping_type NOT NULL DEFAULT 'tent'
 	,address VARCHAR(300)
 	,region VARCHAR(100)
-	,-- pt statistici
-	latitude DECIMAL(10, 7) NOT NULL
+	,latitude DECIMAL(10, 7) NOT NULL
 	,longitude DECIMAL(10, 7) NOT NULL
 	,price_per_night DECIMAL(8, 2)
-	,--alternativ, cost per guest sau per camping
-	capacity INT
+	,capacity INT
 	,rating_avg DECIMAL(3, 2)
-	,-- recalculat de trigger
-	rating_count INT NOT NULL DEFAULT 0
-	,is_published BOOLEAN NOT NULL DEFAULT TRUE
+	,rating_count INT NOT NULL DEFAULT 0
 	,approval_status INT NOT NULL DEFAULT 0
 	,admin_feedback TEXT
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -130,12 +122,10 @@ CREATE TABLE camping_media (
 	,camping_id INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE
 	,TYPE media_type NOT NULL
 	,url TEXT NOT NULL
-	,sort_order INT NOT NULL DEFAULT 0
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	);
 
-CREATE INDEX idx_camping_media_camping ON camping_media (camping_id
-	);
+CREATE INDEX idx_camping_media_camping ON camping_media (camping_id);
 
 -- FACILITIES & ENVIRONMENTS
 CREATE TABLE camping_facilities (
@@ -160,7 +150,6 @@ CREATE TABLE bookings (
 	,check_in DATE NOT NULL
 	,check_out DATE NOT NULL
 	,guests INT NOT NULL DEFAULT 1 CHECK (guests > 0)
-	,total_price DECIMAL(10, 2)
 	,STATUS booking_status NOT NULL DEFAULT 'pending'
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	,CHECK (check_out > check_in)
@@ -185,7 +174,6 @@ CREATE TABLE reviews (
 		rating BETWEEN 1
 			AND 5
 		)
-	,title VARCHAR(200)
 	,content TEXT
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	,UNIQUE (
@@ -196,12 +184,12 @@ CREATE TABLE reviews (
 
 CREATE INDEX idx_reviews_camping ON reviews (camping_id);
 
--- MEDIA reviews
+-- MEDIA reviews (stocat ca blob binar)
 CREATE TABLE review_media (
 	id SERIAL PRIMARY KEY
 	,review_id INT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE
 	,TYPE media_type NOT NULL
-	,url TEXT NOT NULL
+	,data BYTEA NOT NULL
 	,created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	);
 
@@ -216,32 +204,26 @@ CREATE TABLE contact_messages (
 	);
 
 -- SECTIUNI PERSONALE
-CREATE TABLE
+CREATE TABLE user_sections(
+    id SERIAL PRIMARY KEY
+    ,user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    ,name VARCHAR(100) NOT NULL
+    ,created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
 
-IF NOT EXISTS user_sections(id SERIAL PRIMARY KEY, user_id INT NOT NULL
-		REFERENCES users(id) ON DELETE CASCADE, name VARCHAR(100) NOT
-		NULL, color VARCHAR(7) DEFAULT '#4A90D9',
-		-- hex color pentru UI
-		created_at TIMESTAMP NOT NULL DEFAULT NOW());
 	-- CAMPING-URI ASOCIATE SECTIUNILOR (many-to-many)
-	CREATE TABLE
-
-IF NOT EXISTS section_campings(section_id INT NOT NULL REFERENCES
-		user_sections(id) ON DELETE CASCADE, camping_id INT NOT NULL
-		REFERENCES campings(id) ON DELETE CASCADE, added_at TIMESTAMP
-		NOT NULL DEFAULT NOW(), PRIMARY KEY (
-			section_id
-			,camping_id
-			));
-	CREATE INDEX
-
-IF NOT EXISTS idx_sections_user ON user_sections(user_id);
-	CREATE INDEX
-
-IF NOT EXISTS idx_section_campings_section ON section_campings(
-		section_id);
-	CREATE INDEX IF NOT EXISTS idx_section_campings_camping ON section_campings(
-		camping_id);
+CREATE TABLE section_campings(
+    section_id INT NOT NULL REFERENCES user_sections(id) ON DELETE CASCADE
+    ,camping_id INT NOT NULL REFERENCES campings(id) ON DELETE CASCADE
+    ,added_at TIMESTAMP NOT NULL DEFAULT NOW()
+    ,PRIMARY KEY (
+		section_id
+		,camping_id
+	    )
+    );
+	CREATE INDEX IF NOT EXISTS idx_sections_user ON user_sections(user_id);
+	CREATE INDEX IF NOT EXISTS idx_section_campings_section ON section_campings(section_id);
+	CREATE INDEX IF NOT EXISTS idx_section_campings_camping ON section_campings(camping_id);
 
 -- Cereri de verificare / promovare la rolul de organizer
 CREATE TABLE organizer_verifications (

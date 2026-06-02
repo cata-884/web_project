@@ -2,7 +2,9 @@
     "name": "cat/camping-platform",
     "require": {
         "php": ">=8.2",
-        "dompdf/dompdf": "^2.0"
+        "dompdf/dompdf": "^2.0",
+      "ext-curl": "*",
+      "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {}

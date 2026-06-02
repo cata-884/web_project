@@ -24,6 +24,11 @@ define('GOOGLE_REDIRECT_URI',  getenv('GOOGLE_REDIRECT_URI')  ?: 'http://localho
 
 spl_autoload_register(function (string $class): void {
     $dirs = [
+        ROOT . SEP . 'app' . SEP . 'core',
+        ROOT . SEP . 'app' . SEP . 'exceptions',
+        ROOT . SEP . 'app' . SEP . 'repositories',
+        ROOT . SEP . 'app' . SEP . 'services',
+        ROOT . SEP . 'app' . SEP . 'dto',
         ROOT . SEP . 'app' . SEP . 'controllers',
         ROOT . SEP . 'app' . SEP . 'models',
     ];

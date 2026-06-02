@@ -1,66 +1,45 @@
 <?php
-
 use JetBrains\PhpStorm\NoReturn;
 
 abstract class Controller
 {
-    protected mixed $model        = null;
-    protected ?array $currentUser = null;
+    protected ?array  $currentUser  = null;
     protected ?string $currentToken = null;
     protected ?string $bannedReason = null;
 
     public function __construct()
     {
-        $modelName = str_replace('Controller', 'Model', static::class);
-        if (class_exists($modelName)) {
-            $this->model = new $modelName();
-        }
-
         $this->resolveCurrentUser();
     }
 
-    /**
-     * Identifica user-ul curent din header Authorization, daca exista token valid.
-     * Verifica si daca userul are ban activ — daca da, seteaza $bannedReason.
-     */
     private function resolveCurrentUser(): void
     {
         $token = $this->extractBearerToken();
         if (!$token) return;
 
-        $userId = (new SessionModel())->validateToken($token);
+        $userId = (new SessionRepository())->validateToken($token);
         if (!$userId) return;
 
-        $user = (new UserModel())->findById($userId);
+        $user = (new UserRepository())->findById($userId);
         if (!$user) return;
 
         $this->currentUser  = $user;
         $this->currentToken = $token;
 
-        // Verifica ban activ (exceptand admin-ii — nu pot fi banati)
         if (($user['role'] ?? 'user') !== 'admin') {
-            $ban = (new BansModel())->findActiveByUserId((int)$user['id']);
-            if ($ban) {
-                $this->bannedReason = $ban['reason'];
-            }
+            $ban = (new BansRepository())->findActiveByUserId((int)$user['id']);
+            if ($ban) $this->bannedReason = $ban['reason'];
         }
     }
 
     private function extractBearerToken(): ?string
     {
-        // Sursa 1: $_SERVER
         $header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
-
-        // Sursa 2: apache_request_headers (Apache strip-este uneori headerele)
         if (!$header && function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
-            $header = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+            $header  = $headers['Authorization'] ?? $headers['authorization'] ?? '';
         }
-
-        if (str_starts_with($header, 'Bearer ')) {
-            return trim(substr($header, 7));
-        }
-        return null;
+        return str_starts_with($header, 'Bearer ') ? trim(substr($header, 7)) : null;
     }
 
     #[NoReturn]
@@ -74,55 +53,30 @@ abstract class Controller
 
     protected function getJsonBody(): array
     {
-        $raw = file_get_contents('php://input');
-        if (!$raw) return [];
-        $decoded = json_decode($raw, true);
+        $raw     = file_get_contents('php://input');
+        $decoded = $raw ? json_decode($raw, true) : null;
         return is_array($decoded) ? $decoded : [];
     }
 
-    /**
-     * Cere autentificare. Daca userul e banat, returneaza 403 cu motivul.
-     * Exceptie: AuthController::me() si ::logout() nu cheama requireAuth(),
-     * ci verifica direct $this->currentUser.
-     */
     protected function requireAuth(): array
     {
-        if ($this->currentUser === null) {
-            $this->json(['error' => 'Neautentificat'], 401);
-        }
-
-        // Verifica ban — userul e logat dar banat
-        if ($this->bannedReason !== null) {
-            $this->json([
-                'error'  => 'Contul tau este suspendat',
-                'reason' => $this->bannedReason,
-                'banned' => true,
-            ], 403);
-        }
-
+        if ($this->currentUser === null) throw new UnauthorizedException();
+        if ($this->bannedReason !== null) throw new ForbiddenException('Contul tau este suspendat: ' . $this->bannedReason);
         return $this->currentUser;
     }
 
     protected function requireAdmin(): array
     {
         $user = $this->requireAuth();
-        if (($user['role'] ?? 'user') !== 'admin') {
-            $this->json(['error' => 'Acces interzis'], 403);
-        }
+        if (($user['role'] ?? 'user') !== 'admin') throw new ForbiddenException('Acces interzis');
         return $user;
     }
 
-    /**
-     * Cere rol de organizer sau admin.
-     */
     protected function requireOrganizer(): array
     {
         $user = $this->requireAuth();
         $role = $user['role'] ?? 'user';
-        if ($role !== 'organizer' && $role !== 'admin') {
-            $this->json(['error' => 'Necesita rol de organizer'], 403);
-        }
+        if ($role !== 'organizer' && $role !== 'admin') throw new ForbiddenException('Necesita rol de organizer');
         return $user;
     }
-
 }

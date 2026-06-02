@@ -1,167 +1,87 @@
 <?php
-
 use JetBrains\PhpStorm\NoReturn;
 
-/**
- * OrganizersController — API pentru cererile de promovare la organizer.
- *
- * User simplu poate aplica (submit cerere cu date legale).
- * Admin poate vedea cereri pending, aproba sau respinge.
- */
 class OrganizersController extends Controller
 {
-    /**
-     * POST /api/organizers/apply
-     * Body: { legal_name, cui?, id_card_url?, authorization_url?, contract_url? }
-     *
-     * User simplu submitese cerere de promovare la organizer.
-     */
+    private OrganizersService $service;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->service = new OrganizersService(new OrganizersRepository());
+    }
+
+    #[NoReturn]
+    public function uploadDocument(): void
+    {
+        $this->requireAuth();
+        $file = $_FILES['file'] ?? [];
+        if (empty($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK)
+            throw new ValidationException('Fisier lipsa sau eroare upload');
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+        if (!in_array($mime, $allowed, true))
+            throw new ValidationException('Format nepermis. Acceptate: JPEG, PNG, WebP, PDF');
+        if ($file['size'] > 10 * 1024 * 1024)
+            throw new ValidationException('Fisierul trebuie sa fie sub 10 MB');
+
+        $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION) ?: 'bin');
+        $filename = uniqid('doc_', true) . '.' . $ext;
+        $dir      = ROOT . SEP . 'public' . SEP . 'uploads' . SEP . 'documents';
+
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+        if (!move_uploaded_file($file['tmp_name'], $dir . SEP . $filename))
+            throw new ApiException('Eroare la salvarea fisierului', 500);
+
+        $this->json(['url' => '/cat/public/uploads/documents/' . $filename], 201);
+    }
+
     #[NoReturn]
     public function apply(): void
     {
         $user = $this->requireAuth();
-        $body = $this->getJsonBody();
-
-        // User-ul trebuie sa fie 'user' (nu deja organizer/admin)
-        if (($user['role'] ?? 'user') !== 'user') {
-            $this->json(['error' => 'Doar utilizatorii normali pot aplica'], 403);
-        }
-
-        // Validare legal_name
-        $legalName = trim($body['legal_name'] ?? '');
-        if (strlen($legalName) < 3 || strlen($legalName) > 200) {
-            $this->json(['error' => 'legal_name: 3-200 caractere'], 400);
-        }
-
-        // Validare CUI (optional, dar daca e prezent, format romanesc simplu)
-        $cui = isset($body['cui']) ? trim($body['cui']) : null;
-        if ($cui !== null && $cui !== '') {
-            // Format: optional "RO" + 2-10 cifre
-            if (!preg_match('/^(RO)?\d{2,10}$/i', $cui)) {
-                $this->json(['error' => 'CUI invalid (ex: RO12345678 sau 12345678)'], 400);
-            }
-        }
-
-        // Exista deja o cerere pending sau approved?
-        $existing = $this->model->findApplicationByUserId((int)$user['id']);
-        if ($existing && in_array($existing['status'], ['pending', 'approved'], true)) {
-            $this->json(['error' => 'Exista deja o cerere ' . $existing['status']], 409);
-        }
-
-        $id = $this->model->createApplication((int)$user['id'], [
-            'legal_name'        => $legalName,
-            'cui'               => $cui,
-            'id_card_url'       => $body['id_card_url'] ?? null,
-            'authorization_url' => $body['authorization_url'] ?? null,
-            'contract_url'      => $body['contract_url'] ?? null,
-        ]);
-
-        $this->json(['application' => $this->model->findById($id)], 201);
+        $app  = $this->service->apply((int)$user['id'], $user['role'] ?? 'user', $this->getJsonBody());
+        $this->json(['application' => OrganizerDTO::fromRow($app)], 201);
     }
 
-    /**
-     * GET /api/organizers/my-application
-     * Returneaza cererea proprie sau 404.
-     */
     #[NoReturn]
     public function myApplication(): void
     {
         $user = $this->requireAuth();
-
-        $application = $this->model->findApplicationByUserId((int)$user['id']);
-        if (!$application) {
-            $this->json(['error' => 'Nu ai nicio cerere de promovare'], 404);
-        }
-
-        $this->json(['application' => $application]);
+        $this->json(['application' => OrganizerDTO::fromRow($this->service->myApplication((int)$user['id']))]);
     }
 
-    /**
-     * GET /api/organizers/pending
-     * Admin only — lista cererilor pending (paginata).
-     */
     #[NoReturn]
     public function pending(): void
     {
         $this->requireAdmin();
-
-        $limit  = (int)($_GET['limit']  ?? 20);
-        $offset = (int)($_GET['offset'] ?? 0);
-
-        $applications = $this->model->findPendingApplications($limit, $offset);
-        $total        = $this->model->countPending();
-
+        $res = $this->service->pending((int)($_GET['limit'] ?? 20), (int)($_GET['offset'] ?? 0));
         $this->json([
-            'applications' => $applications,
-            'total'        => $total,
-            'limit'        => $limit,
-            'offset'       => $offset,
+            'applications' => array_map([OrganizerDTO::class, 'fromRow'], $res['applications']),
+            'total'        => $res['total'],
+            'limit'        => $res['limit'],
+            'offset'       => $res['offset'],
         ]);
     }
 
-    /**
-     * POST /api/organizers/{id}/approve
-     * Admin only — aproba o cerere pending.
-     */
     #[NoReturn]
     public function approve(int $id): void
     {
         $admin = $this->requireAdmin();
-
-        $application = $this->model->findById($id);
-        if (!$application) {
-            $this->json(['error' => 'Cerere inexistenta'], 404);
-        }
-
-        if ($application['status'] !== 'pending') {
-            $this->json(['error' => 'Cererea nu este in status pending (actual: ' . $application['status'] . ')'], 400);
-        }
-
-        $success = $this->model->approveApplication($id, (int)$admin['id']);
-        if (!$success) {
-            $this->json(['error' => 'Nu s-a putut aproba cererea'], 500);
-        }
-
-        $this->json([
-            'ok'          => true,
-            'message'     => 'Cerere aprobata. Userul a fost promovat la organizer.',
-            'application' => $this->model->findById($id),
-        ]);
+        $app   = $this->service->approve($id, (int)$admin['id']);
+        $this->json(['ok' => true, 'message' => 'Cerere aprobata. Userul a fost promovat la organizer.', 'application' => OrganizerDTO::fromRow($app)]);
     }
 
-    /**
-     * POST /api/organizers/{id}/reject
-     * Admin only — respinge o cerere pending. Body: { notes }
-     */
     #[NoReturn]
     public function reject(int $id): void
     {
         $admin = $this->requireAdmin();
         $body  = $this->getJsonBody();
-
-        $application = $this->model->findById($id);
-        if (!$application) {
-            $this->json(['error' => 'Cerere inexistenta'], 404);
-        }
-
-        if ($application['status'] !== 'pending') {
-            $this->json(['error' => 'Cererea nu este in status pending (actual: ' . $application['status'] . ')'], 400);
-        }
-
-        $notes = trim($body['notes'] ?? '');
-        if (strlen($notes) < 3) {
-            $this->json(['error' => 'Motivul respingerii (notes) obligatoriu, minim 3 caractere'], 400);
-        }
-
-        $success = $this->model->rejectApplication($id, (int)$admin['id'], $notes);
-        if (!$success) {
-            $this->json(['error' => 'Nu s-a putut respinge cererea'], 500);
-        }
-
-        $this->json([
-            'ok'          => true,
-            'message'     => 'Cerere respinsa.',
-            'application' => $this->model->findById($id),
-        ]);
+        $app   = $this->service->reject($id, (int)$admin['id'], trim($body['notes'] ?? ''));
+        $this->json(['ok' => true, 'message' => 'Cerere respinsa.', 'application' => OrganizerDTO::fromRow($app)]);
     }
 }

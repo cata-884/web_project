@@ -25,11 +25,13 @@ $routes = [
     'post /api/auth/logout'    => ['AuthController', 'logout'],
     'get /api/auth/me'         => ['AuthController', 'me'],
     'patch /api/users/me'      => ['AuthController', 'updateMe'],
+    'post /api/users/me/avatar'=> ['AuthController', 'uploadAvatar'],
 
 
     // Campings API
     // /map si /by-slug TREBUIE sa fie INAINTE de /(\d+) altfel ar matchui ca ID
     'get /api/campings/map'              => ['CampingsController', 'mapMarkers'],
+    'get /api/campings/mine'             => ['CampingsController', 'mine'],
     'get /api/campings/by-slug/([^/]+)' => ['CampingsController', 'showBySlug'],
     'get /api/campings'                  => ['CampingsController', 'index'],
     'get /api/campings/(\d+)'            => ['CampingsController', 'show'],
@@ -63,6 +65,7 @@ $routes = [
     'delete /api/sections/(\d+)/campings/(\d+)'      => ['SectionsController', 'removeCamping'],
 
     // Organizer API (cereri de promovare)
+    'post /api/organizers/documents'                 => ['OrganizersController', 'uploadDocument'],
     'post /api/organizers/apply'                     => ['OrganizersController', 'apply'],
     'get /api/organizers/my-application'             => ['OrganizersController', 'myApplication'],
     'get /api/organizers/pending'                    => ['OrganizersController', 'pending'],
@@ -74,6 +77,7 @@ $routes = [
     'post /api/reviews/(\d+)/media'   => ['MediaController', 'uploadReviewMedia'],
     'delete /api/media/camping/(\d+)' => ['MediaController', 'destroyCampingMedia'],
     'delete /api/media/review/(\d+)'  => ['MediaController', 'destroyReviewMedia'],
+    'get /api/media/review/(\d+)'     => ['MediaController', 'serveReviewMedia'],
 
     // Contact API
     'post /api/contact'           => ['ContactController', 'store'],
@@ -133,8 +137,14 @@ foreach ($routes as $pattern => $handler) {
     */
     if (preg_match('#^' . $routePath . '$#', $uri, $matches)) {
         [$class, $action] = $handler;
-        $controller = new $class();
-        $controller->$action(...array_slice($matches, 1));
+        try {
+            $controller = new $class();
+            $controller->$action(...array_slice($matches, 1));
+        } catch (ApiException $e) {
+            http_response_code($e->getStatus());
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
         $matched = true;
         break;
     }

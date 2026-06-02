@@ -1,0 +1,145 @@
+<?php
+class BookingsRepository extends Repository
+{
+    public static function totalPriceExpr(string $b = 'b', string $c = 'c'): string
+    {
+        return "$c.price_per_night * ($b.check_out - $b.check_in) * $b.guests";
+    }
+
+    public function findByUserId(int $userId, int $limit = 50, int $offset = 0, ?int $campingId = null): array
+    {
+        $limit  = min(100, max(1, $limit));
+        $offset = max(0, $offset);
+        $tp     = self::totalPriceExpr();
+
+        $where  = 'b.user_id = :user_id';
+        $params = ['user_id' => $userId];
+        if ($campingId !== null) {
+            $where .= ' AND b.camping_id = :camping_id';
+            $params['camping_id'] = $campingId;
+        }
+
+        $stmt = $this->pdo->prepare(
+            "SELECT b.*,
+                    c.name AS camping_name, c.slug AS camping_slug,
+                    c.type AS camping_type, c.region AS camping_region,
+                    c.latitude, c.longitude,
+                    $tp AS total_price
+             FROM bookings b
+             JOIN campings c ON c.id = b.camping_id
+             WHERE $where
+             ORDER BY b.created_at DESC
+             LIMIT $limit OFFSET $offset"
+        );
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    public function findById(int $id): ?array
+    {
+        $tp = self::totalPriceExpr();
+        $stmt = $this->pdo->prepare(
+            "SELECT b.*,
+                    c.name AS camping_name, c.slug AS camping_slug,
+                    c.type AS camping_type, c.region AS camping_region,
+                    c.price_per_night AS camping_price,
+                    u.username,
+                    $tp AS total_price
+             FROM bookings b
+             JOIN campings c ON c.id = b.camping_id
+             JOIN users u ON u.id = b.user_id
+             WHERE b.id = :id"
+        );
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: null;
+    }
+
+    public function findForExport(): array
+    {
+        $tp = self::totalPriceExpr();
+        return $this->pdo->query("
+            SELECT b.id, b.check_in, b.check_out, b.guests,
+                   $tp AS total_price,
+                   b.status, b.created_at, u.username AS user, c.name AS camping
+            FROM bookings b
+            LEFT JOIN users u ON u.id = b.user_id
+            LEFT JOIN campings c ON c.id = b.camping_id
+            ORDER BY b.id
+        ")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function create(int $userId, int $campingId, array $data): int
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO bookings (user_id, camping_id, check_in, check_out, guests, status)
+             VALUES (:user_id, :camping_id, :check_in, :check_out, :guests, 'pending')
+             RETURNING id"
+        );
+        $stmt->execute([
+            'user_id'    => $userId,
+            'camping_id' => $campingId,
+            'check_in'   => $data['check_in'],
+            'check_out'  => $data['check_out'],
+            'guests'     => $data['guests'],
+        ]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function updateStatus(int $id, string $status): bool
+    {
+        $valid = ['pending', 'confirmed', 'cancelled', 'completed'];
+        if (!in_array($status, $valid, true)) return false;
+        $stmt = $this->pdo->prepare("UPDATE bookings SET status = :status WHERE id = :id");
+        return $stmt->execute(['id' => $id, 'status' => $status]);
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $allowed = ['check_in', 'check_out', 'guests', 'status'];
+        $sets = [];
+        $params = ['id' => $id];
+        foreach ($allowed as $col) {
+            if (array_key_exists($col, $data)) {
+                $sets[] = "$col = :$col";
+                $params[$col] = $data[$col];
+            }
+        }
+        if (!$sets) return false;
+        $stmt = $this->pdo->prepare("UPDATE bookings SET " . implode(', ', $sets) . " WHERE id = :id");
+        return $stmt->execute($params);
+    }
+
+    public function getOwnerId(int $id): ?int
+    {
+        $stmt = $this->pdo->prepare("SELECT user_id FROM bookings WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        $val = $stmt->fetchColumn();
+        return $val ? (int) $val : null;
+    }
+
+    public function checkAvailability(int $campingId, string $checkIn, string $checkOut): bool
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) FROM bookings
+             WHERE camping_id = :camping_id
+               AND status IN ('pending', 'confirmed')
+               AND check_in < :check_out
+               AND check_out > :check_in"
+        );
+        $stmt->execute(['camping_id' => $campingId, 'check_in' => $checkIn, 'check_out' => $checkOut]);
+        return (int) $stmt->fetchColumn() === 0;
+    }
+
+    public function countByUserId(int $userId, ?int $campingId = null): int
+    {
+        $where  = 'user_id = :user_id';
+        $params = ['user_id' => $userId];
+        if ($campingId !== null) {
+            $where .= ' AND camping_id = :camping_id';
+            $params['camping_id'] = $campingId;
+        }
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM bookings WHERE $where");
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+}
