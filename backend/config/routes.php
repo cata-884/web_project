@@ -46,6 +46,7 @@ $routes = [
     // Bookings API
     'get /api/bookings'                     => ['BookingsController', 'index'],
     'post /api/bookings'                    => ['BookingsController', 'store'],
+    'post /api/bookings/(\d+)/cancel'       => ['BookingsController', 'cancel'],
 
     // Sections API (categorii personale de campinguri)
     'get /api/sections'                              => ['SectionsController', 'index'],

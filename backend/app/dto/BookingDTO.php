@@ -12,10 +12,12 @@ class BookingDTO
             'guests'      => (int)$r['guests'],
             'status'      => $r['status'],
             'total_price' => isset($r['total_price']) ? (float)$r['total_price'] : null,
+            'camping_name' => $r['camping_name'] ?? null,
             'camping'     => [
-                'name'   => $r['camping_name']   ?? null,
-                'slug'   => $r['camping_slug']   ?? null,
-                'region' => $r['camping_region'] ?? null,
+                'name'      => $r['camping_name']   ?? null,
+                'slug'      => $r['camping_slug']   ?? null,
+                'region'    => $r['camping_region'] ?? null,
+                'cover_url' => $r['cover_url']      ?? null,
             ],
             'created_at'  => $r['created_at'] ?? null,
         ];
