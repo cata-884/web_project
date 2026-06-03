@@ -3,7 +3,7 @@ class BansRepository extends Repository
 {
     public function create(int $userId, string $reason, ?int $days, int $bannedBy): int
     {
-        $bannedUntil = $days ? (new DateTimeImmutable("+{$days} days"))->format('Y-m-d H:i:s') : null;
+        $bannedUntil = $days ? (new DateTimeImmutable("+$days days"))->format('Y-m-d H:i:s') : null;
         $stmt = $this->pdo->prepare(
             "INSERT INTO user_bans (user_id, reason, banned_until, banned_by, is_active)
              VALUES (:user_id, :reason, :banned_until, :banned_by, TRUE) RETURNING id"

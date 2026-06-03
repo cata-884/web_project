@@ -36,12 +36,12 @@
             <form id="filters-form">
                 <div class="filter-group">
                     <h4 data-i18n="campings.search_label">Cautare</h4>
-                    <input type="text" id="filter-search" data-i18n-ph="campings.search_ph" placeholder="Cauta dupa nume...">
+                    <label for="filter-search"></label><input type="text" id="filter-search" data-i18n-ph="campings.search_ph" placeholder="Cauta dupa nume...">
                 </div>
 
                 <div class="filter-group">
                     <h4 data-i18n="campings.region_label">Regiune</h4>
-                    <select id="filter-region">
+                    <label for="filter-region"></label><select id="filter-region">
                         <option value="" data-i18n="campings.region_all">Toate</option>
                         <option value="Transilvania">Transilvania</option>
                         <option value="Moldova">Moldova</option>
@@ -66,15 +66,15 @@
                 <div class="filter-group">
                     <h4 data-i18n="campings.price_label">Pret / noapte</h4>
                     <div class="price-inputs">
-                        <input type="number" id="filter-min-price" placeholder="Min" min="0">
+                        <label for="filter-min-price"></label><input type="number" id="filter-min-price" placeholder="Min" min="0">
                         <span>-</span>
-                        <input type="number" id="filter-max-price" placeholder="Max" min="0">
+                        <label for="filter-max-price"></label><input type="number" id="filter-max-price" placeholder="Max" min="0">
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <h4 data-i18n="campings.rating_label">Rating Minim</h4>
-                    <select id="filter-min-rating">
+                    <label for="filter-min-rating"></label><select id="filter-min-rating">
                         <option value="" data-i18n="campings.rating_any">Oricare</option>
                         <option value="4">4+ <span data-i18n="campings.stars">Stele</span></option>
                         <option value="3">3+ <span data-i18n="campings.stars">Stele</span></option>

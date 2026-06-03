@@ -1,5 +1,5 @@
 <?php
-class StatsService
+readonly class StatsService
 {
     public function __construct(private StatsRepository $stats) {}
 

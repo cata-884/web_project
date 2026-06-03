@@ -198,7 +198,10 @@
     "review_rating_label": "Choose rating:",
     "review_ph": "Write here what you liked or what could be improved...",
     "upload_text": "Click here to add photos or videos",
-    "submit_review": "Submit Review"
+    "submit_review": "Submit Review",
+    "new_password": "New password",
+    "confirm_password": "Confirm password",
+    "change_password": "Change password"
   },
   "about": {
     "title": "About us - CaT",

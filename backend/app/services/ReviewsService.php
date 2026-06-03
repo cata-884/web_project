@@ -1,8 +1,8 @@
 <?php
-class ReviewsService
+readonly class ReviewsService
 {
     public function __construct(
-        private ReviewsRepository $reviews,
+        private ReviewsRepository  $reviews,
         private CampingsRepository $campings,
     ) {}
 
@@ -14,13 +14,6 @@ class ReviewsService
             'limit' => $limit,
             'offset'=> $offset,
         ];
-    }
-
-    public function getById(int $id): array
-    {
-        $review = $this->reviews->findById($id);
-        if (!$review) throw new NotFoundException('Recenzie inexistenta');
-        return $review;
     }
 
     public function create(int $userId, int $campingId, array $data): array

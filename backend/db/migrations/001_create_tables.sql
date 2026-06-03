@@ -17,17 +17,6 @@ DROP TYPE IF EXISTS user_role CASCADE;
 DROP TYPE IF EXISTS camping_type CASCADE;
 DROP TYPE IF EXISTS booking_status CASCADE;
 DROP TYPE IF EXISTS media_type CASCADE;
-DROP TABLE IF EXISTS contact_requests CASCADE;
-
--- CONTACT REQUESTS
-CREATE TABLE contact_requests (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(200) NOT NULL,
-    email VARCHAR(200) NOT NULL,
-    phone VARCHAR(50),
-    message TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
 
 CREATE TYPE user_role AS ENUM (
     'user',

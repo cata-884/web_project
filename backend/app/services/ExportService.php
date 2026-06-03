@@ -1,11 +1,11 @@
 <?php
-class ExportService
+readonly class ExportService
 {
     public function __construct(
         private CampingsRepository $campings,
         private BookingsRepository $bookings,
-        private ReviewsRepository $reviews,
-        private UserRepository $users,
+        private ReviewsRepository  $reviews,
+        private UserRepository     $users,
     ) {}
 
     public function getCampings(): array { return $this->campings->findForExport(); }

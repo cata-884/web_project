@@ -77,11 +77,14 @@ function initProfile() {
             if (!res || !res.user) return;
             const user = res.user;
 
-            const avatarSrc = mediaUrl(user.avatar_url || '');
-            const profileImg = document.getElementById('profile-avatar-img');
-            const pillAvatar = document.getElementById('user-pill-avatar');
-            if (profileImg) profileImg.src = avatarSrc;
-            if (pillAvatar) pillAvatar.src  = avatarSrc;
+            if (user.avatar_url) {
+                const avatarSrc = mediaUrl(user.avatar_url);
+                const profileImg = document.getElementById('profile-avatar-img');
+                const pillAvatar = document.getElementById('user-pill-avatar');
+                if (profileImg) profileImg.src = avatarSrc;
+                if (pillAvatar) pillAvatar.src  = avatarSrc;
+            }
+
 
             if (document.getElementById('user-pill-name'))
                 document.getElementById('user-pill-name').textContent = user.full_name || user.username || 'Utilizator';
@@ -145,6 +148,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const changePwdBtn = document.getElementById('change-password-btn');
+    if (changePwdBtn) {
+        changePwdBtn.addEventListener('click', async () => {
+            const newPwd  = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            try {
+                changePwdBtn.disabled = true;
+                await api.patch('/api/users/me/password', {
+                    new_password:     newPwd,
+                    confirm_password: confirm,
+                });
+                showToast('Parola a fost schimbată cu succes', 'success');
+                document.getElementById('new-password').value     = '';
+                document.getElementById('confirm-password').value = '';
+            } catch (err) {
+                showToast(err.message || 'Eroare la schimbarea parolei', 'error');
+            } finally {
+                changePwdBtn.disabled = false;
+            }
+        });
+    }
 });
 
 // Manager global click-uri
@@ -197,6 +223,7 @@ document.addEventListener('click', async function (e) {
             longitude:       parseFloat(document.getElementById('c-lng').value),
             capacity:        document.getElementById('campsite-capacity').value ? parseInt(document.getElementById('campsite-capacity').value) : null,
             price_per_night: document.getElementById('campsite-price').value    ? parseFloat(document.getElementById('campsite-price').value)   : null,
+            type:         document.querySelector('input[name="type"]:checked')?.value || 'tent',
             environments: [...document.querySelectorAll('input[name="environment"]:checked')].map(el => el.value),
             facilities:   [...document.querySelectorAll('input[name="facility"]:checked')].map(el => el.value),
         };

@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeZones = prefs.preferred_zones || [];
 
                 currentPage = 1;
-                loadCampings();
+                await loadCampings();
             } catch (err) {
                 console.error('Preferinte indisponibile', err);
             } finally {

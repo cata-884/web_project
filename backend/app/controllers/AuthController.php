@@ -57,6 +57,14 @@ class AuthController extends Controller
     }
 
     #[NoReturn]
+    public function changePassword(): void
+    {
+        $user = $this->requireAuth();
+        $this->service->changePassword((int)$user['id'], $this->getJsonBody());
+        $this->json(['ok' => true, 'message' => 'Parola a fost schimbată cu succes']);
+    }
+
+    #[NoReturn]
     public function uploadAvatar(): void
     {
         $user    = $this->requireAuth();

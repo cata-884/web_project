@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Pornire mediu Docker (Nginx, Backend, PostgreSQL)..."
+echo "Pornire mediu Docker (Backend, PostgreSQL)..."
 docker compose up -d --build
 if [ $? -ne 0 ]; then
     echo "EROARE: Nu s-a putut porni mediul Docker."

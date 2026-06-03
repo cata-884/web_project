@@ -309,13 +309,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emailEl)  emailEl.textContent = user.email || '';
 
     if (avatarEl && user.avatar_url) {
-        // Verificam daca are deja prefixul ca sa nu il punem de doua ori din greseala
-        if (user.avatar_url.startsWith('/cat/public/')) {
-            avatarEl.src = user.avatar_url;
-        } else {
-            // Daca ii lipseste (cum se intampla acum), il lipim noi aici
-            avatarEl.src = '/cat/public/' + user.avatar_url;
-        }
+        avatarEl.src = user.avatar_url.startsWith('/cat/public/')
+            ? user.avatar_url
+            : '/cat/public/' + user.avatar_url;
     }
 }
     function populateProfileForm(user) {

@@ -31,6 +31,7 @@ class MediaController extends Controller
         $this->json(['media' => array_merge(MediaDTO::fromReviewRow(array_merge($result, ['review_id' => $reviewId])), ['id' => $result['id']])], 201);
     }
 
+    #[NoReturn]
     public function serveReviewMedia(int $id): void
     {
         $row = $this->service->getReviewMediaData($id);

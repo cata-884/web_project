@@ -8,7 +8,7 @@ class CampingsService
         'forest_lake' => ['pădure', 'lângă lac', 'lângă râu'],
     ];
 
-    public function __construct(private CampingsRepository $campings) {}
+    public function __construct(private readonly CampingsRepository $campings) {}
 
     public function listMine(int $userId): array
     {

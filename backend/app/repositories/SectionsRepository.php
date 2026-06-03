@@ -32,28 +32,6 @@ class SectionsRepository extends Repository
         return (int) $stmt->fetchColumn();
     }
 
-    public function update(int $id, array $data): bool
-    {
-        $allowed = ['name'];
-        $sets = [];
-        $params = ['id' => $id];
-        foreach ($allowed as $col) {
-            if (array_key_exists($col, $data)) {
-                $sets[] = "$col = :$col";
-                $params[$col] = $data[$col];
-            }
-        }
-        if (!$sets) return false;
-        $stmt = $this->pdo->prepare("UPDATE user_sections SET " . implode(', ', $sets) . " WHERE id = :id");
-        return $stmt->execute($params);
-    }
-
-    public function delete(int $id): bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM user_sections WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
-    }
-
     public function getCampings(int $sectionId): array
     {
         $stmt = $this->pdo->prepare(

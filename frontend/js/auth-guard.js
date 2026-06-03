@@ -7,7 +7,7 @@
             const parts = path.split('/').filter(Boolean);
             const frontendIdx = parts.indexOf('frontend');
 
-            let prefix = '';
+            let prefix;
             if (frontendIdx !== -1) {
                 const depth = parts.length - frontendIdx - 1;
                 prefix = depth > 1 ? '../'.repeat(depth - 1) : '';

@@ -5,9 +5,6 @@ $uri    = str_replace(BASE_URL, '', $uri);
 $uri    = '/' . trim($uri, '/');
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 
-
-
-
 // CORS — permite frontend-ul sa faca fetch() din alta origine la dev
 // Cross-Origin Resource Sharing
 header('Access-Control-Allow-Origin: *');
@@ -25,7 +22,8 @@ $routes = [
     'post /api/auth/logout'    => ['AuthController', 'logout'],
     'get /api/auth/me'         => ['AuthController', 'me'],
     'patch /api/users/me'      => ['AuthController', 'updateMe'],
-    'post /api/users/me/avatar'=> ['AuthController', 'uploadAvatar'],
+    'post /api/users/me/avatar'   => ['AuthController', 'uploadAvatar'],
+    'patch /api/users/me/password'=> ['AuthController', 'changePassword'],
 
 
     // Campings API
@@ -42,24 +40,16 @@ $routes = [
     // Reviews API
     'get /api/campings/(\d+)/reviews'   => ['ReviewsController', 'index'],
     'post /api/campings/(\d+)/reviews'  => ['ReviewsController', 'store'],
-    'get /api/reviews/(\d+)'            => ['ReviewsController', 'show'],
     'patch /api/reviews/(\d+)'          => ['ReviewsController', 'update'],
     'delete /api/reviews/(\d+)'         => ['ReviewsController', 'destroy'],
 
     // Bookings API
     'get /api/bookings'                     => ['BookingsController', 'index'],
     'post /api/bookings'                    => ['BookingsController', 'store'],
-    'get /api/bookings/(\d+)'               => ['BookingsController', 'show'],
-    'patch /api/bookings/(\d+)'             => ['BookingsController', 'update'],
-    'post /api/bookings/(\d+)/cancel'       => ['BookingsController', 'cancel'],
-    'get /api/campings/(\d+)/availability'  => ['BookingsController', 'availability'],
 
     // Sections API (categorii personale de campinguri)
     'get /api/sections'                              => ['SectionsController', 'index'],
     'post /api/sections'                             => ['SectionsController', 'store'],
-    'get /api/sections/(\d+)'                        => ['SectionsController', 'show'],
-    'patch /api/sections/(\d+)'                      => ['SectionsController', 'update'],
-    'delete /api/sections/(\d+)'                     => ['SectionsController', 'destroy'],
     'get /api/sections/(\d+)/campings'               => ['SectionsController', 'campings'],
     'post /api/sections/(\d+)/campings'              => ['SectionsController', 'addCamping'],
     'delete /api/sections/(\d+)/campings/(\d+)'      => ['SectionsController', 'removeCamping'],
@@ -68,9 +58,6 @@ $routes = [
     'post /api/organizers/documents'                 => ['OrganizersController', 'uploadDocument'],
     'post /api/organizers/apply'                     => ['OrganizersController', 'apply'],
     'get /api/organizers/my-application'             => ['OrganizersController', 'myApplication'],
-    'get /api/organizers/pending'                    => ['OrganizersController', 'pending'],
-    'post /api/organizers/(\d+)/approve'             => ['OrganizersController', 'approve'],
-    'post /api/organizers/(\d+)/reject'              => ['OrganizersController', 'reject'],
 
     // Media API
     'post /api/campings/(\d+)/media'  => ['MediaController', 'uploadCampingMedia'],

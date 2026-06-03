@@ -198,7 +198,10 @@
     "review_rating_label": "Alege nota:",
     "review_ph": "Scrie aici ce ti-a placut sau ce ar putea fi imbunatatit...",
     "upload_text": "Apasa aici pentru a adauga poze sau videoclipuri",
-    "submit_review": "Trimite Recenzia"
+    "submit_review": "Trimite Recenzia",
+    "new_password": "Parola nouă",
+    "confirm_password": "Confirmă parola",
+    "change_password": "Schimbă parola"
   },
   "about": {
     "title": "Despre noi - CaT",

@@ -1,7 +1,5 @@
 /.idea/
 vendor/
-composer.json
-composer.lock
 .env
 BIG_TODO.md
 node_modules
