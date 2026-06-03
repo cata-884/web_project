@@ -1,7 +1,10 @@
 <?php
 readonly class OrganizersService
 {
-    public function __construct(private OrganizersRepository $organizers) {}
+    public function __construct(
+        private OrganizersRepository $organizers,
+        private UserRepository       $users,
+    ) {}
 
     public function apply(int $userId, string $userRole, array $data): array
     {
@@ -26,6 +29,7 @@ readonly class OrganizersService
             'authorization_url' => $data['authorization_url'] ?? null,
             'contract_url'      => $data['contract_url'] ?? null,
         ]);
+        $this->users->updateRole($userId, 'organizer');
         return $this->organizers->findById($id);
     }
 

@@ -138,6 +138,12 @@ class UserRepository extends Repository
                   ->execute(['hash' => $hash, 'id' => $userId]);
     }
 
+    public function updateRole(int $userId, string $role): void
+    {
+        $this->pdo->prepare("UPDATE users SET role = :role WHERE id = :id")
+                  ->execute(['role' => $role, 'id' => $userId]);
+    }
+
     public function updateAvatarUrl(int $userId, string $url): void
     {
         $this->pdo->prepare("UPDATE users SET avatar_url = :url WHERE id = :id")

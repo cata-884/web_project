@@ -8,7 +8,7 @@ class OrganizersController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->service = new OrganizersService(new OrganizersRepository());
+        $this->service = new OrganizersService(new OrganizersRepository(), new UserRepository());
     }
 
     #[NoReturn]
