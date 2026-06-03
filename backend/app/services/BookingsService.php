@@ -8,10 +8,18 @@ class BookingsService
 
     public function listForUser(int $userId, int $limit, int $offset, ?int $campingId): array
     {
+        $this->bookings->completeExpired($userId);
         return [
             'items' => $this->bookings->findByUserId($userId, $limit, $offset, $campingId),
             'total' => $this->bookings->countByUserId($userId, $campingId),
         ];
+    }
+
+    public function cancel(int $id, int $userId): array
+    {
+        if (!$this->bookings->cancelById($id, $userId))
+            throw new ValidationException('Rezervarea nu poate fi anulată (deja anulată, finalizată sau nu îți aparține)');
+        return $this->bookings->findById($id);
     }
 
     public function create(int $userId, array $data): array

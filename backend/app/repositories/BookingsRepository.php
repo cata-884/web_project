@@ -24,7 +24,8 @@ class       BookingsRepository extends Repository
                     c.name AS camping_name, c.slug AS camping_slug,
                     c.type AS camping_type, c.region AS camping_region,
                     c.latitude, c.longitude,
-                    $tp AS total_price
+                    $tp AS total_price,
+                    (SELECT url FROM camping_media WHERE camping_id = c.id ORDER BY created_at LIMIT 1) AS cover_url
              FROM bookings b
              JOIN campings c ON c.id = b.camping_id
              WHERE $where
@@ -83,6 +84,24 @@ class       BookingsRepository extends Repository
             'guests'     => $data['guests'],
         ]);
         return (int) $stmt->fetchColumn();
+    }
+
+    public function completeExpired(int $userId): void
+    {
+        $this->pdo->prepare(
+            "UPDATE bookings SET status = 'completed'
+             WHERE user_id = :user_id AND status IN ('pending', 'confirmed') AND check_out < CURRENT_DATE"
+        )->execute(['user_id' => $userId]);
+    }
+
+    public function cancelById(int $id, int $userId): bool
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE bookings SET status = 'cancelled'
+             WHERE id = :id AND user_id = :user_id AND status IN ('pending', 'confirmed')"
+        );
+        $stmt->execute(['id' => $id, 'user_id' => $userId]);
+        return $stmt->rowCount() > 0;
     }
 
     public function checkAvailability(int $campingId, string $checkIn, string $checkOut): bool

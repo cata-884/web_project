@@ -111,6 +111,25 @@
     color: var(--color-primary);
 }
 
+.btn-cancel-booking {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    background: transparent;
+    color: #e05252;
+    border: 1.5px solid #e05252;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-cancel-booking:hover {
+    background: #e05252;
+    color: #fff;
+}
+
 /* culori pentru statusuri */
 
 /* verde pentru viitoare */

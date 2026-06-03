@@ -110,15 +110,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const filterCls = bookingFilterClass(booking.status);
             const label = STATUS_LABELS()[booking.status] || booking.status;
             const dates = formatDateRange(booking.check_in, booking.check_out, booking.guests);
+            const name = booking.camping_name || booking.camping?.name || '—';
+            const cover = booking.camping?.cover_url;
+            const imgHtml = cover
+                ? `<img src="${cover}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">`
+                : `<div style="width:100%;height:100%;background:#e8ede8;"></div>`;
+            const canCancel = booking.status === 'pending' || booking.status === 'confirmed';
             return `
                 <div class="booking-card status-${filterCls}" onclick="openBookingDetails(${booking.id})">
-                    <div class="booking-img" style="background:#e8ede8; flex-shrink:0;"></div>
+                    <div class="booking-img" style="flex-shrink:0;overflow:hidden;">${imgHtml}</div>
                     <div class="booking-info">
-                        <h3>${booking.camping_name}</h3>
+                        <h3>${name}</h3>
                         <p class="booking-dates">${dates}</p>
                         <span class="booking-status">${label}</span>
                     </div>
-                    <div class="booking-arrow"></div>
+                    ${canCancel
+                ? `<button class="btn-cancel-booking" onclick="event.stopPropagation();cancelBooking(${booking.id})"
+                    style="flex-shrink:0;padding:8px 16px;background:transparent;color:#e05252;border:1.5px solid #e05252;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Anulează</button>`
+                : '<div class="booking-arrow"></div>'}
                 </div>
             `;
         }).join('');
@@ -174,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const datesEl = document.getElementById('bd-dates');
         const statusEl = document.getElementById('bd-status');
 
-        if (nameEl) nameEl.textContent = booking.camping_name;
+        if (nameEl) nameEl.textContent = booking.camping_name || booking.camping?.name || '—';
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
@@ -199,6 +208,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.account-tabs .nav-item').forEach(b => b.classList.remove('active'));
         const historyBtn = document.querySelector('.account-tabs .nav-item[data-tab="history"]');
         if (historyBtn) historyBtn.classList.add('active');
+    };
+
+    window.cancelBooking = async function (id) {
+        const ok = await showConfirm('Ești sigur că vrei să anulezi această rezervare?', { title: 'Anulează rezervarea', confirmText: 'Anulează', type: 'error' });
+        if (!ok) return;
+        try {
+            await api.post(`/api/bookings/${id}/cancel`, {});
+            showToast('Rezervarea a fost anulată.', 'success');
+            await loadBookings();
+        } catch (err) {
+            showToast(err.message || 'Eroare la anulare.', 'error');
+        }
     };
 
     const backBtn = document.getElementById('back-to-history');

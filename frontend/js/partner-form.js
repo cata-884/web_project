@@ -56,7 +56,7 @@ function validateStep(stepElement) {
         const checkTerms = document.getElementById('agree-terms');
         const checkTruth = document.getElementById('declare-truth');
         if (!checkTerms.checked || !checkTruth.checked) {
-            alert('Te rugăm să accepți termenii și să declari acuratețea informațiilor.');
+            showToast('Te rugăm să accepți termenii și să declari acuratețea informațiilor.', 'warning');
             isValid = false;
         }
     }

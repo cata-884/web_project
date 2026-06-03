@@ -28,6 +28,13 @@ class BookingsController extends Controller
     }
 
     #[NoReturn]
+    public function cancel(int $id): void
+    {
+        $user = $this->requireAuth();
+        $this->json(['ok' => true, 'booking' => BookingDTO::fromRow($this->service->cancel($id, (int)$user['id']))]);
+    }
+
+    #[NoReturn]
     public function store(): void
     {
         $user    = $this->requireAuth();
