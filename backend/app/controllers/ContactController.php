@@ -14,10 +14,4 @@ class ContactController extends Controller
         $this->service->store($this->getJsonBody());
         $this->json(['ok' => true, 'message' => 'Mesaj trimis cu succes']);
     }
-
-    public function index(): void
-    {
-        $this->requireAdmin();
-        $this->json(['messages' => array_map([ContactDTO::class, 'fromRow'], $this->service->list())]);
-    }
 }

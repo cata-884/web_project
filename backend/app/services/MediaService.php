@@ -19,9 +19,9 @@ class MediaService
     private const AUDIO_EXTENSIONS = ['mp3', 'ogg', 'wav', 'm4a', 'aac', 'webm'];
 
     public function __construct(
-        private MediaRepository $media,
-        private CampingsRepository $campings,
-        private ReviewsRepository $reviews,
+        private readonly MediaRepository    $media,
+        private readonly CampingsRepository $campings,
+        private readonly ReviewsRepository  $reviews,
     ) {}
 
     public function uploadForCamping(int $campingId, array $user, array $file): array
@@ -32,7 +32,7 @@ class MediaService
             throw new ForbiddenException('Nu ai drepturi pe acest camping');
 
         [$validFile, $mediaType] = $this->validate($file);
-        $filename = $this->saveFile($validFile, 'campings', $campingId);
+        $filename = $this->saveFile($validFile, $campingId);
         $url      = '/cat/public/' . self::UPLOAD_DIR . '/campings/' . $campingId . '/' . $filename;
         $id       = $this->media->createForCamping($campingId, $mediaType, $url);
 
@@ -117,11 +117,11 @@ class MediaService
         return null;
     }
 
-    private function saveFile(array $file, string $category, int $entityId): string
+    private function saveFile(array $file, int $entityId): string
     {
         $ext      = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', pathinfo($file['name'], PATHINFO_EXTENSION) ?: 'bin'));
         $filename = uniqid('media_', true) . '.' . $ext;
-        $dir      = ROOT . SEP . 'public' . SEP . self::UPLOAD_DIR . SEP . $category . SEP . $entityId;
+        $dir      = ROOT . SEP . 'public' . SEP . self::UPLOAD_DIR . SEP . 'campings' . SEP . $entityId;
 
         if (!is_dir($dir)) mkdir($dir, 0755, true);
         if (!move_uploaded_file($file['tmp_name'], $dir . SEP . $filename))

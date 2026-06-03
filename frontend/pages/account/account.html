@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="../../css/account/settings.css">
     <link rel="stylesheet" href="../../css/account/account-layout.css">
     <link rel="stylesheet" href="../../css/account/CaT-partner.css">
-    <link rel="stylesheet" href="../../css/account/create-campsite.css">
     <link rel="stylesheet" href="../../css/account/admin.css">
 
 </head>
@@ -82,7 +81,7 @@
 
                 <div class="header-right">
                     <div class="user-pill">
-                        <img id="user-pill-avatar" src="/cat/public/uploads/avatars/user_10_1779900557.jpg" alt="Avatar">
+                        <img id="user-pill-avatar" src="../../assets/Call.jpg" alt="Avatar" onerror="this.onerror=null;this.src='../../assets/Call.jpg'">
                         <div class="user-info">
                             <span class="user-name" id="user-pill-name">...</span>
                             <span class="user-email" id="user-pill-email">...</span>
@@ -103,10 +102,11 @@
                             <input type="file" id="cover-upload" accept="image/*" style="display: none;">
 
                             <div class="avatar-container">
-                                <img src="/cat/public/uploads/avatars/user_10_1779900557.jpg" alt="Avatar" class="profile-photo-circle"
+                                <img src="../../assets/Call.jpg" alt="Avatar" class="profile-photo-circle"
      id="profile-avatar-img"
      onclick="document.getElementById('avatar-upload').click()"
-     title="Apasa pentru a schimba poza de profil">
+     title="Apasa pentru a schimba poza de profil"
+     onerror="this.onerror=null;this.src='../../assets/Call.jpg'">
                                 <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                             </div>
 
@@ -114,18 +114,19 @@
                                 <div class="form-row split">
                                     <div class="input-group">
                                         <label>Username</label>
-                                        <input type="text" id="profile-username" placeholder="username">
+                                        <label for="profile-username"></label><input type="text" id="profile-username" placeholder="username">
                                     </div>
                                     <div class="input-group">
                                         <label>Nume complet</label>
-                                        <input type="text" id="profile-fullname" placeholder="Prenume Nume">
+                                        <label for="profile-fullname"></label><input type="text" id="profile-fullname" placeholder="Prenume Nume">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="input-group">
                                         <label>Email</label>
-                                        <input type="email" id="profile-email" placeholder="email@example.com" readonly
-                                            style="opacity:.6; cursor:not-allowed;">
+                                        <label for="profile-email"></label><label
+                                            for="profile-email"></label><input type="email" id="profile-email" placeholder="email@example.com" readonly
+                                                                               style="opacity:.6; cursor:not-allowed;">
                                     </div>
                                 </div>
                                 <button class="btn-save-profile" id="save-profile-btn">Save Changes</button>
@@ -235,7 +236,9 @@
                                     <span data-value="5"></span>
                                 </div>
                             </div>
-                            <textarea class="review-textarea" placeholder="Scrie aici ce ti-a placut..."></textarea>
+                            <label>
+                                <textarea class="review-textarea" placeholder="Scrie aici ce ti-a placut..."></textarea>
+                            </label>
                             <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
                                 <span class="upload-icon">+</span>
                                 <p>Apasa aici pentru a adauga poze sau videoclipuri</p>
@@ -262,47 +265,33 @@
                             <div class="form-row split">
                                 <div class="input-group-settings">
                                     <label>Email Address</label>
-                                    <input type="email" value="mihai@gmail.com" placeholder="Emailul tau">
+                                    <label>
+                                        <input type="email" value="mihai@gmail.com" placeholder="Emailul tau">
+                                    </label>
                                 </div>
                                 <div class="input-group-settings">
                                     <label>Your Id</label>
-                                    <input type="text" value="#12894" readonly
-                                        style="background-color: rgba(0,0,0,0.02); color: #666;">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <h3>Notifications</h3>
-                            <div class="notifications-row">
-                                <div class="toggle-wrapper">
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
+                                    <label>
+                                        <input type="text" value="#12894" readonly
+                                            style="background-color: rgba(0,0,0,0.02); color: #666;">
                                     </label>
-                                    <span class="toggle-label">New Invites</span>
-                                </div>
-
-                                <div class="toggle-wrapper">
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                    <span class="toggle-label">Team Activity</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="settings-section">
                             <h3>Security & Privacy</h3>
-                            <div class="form-row split align-end">
-                                <div class="input-group-settings relative-input">
-                                    <label>Actual Password</label>
-                                    <input type="password" value="secretpassword" placeholder=".....">
-                                    <span class="eye-icon" title="Arata parola">&#9679;</span>
+                            <div class="form-row split">
+                                <div class="input-group-settings">
+                                    <label data-i18n="account.new_password">Parola nouă</label>
+                                    <input type="password" id="new-password" placeholder="••••••••">
                                 </div>
-                                <button class="btn-dark">Change Password</button>
+                                <div class="input-group-settings">
+                                    <label data-i18n="account.confirm_password">Confirmă parola</label>
+                                    <input type="password" id="confirm-password" placeholder="••••••••">
+                                </div>
                             </div>
+                            <button class="btn-dark" id="change-password-btn" style="margin-top: 12px;" data-i18n="account.change_password">Schimbă parola</button>
                         </div>
 
                         <button class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete
@@ -538,27 +527,27 @@
                             <div class="form-row split">
                                 <div class="input-group">
                                     <label>Camping Name</label>
-                                    <input type="text" id="c-name" placeholder="Numele locației" required>
+                                    <label for="c-name"></label><label for="c-name"></label><input type="text" id="c-name" placeholder="Numele locației" required>
                                 </div>
                                 <div class="input-group">
                                     <label>First Name</label>
-                                    <input type="text" id="c-owner" placeholder="Prenume proprietar" required>
+                                    <label for="c-owner"></label><input type="text" id="c-owner" placeholder="Prenume proprietar" required>
                                 </div>
                             </div>
 
                             <div class="input-group">
                                 <label>Short Description</label>
-                                <textarea id="c-short-desc" rows="3"
-                                    placeholder="Briefly describe what makes your location special... (Max 500 characters)"
-                                    required></textarea>
+                                <label for="c-short-desc"></label><label for="c-short-desc"></label><textarea id="c-short-desc" rows="3"
+                                                                                                              placeholder="Briefly describe what makes your location special... (Max 500 characters)"
+                                                                                                              required></textarea>
                             </div>
 
                             <div class="input-group">
                                 <label>Full Description - Provide all the details about the experience, rules, and
                                     surroundings. This will be the main text on your generated page.</label>
-                                <textarea id="c-full-desc" rows="6"
-                                    placeholder="Hello! I'm a software developer by day, but I know how frustrating..."
-                                    required></textarea>
+                                <label for="c-full-desc"></label><textarea id="c-full-desc" rows="6"
+                                                                           placeholder="Hello! I'm a software developer by day, but I know how frustrating..."
+                                                                           required></textarea>
                             </div>
 
                             <button type="button" class="btn-dark campsite-next" data-next="2">Next</button>
@@ -581,22 +570,22 @@
                             <div class="form-row split">
                                 <div class="input-group">
                                     <label>Street</label>
-                                    <input type="text" id="c-street" placeholder="Strada" required>
+                                    <label for="c-street"></label><label for="c-street"></label><input type="text" id="c-street" placeholder="Strada" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Number</label>
-                                    <input type="text" id="c-number" placeholder="Număr" required>
+                                    <label for="c-number"></label><label for="c-number"></label><input type="text" id="c-number" placeholder="Număr" required>
                                 </div>
                             </div>
 
                             <div class="form-row split">
                                 <div class="input-group">
                                     <label>City</label>
-                                    <input type="text" id="c-city" placeholder="Oraș/Localitate" required>
+                                    <label for="c-city"></label><input type="text" id="c-city" placeholder="Oraș/Localitate" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Zip Code</label>
-                                    <input type="text" id="c-zip" placeholder="Cod poștal" required>
+                                    <label for="c-zip"></label><input type="text" id="c-zip" placeholder="Cod poștal" required>
                                 </div>
                             </div>
 
@@ -607,10 +596,10 @@
 
                             <div class="form-row split">
                                 <div class="input-group">
-                                    <input type="text" id="c-lat" placeholder="Latitude" required readonly>
+                                    <label for="c-lat"></label><input type="text" id="c-lat" placeholder="Latitude" required readonly>
                                 </div>
                                 <div class="input-group">
-                                    <input type="text" id="c-lng" placeholder="Longitude" required readonly>
+                                    <label for="c-lng"></label><input type="text" id="c-lng" placeholder="Longitude" required readonly>
                                 </div>
                             </div>
 
@@ -648,20 +637,28 @@
 
                             <div class="accordion-item" style="margin-bottom: 20px;">
                                 <button type="button" class="accordion-header dark-acc-header">
-                                    Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
+                                    Camping Type <span class="acc-icon" style="margin-left: 8px;">^</span>
                                 </button>
                                 <div class="accordion-content show req-group">
                                     <label class="check-row-between">
-                                        <span>Tent Pitches:</span>
-                                        <input type="checkbox" name="environment" value="tent">
+                                        <span>Cort (Tent)</span>
+                                        <input type="radio" name="type" value="tent">
                                     </label>
                                     <label class="check-row-between">
-                                        <span>RV/Campervan Spots:</span>
-                                        <input type="checkbox" name="environment" value="rv">
+                                        <span>Autorulotă (RV)</span>
+                                        <input type="radio" name="type" value="rv">
                                     </label>
                                     <label class="check-row-between">
-                                        <span>Cabins/Glamping:</span>
-                                        <input type="checkbox" name="environment" value="cabin">
+                                        <span>Cabană (Cabin)</span>
+                                        <input type="radio" name="type" value="cabin">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Glamping</span>
+                                        <input type="radio" name="type" value="glamping">
+                                    </label>
+                                    <label class="check-row-between">
+                                        <span>Sălbatic (Wild)</span>
+                                        <input type="radio" name="type" value="wild">
                                     </label>
                                 </div>
                             </div>
@@ -708,7 +705,7 @@
                                 </button>
                                 <div class="accordion-content show req-group" style="padding: 15px;">
                                     <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Maximum guests/spots:</label>
-                                    <select name="capacity" id="campsite-capacity" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; color: #333; font-size: 14px;">
+                                    <label for="campsite-capacity"></label><select name="capacity" id="campsite-capacity" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; color: #333; font-size: 14px;">
                                         <option value="">Select capacity...</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -730,7 +727,7 @@
                                 </button>
                                 <div class="accordion-content show req-group" style="padding: 15px;">
                                     <label style="display: block; margin-bottom: 8px; color: #4A3C31; font-weight: 500;">Price per night (RON):</label>
-                                    <input type="number" name="price_per_night" id="campsite-price" placeholder="Ex: 150" min="0" step="1" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; font-size: 14px; box-sizing: border-box;">
+                                    <label for="campsite-price"></label><input type="number" name="price_per_night" id="campsite-price" placeholder="Ex: 150" min="0" step="1" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; font-size: 14px; box-sizing: border-box;">
                                 </div>
                             </div>
 
@@ -845,7 +842,7 @@
 
                     <div class="details-gallery">
                         <div class="hero-image-wrapper">
-                            <img id="detail-hero-img" src="../../assets/images/camping-placeholder.jpg" alt="Cover">
+                            <img id="detail-hero-img" src="../../assets/Call.jpg" alt="Cover">
                         </div>
                         <div id="detail-thumbnails" class="thumbnails-container"></div>
                     </div>
@@ -943,8 +940,8 @@
                         <div class="admin-toolbar">
                             <h2 data-i18n="admin.users_title">Administrare Utilizatori</h2>
                             <div class="admin-search-bar">
-                                <input type="text" id="admin-user-search" data-i18n-ph="admin.search_ph" placeholder="Cauta username sau email...">
-                                <select id="admin-user-filter">
+                                <label for="admin-user-search"></label><input type="text" id="admin-user-search" data-i18n-ph="admin.search_ph" placeholder="Cauta username sau email...">
+                                <label for="admin-user-filter"></label><select id="admin-user-filter">
                                     <option value="" data-i18n="admin.filter_all_users">Toti utilizatorii</option>
                                     <option value="true" data-i18n="admin.filter_banned">Banati</option>
                                     <option value="false" data-i18n="admin.filter_active">Activi</option>
@@ -1032,7 +1029,7 @@
                             <div class="admin-chart-box">
                                 <div class="admin-chart-toolbar">
                                     <span class="admin-chart-title" data-i18n="admin.chart_title">Grafic</span>
-                                    <select id="admin-chart-type" onchange="loadAdminChart()">
+                                    <label for="admin-chart-type"></label><select id="admin-chart-type" onchange="loadAdminChart()">
                                         <option value="bookings_per_month" data-i18n="admin.chart_bookings">Rezervari / luna</option>
                                         <option value="top_regions" data-i18n="admin.chart_regions">Campinguri pe regiune</option>
                                         <option value="revenue_per_month" data-i18n="admin.chart_revenue">Venituri / luna</option>
@@ -1060,9 +1057,9 @@
                         <p data-i18n="admin.feedback_modal_desc">Mesajul tau va fi vizibil utilizatorului. Explica clar ce trebuie corectat pentru a putea
                             retrimite cererea.</p>
                         <label class="admin-modal-label" data-i18n="admin.feedback_label">Mesaj feedback *</label>
-                        <textarea id="admin-feedback-text" rows="5"
-                            data-i18n-ph="admin.feedback_ph"
-                            placeholder="Ex: Documentele furnizate sunt incomplete. Te rugam sa atasezi autorizatia de functionare valabila..."></textarea>
+                        <label for="admin-feedback-text"></label><textarea id="admin-feedback-text" rows="5"
+                                                                           data-i18n-ph="admin.feedback_ph"
+                                                                           placeholder="Ex: Documentele furnizate sunt incomplete. Te rugam sa atasezi autorizatia de functionare valabila..."></textarea>
                         <div class="modal-btn-row">
                             <button class="btn-mc" id="admin-feedback-cancel" data-i18n="admin.modal_cancel">Anuleaza</button>
                             <button class="btn-md" id="admin-feedback-confirm" data-i18n="admin.feedback_confirm">Trimite Feedback</button>
@@ -1075,11 +1072,11 @@
                         <h3 data-i18n="admin.ban_modal_title">Baneaza Utilizator</h3>
                         <p data-i18n="admin.ban_modal_desc">Userul va fi deconectat imediat si nu va mai putea accesa campinguri sau lasa recenzii.</p>
                         <label class="admin-modal-label" data-i18n="admin.ban_reason_label">Motiv ban *</label>
-                        <textarea id="admin-ban-reason" rows="3" data-i18n-ph="admin.ban_reason_ph" placeholder="Descrie motivul banarii..."></textarea>
+                        <label for="admin-ban-reason"></label><textarea id="admin-ban-reason" rows="3" data-i18n-ph="admin.ban_reason_ph" placeholder="Descrie motivul banarii..."></textarea>
                         <label class="admin-modal-label" data-i18n="admin.ban_days_label">Durata in zile (gol = permanent)</label>
-                        <input type="number" id="admin-ban-days" min="1"
-                            data-i18n-ph="admin.ban_days_ph"
-                            placeholder="Ex: 30 — lasa gol pentru ban permanent">
+                        <label for="admin-ban-days"></label><input type="number" id="admin-ban-days" min="1"
+                                                                   data-i18n-ph="admin.ban_days_ph"
+                                                                   placeholder="Ex: 30 — lasa gol pentru ban permanent">
                         <div class="modal-btn-row">
                             <button class="btn-mc" id="admin-ban-cancel" data-i18n="admin.modal_cancel">Anuleaza</button>
                             <button class="btn-md" id="admin-ban-confirm" data-i18n="admin.modal_apply_ban">Aplica Ban</button>

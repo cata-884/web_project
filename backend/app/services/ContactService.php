@@ -1,5 +1,5 @@
 <?php
-class ContactService
+readonly class ContactService
 {
     public function __construct(private ContactRepository $contact) {}
 
@@ -13,10 +13,5 @@ class ContactService
             throw new ValidationException('Date invalide');
 
         $this->contact->create($name, $email, $data['phone'] ?? null, $message);
-    }
-
-    public function list(): array
-    {
-        return $this->contact->findAll();
     }
 }

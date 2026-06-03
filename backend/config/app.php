@@ -1,7 +1,5 @@
 <?php
-define('APP_NAME', 'CaT Camping Info Web Tool');
-define('BASE_URL', '/cat/public');
-define('DEFAULT_LANG', 'ro');
+const BASE_URL = '/cat/public';
 
 // Incarca .env daca variabilele nu sunt deja in mediu (Apache nu citeste .env automat)
 // in mediul de executie al mediului php curent

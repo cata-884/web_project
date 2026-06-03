@@ -4,7 +4,8 @@
         "php": ">=8.2",
         "dompdf/dompdf": "^2.0",
       "ext-curl": "*",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-fileinfo": "*"
     },
     "autoload": {
         "psr-4": {}

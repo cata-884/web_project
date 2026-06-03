@@ -2,9 +2,9 @@
 class AuthService
 {
     public function __construct(
-        private UserRepository $users,
-        private SessionRepository $sessions,
-        private BansRepository $bans,
+        private readonly UserRepository    $users,
+        private readonly SessionRepository $sessions,
+        private readonly BansRepository    $bans,
     ) {}
 
     public function register(array $data): array
@@ -74,6 +74,19 @@ class AuthService
         }
         $this->users->updateProfile($userId, $data);
         return $this->users->findById($userId);
+    }
+
+    public function changePassword(int $userId, array $data): void
+    {
+        $new     = trim($data['new_password']     ?? '');
+        $confirm = trim($data['confirm_password'] ?? '');
+
+        if (strlen($new) < 8)
+            throw new ValidationException('Parola nouă trebuie să aibă minim 8 caractere');
+        if ($new !== $confirm)
+            throw new ValidationException('Parolele noi nu coincid');
+
+        $this->users->updatePassword($userId, password_hash($new, PASSWORD_DEFAULT));
     }
 
     public function uploadAvatar(int $userId, array $file): array

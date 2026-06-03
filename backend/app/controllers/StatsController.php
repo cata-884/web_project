@@ -1,4 +1,7 @@
 <?php
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use JetBrains\PhpStorm\NoReturn;
 
 class StatsController extends Controller
@@ -54,7 +57,7 @@ class StatsController extends Controller
         }
 
         $html = <<<HTML
-<!DOCTYPE html><html><head><meta charset="UTF-8">
+<!DOCTYPE html><html lang=""><head><meta charset="UTF-8">
 <style>
   body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #1f2937; margin: 0; padding: 24px; }
   h1 { font-size: 22px; color: #D97706; margin-bottom: 4px; }
@@ -85,12 +88,12 @@ class StatsController extends Controller
 </body></html>
 HTML;
 
-        $options = new \Dompdf\Options();
+        $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', false);
-        $dompdf = new \Dompdf\Dompdf($options);
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html, 'UTF-8');
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A4');
         $dompdf->render();
 
         header('Content-Type: application/pdf');
@@ -113,7 +116,7 @@ HTML;
         $values = array_column($rows, 'value');
         $maxVal = max($values) ?: 1;
         $n = count($rows); $barW = max(8, ($chartW/$n)*0.6); $gap = $chartW/$n;
-        $bars = ''; $xLabels = ''; $yStep = $this->niceStep($maxVal, 5);
+        $bars = ''; $xLabels = ''; $yStep = $this->niceStep($maxVal);
 
         for ($i = 0; $i < $n; $i++) {
             $val = (float)$rows[$i]['value'];
@@ -143,9 +146,9 @@ HTML;
              . "</svg>";
     }
 
-    private function niceStep(float $maxVal, int $steps): float
+    private function niceStep(float $maxVal): float
     {
-        $raw  = $maxVal / $steps;
+        $raw  = $maxVal / 5;
         $mag  = pow(10, floor(log10(max($raw, 1))));
         return max(1, ceil($raw / $mag) * $mag);
     }

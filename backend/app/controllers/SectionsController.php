@@ -27,29 +27,6 @@ class SectionsController extends Controller
     }
 
     #[NoReturn]
-    public function show(int $id): void
-    {
-        $user = $this->requireAuth();
-        $this->json(['section' => SectionDTO::fromRow($this->service->getById($id, $user))]);
-    }
-
-    #[NoReturn]
-    public function update(int $id): void
-    {
-        $user    = $this->requireAuth();
-        $section = $this->service->update($id, $this->getJsonBody(), $user);
-        $this->json(['section' => SectionDTO::fromRow($section)]);
-    }
-
-    #[NoReturn]
-    public function destroy(int $id): void
-    {
-        $user = $this->requireAuth();
-        $this->service->delete($id, $user);
-        $this->json(['ok' => true]);
-    }
-
-    #[NoReturn]
     public function campings(int $id): void
     {
         $user = $this->requireAuth();

@@ -36,12 +36,6 @@ class ReviewsController extends Controller
     }
 
     #[NoReturn]
-    public function show(int $id): void
-    {
-        $this->json(['review' => ReviewDTO::fromRow($this->service->getById($id))]);
-    }
-
-    #[NoReturn]
     public function update(int $id): void
     {
         $user   = $this->requireAuth();

@@ -1,6 +1,5 @@
 let currentCamping = null;
 let currentPricePerNight = 0;
-let userBookings = [];
 let wishlistSectionId = null;
 let campingInWishlist = false;
 

@@ -55,33 +55,4 @@ class OrganizersController extends Controller
         $this->json(['application' => OrganizerDTO::fromRow($this->service->myApplication((int)$user['id']))]);
     }
 
-    #[NoReturn]
-    public function pending(): void
-    {
-        $this->requireAdmin();
-        $res = $this->service->pending((int)($_GET['limit'] ?? 20), (int)($_GET['offset'] ?? 0));
-        $this->json([
-            'applications' => array_map([OrganizerDTO::class, 'fromRow'], $res['applications']),
-            'total'        => $res['total'],
-            'limit'        => $res['limit'],
-            'offset'       => $res['offset'],
-        ]);
-    }
-
-    #[NoReturn]
-    public function approve(int $id): void
-    {
-        $admin = $this->requireAdmin();
-        $app   = $this->service->approve($id, (int)$admin['id']);
-        $this->json(['ok' => true, 'message' => 'Cerere aprobata. Userul a fost promovat la organizer.', 'application' => OrganizerDTO::fromRow($app)]);
-    }
-
-    #[NoReturn]
-    public function reject(int $id): void
-    {
-        $admin = $this->requireAdmin();
-        $body  = $this->getJsonBody();
-        $app   = $this->service->reject($id, (int)$admin['id'], trim($body['notes'] ?? ''));
-        $this->json(['ok' => true, 'message' => 'Cerere respinsa.', 'application' => OrganizerDTO::fromRow($app)]);
-    }
 }

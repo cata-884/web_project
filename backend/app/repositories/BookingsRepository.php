@@ -1,5 +1,5 @@
 <?php
-class BookingsRepository extends Repository
+class       BookingsRepository extends Repository
 {
     public static function totalPriceExpr(string $b = 'b', string $c = 'c'): string
     {
@@ -60,7 +60,7 @@ class BookingsRepository extends Repository
         return $this->pdo->query("
             SELECT b.id, b.check_in, b.check_out, b.guests,
                    $tp AS total_price,
-                   b.status, b.created_at, u.username AS user, c.name AS camping
+                   b.status, b.created_at, u.username AS \"user\", c.name AS camping
             FROM bookings b
             LEFT JOIN users u ON u.id = b.user_id
             LEFT JOIN campings c ON c.id = b.camping_id
@@ -83,38 +83,6 @@ class BookingsRepository extends Repository
             'guests'     => $data['guests'],
         ]);
         return (int) $stmt->fetchColumn();
-    }
-
-    public function updateStatus(int $id, string $status): bool
-    {
-        $valid = ['pending', 'confirmed', 'cancelled', 'completed'];
-        if (!in_array($status, $valid, true)) return false;
-        $stmt = $this->pdo->prepare("UPDATE bookings SET status = :status WHERE id = :id");
-        return $stmt->execute(['id' => $id, 'status' => $status]);
-    }
-
-    public function update(int $id, array $data): bool
-    {
-        $allowed = ['check_in', 'check_out', 'guests', 'status'];
-        $sets = [];
-        $params = ['id' => $id];
-        foreach ($allowed as $col) {
-            if (array_key_exists($col, $data)) {
-                $sets[] = "$col = :$col";
-                $params[$col] = $data[$col];
-            }
-        }
-        if (!$sets) return false;
-        $stmt = $this->pdo->prepare("UPDATE bookings SET " . implode(', ', $sets) . " WHERE id = :id");
-        return $stmt->execute($params);
-    }
-
-    public function getOwnerId(int $id): ?int
-    {
-        $stmt = $this->pdo->prepare("SELECT user_id FROM bookings WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-        $val = $stmt->fetchColumn();
-        return $val ? (int) $val : null;
     }
 
     public function checkAvailability(int $campingId, string $checkIn, string $checkOut): bool

@@ -1,5 +1,5 @@
 <?php
-class OrganizersService
+readonly class OrganizersService
 {
     public function __construct(private OrganizersRepository $organizers) {}
 
@@ -34,39 +34,5 @@ class OrganizersService
         $app = $this->organizers->findApplicationByUserId($userId);
         if (!$app) throw new NotFoundException('Nu ai nicio cerere de promovare');
         return $app;
-    }
-
-    public function pending(int $limit, int $offset): array
-    {
-        return [
-            'applications' => $this->organizers->findPendingApplications($limit, $offset),
-            'total'        => $this->organizers->countPending(),
-            'limit'        => $limit,
-            'offset'       => $offset,
-        ];
-    }
-
-    public function approve(int $id, int $adminId): array
-    {
-        $app = $this->organizers->findById($id);
-        if (!$app) throw new NotFoundException('Cerere inexistenta');
-        if ($app['status'] !== 'pending')
-            throw new ValidationException('Cererea nu este in status pending (actual: ' . $app['status'] . ')');
-        if (!$this->organizers->approveApplication($id, $adminId))
-            throw new ApiException('Nu s-a putut aproba cererea', 500);
-        return $this->organizers->findById($id);
-    }
-
-    public function reject(int $id, int $adminId, string $notes): array
-    {
-        $app = $this->organizers->findById($id);
-        if (!$app) throw new NotFoundException('Cerere inexistenta');
-        if ($app['status'] !== 'pending')
-            throw new ValidationException('Cererea nu este in status pending (actual: ' . $app['status'] . ')');
-        if (strlen($notes) < 3)
-            throw new ValidationException('Motivul respingerii (notes) obligatoriu, minim 3 caractere');
-        if (!$this->organizers->rejectApplication($id, $adminId, $notes))
-            throw new ApiException('Nu s-a putut respinge cererea', 500);
-        return $this->organizers->findById($id);
     }
 }

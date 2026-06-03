@@ -11,7 +11,6 @@
 | **Frontend** | HTML5, CSS3, JavaScript (ES2020+), Leaflet.js 1.9 |
 | **Backend** | PHP 8.2, Apache 2.4, Composer |
 | **Bază de date** | PostgreSQL 16, PDO (prepared statements) |
-| **Gateway** | Nginx Alpine (reverse proxy + static files) |
 | **Autentificare** | Bearer tokens (sesiuni proprii) + Google OAuth 2.0 |
 | **Containerizare** | Docker, Docker Compose |
 | **Dev tools** | stylelint, vnu-jar (HTML validator) |
@@ -75,7 +74,7 @@ chmod +x init_backend.sh
 Scriptul execută automat:
 
 ```
-1. docker compose up -d --build   # pornește nginx + backend + db
+1. docker compose up -d --build   # pornește backend + db
 2. Așteaptă ca PostgreSQL să fie gata (pg_isready)
 3. docker compose exec backend php script/migrate.php   # migrări + seed
 ```
@@ -126,7 +125,7 @@ docker compose down -v       # oprește + șterge volumul de date
 - API REST: autentificare (register/login/logout/me), campinguri, rezervări, recenzii (CRUD + sanitizare XSS), media, secțiuni personale, organizatori
 - Google OAuth 2.0
 - Pagini frontend: listing campinguri, detaliu camping, hartă interactivă cu auth guard
-- Migrare XAMPP → Docker; `docker-compose.yml`, Dockerfile, entrypoint, Nginx reverse proxy
+- Migrare XAMPP → Docker; `docker-compose.yml`, Dockerfile, entrypoint, Apache (servește frontend + API)
 - Admin backend: aprobare/respingere campinguri, tabele facilități/mediu, statistici (JSON + SVG + PDF), export date
 - Admin panel UI: cereri camping, gestionare utilizatori, statistici
 - Sistem toast & confirm modal (înlocuire `alert`/`confirm` nativ)

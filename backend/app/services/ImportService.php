@@ -1,7 +1,7 @@
 <?php
 class ImportService
 {
-    public function __construct(private CampingsRepository $campings) {}
+    public function __construct(private readonly CampingsRepository $campings) {}
 
     public function importCampings(array $rows, int $createdBy): array
     {

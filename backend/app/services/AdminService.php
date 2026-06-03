@@ -2,11 +2,11 @@
 class AdminService
 {
     public function __construct(
-        private UserRepository $users,
-        private BansRepository $bans,
-        private CampingsRepository $campings,
-        private ContactRepository $contact,
-        private SessionRepository $sessions,
+        private readonly UserRepository     $users,
+        private readonly BansRepository     $bans,
+        private readonly CampingsRepository $campings,
+        private readonly ContactRepository  $contact,
+        private readonly SessionRepository  $sessions,
     ) {}
 
     public function listUsers(array $filters, int $limit, int $offset): array

@@ -1,4 +1,7 @@
 <?php
+
+use JetBrains\PhpStorm\NoReturn;
+
 class ExportController extends Controller
 {
     private ExportService $service;
@@ -17,15 +20,24 @@ class ExportController extends Controller
         );
     }
 
+    #[NoReturn]
     public function campingsCsv(): void  { $this->requireAdmin(); $this->sendCsv('campings', $this->service->getCampings()); }
+    #[NoReturn]
     public function campingsJson(): void { $this->requireAdmin(); $this->sendJson('campings', $this->service->getCampings()); }
+    #[NoReturn]
     public function bookingsCsv(): void  { $this->requireAdmin(); $this->sendCsv('bookings', $this->service->getBookings()); }
+    #[NoReturn]
     public function bookingsJson(): void { $this->requireAdmin(); $this->sendJson('bookings', $this->service->getBookings()); }
+    #[NoReturn]
     public function reviewsCsv(): void   { $this->requireAdmin(); $this->sendCsv('reviews', $this->service->getReviews()); }
+    #[NoReturn]
     public function reviewsJson(): void  { $this->requireAdmin(); $this->sendJson('reviews', $this->service->getReviews()); }
+    #[NoReturn]
     public function usersCsv(): void     { $this->requireAdmin(); $this->sendCsv('users', $this->service->getUsers()); }
+    #[NoReturn]
     public function usersJson(): void    { $this->requireAdmin(); $this->sendJson('users', $this->service->getUsers()); }
 
+    #[NoReturn]
     private function sendCsv(string $name, array $rows): void
     {
         if (empty($rows)) $this->json(['error' => 'No data'], 404);
@@ -40,6 +52,7 @@ class ExportController extends Controller
         exit;
     }
 
+    #[NoReturn]
     private function sendJson(string $name, array $rows): void
     {
         header('Content-Type: application/json; charset=UTF-8');

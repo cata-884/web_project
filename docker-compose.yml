@@ -16,7 +16,7 @@ services:
     container_name: camping_backend
     restart: always
     ports:
-      - "80:80"                              # mutat de pe nginx
+      - "80:80"
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -27,7 +27,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
     volumes:
       - ./backend:/var/www/html
-      - ./frontend:/var/www/frontend         # frontendul, fost la nginx
+      - ./frontend:/var/www/frontend
     depends_on:
       - db
 volumes:

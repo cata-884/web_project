@@ -5,7 +5,7 @@ class PreferencesService
     private const VALID_STYLES = ['solo', 'couple', 'family', 'group', 'pets'];
     private const VALID_ZONES  = ['mountain', 'seaside', 'delta', 'forest_lake'];
 
-    public function __construct(private PreferencesRepository $prefs) {}
+    public function __construct(private readonly PreferencesRepository $prefs) {}
 
     public function get(int $userId): array
     {
@@ -17,7 +17,7 @@ class PreferencesService
     public function save(int $userId, array $data): void
     {
         $filter = fn(array $val, array $allowed) =>
-            array_values(array_filter((array) $val, fn($v) => in_array($v, $allowed, true)));
+            array_values(array_filter($val, fn($v) => in_array($v, $allowed, true)));
 
         $this->prefs->upsert(
             $userId,

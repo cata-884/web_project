@@ -30,6 +30,15 @@ class UserRepository extends Repository
         return $stmt->fetch() ?: null;
     }
 
+    public function findByIdWithHash(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT id, username, email, password_hash, full_name, avatar_url, role, is_oauth, created_at FROM users WHERE id = :id"
+        );
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function findByOauthId(string $oauthId): ?array
     {
         $stmt = $this->pdo->prepare('SELECT id FROM users WHERE oauth_id = :oauth_id LIMIT 1');
@@ -121,6 +130,12 @@ class UserRepository extends Repository
         if (!$sets) return false;
         $stmt = $this->pdo->prepare("UPDATE users SET " . implode(', ', $sets) . " WHERE id = :id");
         return $stmt->execute($params);
+    }
+
+    public function updatePassword(int $userId, string $hash): void
+    {
+        $this->pdo->prepare("UPDATE users SET password_hash = :hash WHERE id = :id")
+                  ->execute(['hash' => $hash, 'id' => $userId]);
     }
 
     public function updateAvatarUrl(int $userId, string $url): void
