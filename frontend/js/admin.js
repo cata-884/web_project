@@ -18,6 +18,14 @@ function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function adminMsg(container, cls, text) {
+    container.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = cls;
+    p.textContent = text;
+    container.appendChild(p);
+}
+
 function fmtDate(iso) {
     if (!iso) return '—';
     return new Date(iso).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -26,22 +34,25 @@ function fmtDate(iso) {
 async function loadAdminCampings(status = '') {
     const grid = document.getElementById('admin-campings-grid');
     if (!grid) return;
-    grid.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
+    adminMsg(grid, 'admin-loading', t('admin.loading'));
 
     try {
         const qs = status !== '' ? `?status=${encodeURIComponent(status)}` : '';
-        // Apelul corect pentru campinguri
         const res = await api.get(`/api/admin/campings${qs}`);
 
         const campings = res?.campings ?? [];
 
         if (!campings.length) {
-            grid.innerHTML = '<p class="admin-empty">Nicio cerere gasita pentru aceasta categorie.</p>';
+            adminMsg(grid, 'admin-empty', 'Nicio cerere gasita pentru aceasta categorie.');
             return;
         }
-        grid.innerHTML = campings.map(renderCampingCard).join('');
+        const frag = document.createDocumentFragment();
+        campings.forEach(c => frag.appendChild(renderCampingCard(c)));
+        grid.innerHTML = '';
+        grid.appendChild(frag);
     } catch (err) {
-        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
+        adminMsg(grid, 'admin-empty', t('admin.err_prefix') + (err.message ?? ''));
+        grid.querySelector('.admin-empty').style.color = 'var(--ar)';
     }
 }
 
@@ -49,66 +60,88 @@ function renderCampingCard(c) {
     const meta = STATUS_META();
     const st = meta[String(c.approval_status)] ?? meta['0'];
     const isPending = Number(c.approval_status) === 0;
+    const node = cloneTemplate('tpl-admin-camping-card');
+    const el = node.querySelector('.admin-camping-card');
 
-    const docLinks = [];
-    if (c.id_document_path) {
-        docLinks.push(`<a class="admin-doc-link" href="${esc(c.id_document_path)}" download>↓ Document Identitate</a>`);
+    el.classList.add(st.card);
+    el.querySelector('.ac-name').textContent = c.name;
+    const badge = el.querySelector('.ac-badge');
+    badge.textContent = st.label;
+    badge.classList.add(st.cls);
+
+    el.querySelector('.ac-type-region').textContent = `${c.type} • ${c.region}`;
+    if (c.price_per_night) {
+        const priceEl = el.querySelector('.ac-price');
+        priceEl.textContent = `${Number(c.price_per_night).toFixed(0)} RON/noapte`;
+        priceEl.style.display = '';
     }
-    if (c.registration_document_path) {
-        docLinks.push(`<a class="admin-doc-link" href="${esc(c.registration_document_path)}" download>↓ Certificat Inregistrare</a>`);
+    el.querySelector('.ac-date').textContent = `Trimis: ${fmtDate(c.created_at)}`;
+
+    const userEl = el.querySelector('.ac-user');
+    userEl.textContent = `${c.full_name || c.username} — `;
+    const em = document.createElement('em');
+    em.textContent = c.email;
+    userEl.appendChild(em);
+
+    if (c.company_name) {
+        const compRow = el.querySelector('.ac-company-row');
+        let txt = c.company_name;
+        if (c.business_type) txt += ` (${c.business_type})`;
+        if (c.registration_number) txt += ` • CIF: ${c.registration_number}`;
+        el.querySelector('.ac-company').textContent = txt;
+        compRow.style.display = '';
     }
-
-    const feedbackBlock = (Number(c.approval_status) === 2 && c.admin_feedback)
-        ? `<div class="admin-feedback-block"><strong>Feedback trimis:</strong> ${esc(c.admin_feedback)}</div>`
-        : '';
-
-    const actions = isPending ? `
-        <div class="admin-card-actions">
-            <button class="btn-aa" onclick="adminCampingAction(${c.id},'approve')">Aproba</button>
-            <button class="btn-ar" onclick="adminCampingAction(${c.id},'reject')">Respinge</button>
-            <button class="btn-af" onclick="openFeedbackModal(${c.id})">Respinge cu Feedback</button>
-        </div>` : '';
 
     const addrParts = [c.address_street, c.address_number, c.address_city, c.address_zip].filter(Boolean);
+    if (addrParts.length) {
+        el.querySelector('.ac-addr').textContent = addrParts.join(', ');
+        el.querySelector('.ac-addr-row').style.display = '';
+    }
 
-    return `
-    <div class="admin-camping-card ${st.card}">
-        <div class="admin-card-header">
-            <h3>${esc(c.name)}</h3>
-            <span class="a-badge ${st.cls}">${st.label}</span>
-        </div>
-        <div class="admin-card-meta">
-            <span>${esc(c.type)} &bull; ${esc(c.region)}</span>
-            ${c.price_per_night ? `<span>${Number(c.price_per_night).toFixed(0)} RON/noapte</span>` : ''}
-            <span>Trimis: ${fmtDate(c.created_at)}</span>
-        </div>
+    const contactParts = [c.contact_phone, c.contact_email].filter(Boolean);
+    if (contactParts.length) {
+        el.querySelector('.ac-contact').textContent = contactParts.join(' • ');
+        el.querySelector('.ac-contact-row').style.display = '';
+    }
 
-        <div class="admin-info-row">
-            <span class="admin-info-label">Utilizator</span>
-            ${esc(c.full_name || c.username)} — <em>${esc(c.email)}</em>
-        </div>
-        ${c.company_name ? `
-        <div class="admin-info-row">
-            <span class="admin-info-label">Firma</span>
-            ${esc(c.company_name)}
-            ${c.business_type ? `(${esc(c.business_type)})` : ''}
-            ${c.registration_number ? `&bull; CIF: ${esc(c.registration_number)}` : ''}
-        </div>` : ''}
-        ${addrParts.length ? `
-        <div class="admin-info-row">
-            <span class="admin-info-label">Adresa firma</span>
-            ${esc(addrParts.join(', '))}
-        </div>` : ''}
-        ${(c.contact_phone || c.contact_email) ? `
-        <div class="admin-info-row">
-            <span class="admin-info-label">Contact</span>
-            ${[c.contact_phone, c.contact_email].filter(Boolean).map(esc).join(' &bull; ')}
-        </div>` : ''}
+    const docsEl = el.querySelector('.ac-docs');
+    const docDefs = [
+        { path: c.id_document_path,           label: '↓ Document Identitate' },
+        { path: c.registration_document_path, label: '↓ Certificat Inregistrare' },
+    ];
+    docDefs.forEach(({ path, label }) => {
+        if (!path) return;
+        const a = cloneTemplate('tpl-admin-doc-link').querySelector('a');
+        a.href = path;
+        a.textContent = label;
+        docsEl.appendChild(a);
+    });
+    if (docsEl.children.length) docsEl.style.display = '';
 
-        ${docLinks.length ? `<div class="admin-docs">${docLinks.join('')}</div>` : ''}
-        ${feedbackBlock}
-        ${actions}
-    </div>`;
+    if (Number(c.approval_status) === 2 && c.admin_feedback) {
+        const fb = el.querySelector('.ac-feedback');
+        const strong = document.createElement('strong');
+        strong.textContent = 'Feedback trimis: ';
+        fb.appendChild(strong);
+        fb.appendChild(document.createTextNode(c.admin_feedback));
+        fb.style.display = '';
+    }
+
+    if (isPending) {
+        const actionsEl = el.querySelector('.ac-actions');
+        actionsEl.style.display = '';
+        const btnApprove = actionsEl.querySelector('.ac-btn-approve');
+        const btnReject  = actionsEl.querySelector('.ac-btn-reject');
+        const btnFb      = actionsEl.querySelector('.ac-btn-feedback');
+        btnApprove.textContent = 'Aproba';
+        btnReject.textContent  = 'Respinge';
+        btnFb.textContent      = 'Respinge cu Feedback';
+        btnApprove.addEventListener('click', () => adminCampingAction(c.id, 'approve'));
+        btnReject.addEventListener('click',  () => adminCampingAction(c.id, 'reject'));
+        btnFb.addEventListener('click',      () => openFeedbackModal(c.id));
+    }
+
+    return node;
 }
 
 async function adminCampingAction(id, action) {
@@ -137,7 +170,7 @@ async function loadAdminUsers(reset = false) {
     if (reset) adminUserOffset = 0;
     const grid = document.getElementById('admin-users-grid');
     if (!grid) return;
-    if (reset) grid.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
+    if (reset) adminMsg(grid, 'admin-loading', t('admin.loading'));
 
     const search = document.getElementById('admin-user-search')?.value.trim() ?? '';
     const banned = document.getElementById('admin-user-filter')?.value ?? '';
@@ -152,28 +185,29 @@ async function loadAdminUsers(reset = false) {
         const total = res?.total ?? 0;
 
         if (!users.length && reset) {
-            grid.innerHTML = '<p class="admin-empty">Niciun utilizator gasit.</p>';
+            adminMsg(grid, 'admin-empty', 'Niciun utilizator gasit.');
             return;
         }
 
-        const html = users.map(renderUserCard).join('');
-        if (reset) {
-            grid.innerHTML = html;
-        } else {
-            grid.insertAdjacentHTML('beforeend', html);
-        }
+        const frag = document.createDocumentFragment();
+        users.forEach(u => frag.appendChild(renderUserCard(u)));
+        if (reset) { grid.innerHTML = ''; }
+        grid.appendChild(frag);
 
         document.getElementById('admin-users-more')?.remove();
         const loaded = adminUserOffset + users.length;
         if (loaded < total) {
-            grid.insertAdjacentHTML('afterend', `
-                <div class="admin-load-more" id="admin-users-more">
-                    <span>${loaded} din ${total}</span>
-                    <button onclick="adminUserOffset += ADMIN_USER_LIMIT; loadAdminUsers()">Incarca mai multi</button>
-                </div>`);
+            const more = cloneTemplate('tpl-admin-load-more');
+            more.querySelector('.alm-count').textContent = `${loaded} din ${total}`;
+            more.querySelector('.alm-btn').addEventListener('click', () => {
+                adminUserOffset += ADMIN_USER_LIMIT;
+                loadAdminUsers();
+            });
+            grid.after(more.querySelector('.admin-load-more'));
         }
     } catch (err) {
-        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
+        adminMsg(grid, 'admin-empty', t('admin.err_prefix') + (err.message ?? ''));
+        grid.querySelector('.admin-empty').style.color = 'var(--ar)';
     }
 }
 
@@ -183,26 +217,44 @@ function renderUserCard(u) {
     const roleLabel = { user: 'User', organizer: 'Organizer', admin: 'Admin' }[u.role] ?? u.role;
     const isBanned = u.is_banned === true || u.is_banned === 't' || u.is_banned === '1';
 
-    const banBtn = (u.role !== 'admin')
-        ? isBanned
-            ? `<button class="btn-unban" onclick="adminUnbanUser(${u.id})">Ridica Ban</button>`
-            : `<button class="btn-ban"   onclick="openBanModal(${u.id})">Baneaza</button>`
-        : '';
+    const node = cloneTemplate('tpl-admin-user-card');
+    const el = node.querySelector('.admin-user-card');
+    if (isBanned) el.classList.add('banned');
 
-    return `
-    <div class="admin-user-card ${isBanned ? 'banned' : ''}">
-        <div class="admin-user-avatar">
-            ${u.avatar_url
-            ? `<img src="${esc(u.avatar_url)}" alt="${esc(u.username)}" loading="lazy">`
-            : initial}
-        </div>
-        <div class="admin-user-info">
-            <h4>${esc(u.full_name || u.username)}</h4>
-            <p>${esc(u.email)} &bull; @${esc(u.username)} &bull; ${fmtDate(u.created_at)}</p>
-        </div>
-        <span class="a-role ${roleClass}">${roleLabel}</span>
-        <div class="admin-user-actions">${banBtn}</div>
-    </div>`;
+    const avatarEl = el.querySelector('.au-avatar');
+    if (u.avatar_url) {
+        const img = document.createElement('img');
+        img.src = u.avatar_url;
+        img.alt = u.username;
+        img.loading = 'lazy';
+        avatarEl.appendChild(img);
+    } else {
+        avatarEl.textContent = initial;
+    }
+
+    el.querySelector('.au-name').textContent = u.full_name || u.username;
+    el.querySelector('.au-meta').textContent = `${u.email} • @${u.username} • ${fmtDate(u.created_at)}`;
+
+    const roleEl = el.querySelector('.au-role');
+    roleEl.textContent = roleLabel;
+    roleEl.classList.add(roleClass);
+
+    const banBtn = el.querySelector('.au-ban-btn');
+    if (u.role !== 'admin') {
+        if (isBanned) {
+            banBtn.className = 'btn-unban';
+            banBtn.textContent = 'Ridica Ban';
+            banBtn.addEventListener('click', () => adminUnbanUser(u.id));
+        } else {
+            banBtn.className = 'btn-ban';
+            banBtn.textContent = 'Baneaza';
+            banBtn.addEventListener('click', () => openBanModal(u.id));
+        }
+    } else {
+        banBtn.remove();
+    }
+
+    return node;
 }
 
 function openBanModal(userId) {
@@ -229,7 +281,7 @@ async function adminUnbanUser(userId) {
 async function loadAdminStats() {
     const container = document.getElementById('admin-stats-summary');
     if (!container) return;
-    container.innerHTML = `<p class="admin-loading">${t('admin.loading')}</p>`;
+    adminMsg(container, 'admin-loading', t('admin.loading'));
 
     try {
         const d = await api.get('/api/admin/stats/summary');
@@ -237,39 +289,48 @@ async function loadAdminStats() {
         const bookings = d.bookings_by_status ?? {};
         const totalBookings = Object.values(bookings).reduce((a, b) => a + Number(b), 0);
 
-        container.innerHTML = `
-            <div class="stat-card">
-                <div class="stat-val">${d.nr_users ?? 0}</div>
-                <div class="stat-lbl">Utilizatori</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val">${d.nr_campings ?? 0}</div>
-                <div class="stat-lbl">Campinguri Active</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val">${d.nr_pending ?? 0}</div>
-                <div class="stat-lbl">Cereri in Asteptare</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val">${totalBookings}</div>
-                <div class="stat-lbl">Rezervari Total</div>
-            </div>
-            <div class="stat-card stat-card--revenue">
-                <div class="stat-val">${Number(d.total_revenue ?? 0).toLocaleString('ro-RO', { minimumFractionDigits: 0 })} RON</div>
-                <div class="stat-lbl">Venituri Confirmate</div>
-            </div>
-            ${(d.top_regions ?? []).length ? `
-            <div class="stat-card stat-card--wide">
-                <div class="stat-lbl" style="margin-bottom:8px">Top Regiuni</div>
-                ${d.top_regions.map(r => `
-                    <div class="stat-region-row">
-                        <span>${esc(r.region)}</span>
-                        <span class="stat-region-cnt">${r.cnt}</span>
-                    </div>`).join('')}
-            </div>` : ''}
-        `;
+        const frag = document.createDocumentFragment();
+
+        const statDefs = [
+            { val: d.nr_users ?? 0,    lbl: 'Utilizatori' },
+            { val: d.nr_campings ?? 0, lbl: 'Campinguri Active' },
+            { val: d.nr_pending ?? 0,  lbl: 'Cereri in Asteptare' },
+            { val: totalBookings,       lbl: 'Rezervari Total' },
+            { val: `${Number(d.total_revenue ?? 0).toLocaleString('ro-RO', { minimumFractionDigits: 0 })} RON`,
+              lbl: 'Venituri Confirmate', extra: 'stat-card--revenue' },
+        ];
+        statDefs.forEach(({ val, lbl, extra }) => {
+            const node = cloneTemplate('tpl-stat-card');
+            const card = node.querySelector('.stat-card');
+            if (extra) card.classList.add(extra);
+            card.querySelector('.stat-val').textContent = val;
+            card.querySelector('.stat-lbl').textContent = lbl;
+            frag.appendChild(node);
+        });
+
+        if ((d.top_regions ?? []).length) {
+            const wideNode = cloneTemplate('tpl-stat-card');
+            const wide = wideNode.querySelector('.stat-card');
+            wide.classList.add('stat-card--wide');
+            const hdr = document.createElement('div');
+            hdr.className = 'stat-lbl';
+            hdr.style.marginBottom = '8px';
+            hdr.textContent = 'Top Regiuni';
+            wide.querySelector('.stat-val').replaceWith(hdr);
+            d.top_regions.forEach(r => {
+                const row = cloneTemplate('tpl-stat-region-row');
+                row.querySelector('.sr-name').textContent = r.region;
+                row.querySelector('.sr-cnt').textContent  = r.cnt;
+                wide.appendChild(row);
+            });
+            frag.appendChild(wideNode);
+        }
+
+        container.innerHTML = '';
+        container.appendChild(frag);
     } catch (err) {
-        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
+        adminMsg(container, 'admin-empty', t('admin.err_prefix') + (err.message ?? ''));
+        container.querySelector('.admin-empty').style.color = 'var(--ar)';
         showToast(t('admin.stats_err'), 'error');
     }
 
@@ -281,41 +342,45 @@ async function loadAdminMessages() {
     const grid = document.getElementById('admin-messages-grid');
     if (!grid) return;
 
-    grid.innerHTML = '<p class="admin-loading">Se încarcă mesajele...</p>';
+    adminMsg(grid, 'admin-loading', 'Se încarcă mesajele...');
 
     try {
         const res = await api.get('/api/admin/messages');
         const messages = res?.messages ?? [];
 
         if (messages.length > 0) {
-            grid.innerHTML = messages.map(m => {
-                // Luam prima litera din nume pentru patratul gri
-                const initial = esc(m.name)[0].toUpperCase();
+            const frag = document.createDocumentFragment();
+            messages.forEach(m => {
+                const node = cloneTemplate('tpl-admin-message-card');
+                const card = node.querySelector('.admin-message-card');
+                card.addEventListener('click', () => card.classList.toggle('expanded'));
 
-                return `
-                <div class="admin-message-card expandable-card" onclick="this.classList.toggle('expanded')">
-                    <div class="msg-header-row">
-                        <div class="msg-avatar">${initial}</div>
+                card.querySelector('.am-avatar').textContent = (m.name || '?')[0].toUpperCase();
+                card.querySelector('.am-name').textContent   = m.name;
+                const metaParts = [m.email, m.phone].filter(Boolean);
+                card.querySelector('.am-meta').textContent   = metaParts.join(' • ');
+                card.querySelector('.am-date').textContent   = `${fmtDate(m.created_at)} • MESAJ CONTACT`;
 
-                        <div class="msg-info">
-                            <h3 class="msg-title">${esc(m.name)}</h3>
-                            <p class="msg-meta">${esc(m.email)} ${m.phone ? `&bull; ${esc(m.phone)}` : ''}</p>
-                            <span class="msg-date-badge">${fmtDate(m.created_at)} &bull; MESAJ CONTACT</span>
-                        </div>
+                const textEl = card.querySelector('.am-text');
+                m.message.split('\n').forEach((line, i) => {
+                    if (i > 0) textEl.appendChild(document.createElement('br'));
+                    textEl.appendChild(document.createTextNode(line));
+                });
 
-                        <div class="msg-expand-icon"></div>
-                    </div>
-
-                    <div class="msg-body">
-                        <p class="msg-text">${esc(m.message).replace(/\n/g, '<br>')}</p>
-                    </div>
-                </div>
-            `}).join('');
+                frag.appendChild(node);
+            });
+            grid.innerHTML = '';
+            grid.appendChild(frag);
         } else {
-            grid.innerHTML = '<p class="admin-empty">Nu există mesaje în baza de date.</p>';
+            grid.innerHTML = '';
+            const p = document.createElement('p');
+            p.className = 'admin-empty';
+            p.textContent = 'Nu există mesaje în baza de date.';
+            grid.appendChild(p);
         }
     } catch (err) {
-        grid.innerHTML = `<p class="admin-empty" style="color:var(--ar)">Eroare: ${err.message}</p>`;
+        adminMsg(grid, 'admin-empty', `Eroare: ${err.message}`);
+        grid.querySelector('.admin-empty').style.color = 'var(--ar)';
         console.error(err);
     }
 }
@@ -323,7 +388,7 @@ async function loadAdminMessages() {
 async function loadAdminChart() {
     const container = document.getElementById('admin-chart-container');
     if (!container) return;
-    container.innerHTML = `<p class="admin-loading">${t('admin.loading_chart')}</p>`;
+    adminMsg(container, 'admin-loading', t('admin.loading_chart'));
 
     const type = document.getElementById('admin-chart-type')?.value ?? 'bookings_per_month';
     const token = localStorage.getItem('cat_token') ?? '';
@@ -336,7 +401,8 @@ async function loadAdminChart() {
         const svg = await res.text();
         container.innerHTML = svg;
     } catch (err) {
-        container.innerHTML = `<p class="admin-empty" style="color:var(--ar)">${t('admin.err_prefix')}${esc(err.message)}</p>`;
+        adminMsg(container, 'admin-empty', t('admin.err_prefix') + (err.message ?? ''));
+        container.querySelector('.admin-empty').style.color = 'var(--ar)';
     }
 }
 
@@ -538,20 +604,35 @@ async function adminImport() {
         });
         const data = await resp.json();
 
+        resultEl.innerHTML = '';
         if (!resp.ok) {
-            resultEl.innerHTML = `<span class="io-err">${t('admin.err_prefix')}${esc(data.error)}</span>`;
+            const span = document.createElement('span');
+            span.className = 'io-err';
+            span.textContent = t('admin.err_prefix') + (data.error ?? '');
+            resultEl.appendChild(span);
         } else {
-            let html = `<span class="io-ok"> ${data.inserted} / ${data.total} ${t('admin.import_rows_ok')}</span>`;
+            const ok = document.createElement('span');
+            ok.className = 'io-ok';
+            ok.textContent = ` ${data.inserted} / ${data.total} ${t('admin.import_rows_ok')}`;
+            resultEl.appendChild(ok);
             if (data.errors?.length) {
-                html += '<ul class="import-errors">' +
-                    data.errors.map(e => `<li>Rand ${e.row}: ${esc(e.error)}</li>`).join('') +
-                    '</ul>';
+                const ul = document.createElement('ul');
+                ul.className = 'import-errors';
+                data.errors.forEach(e => {
+                    const li = document.createElement('li');
+                    li.textContent = `Rand ${e.row}: ${e.error}`;
+                    ul.appendChild(li);
+                });
+                resultEl.appendChild(ul);
             }
-            resultEl.innerHTML = html;
         }
         resultEl.style.display = 'block';
     } catch (err) {
-        resultEl.innerHTML = `<span class="io-err">${t('admin.import_net_err')}${esc(err.message)}</span>`;
+        resultEl.innerHTML = '';
+        const span = document.createElement('span');
+        span.className = 'io-err';
+        span.textContent = t('admin.import_net_err') + (err.message ?? '');
+        resultEl.appendChild(span);
         resultEl.style.display = 'block';
     } finally {
         submitBtn.disabled = false;

@@ -51,7 +51,7 @@
 .auth-card .subtitle {
     font-size: var(--font-body);
     color: var(--text-main);
-    opacity: 80%;
+    opacity: 0.8;
     margin-bottom: var(--spacing-form);
 }
 
@@ -105,7 +105,7 @@
     transform: translateY(-50%);
     cursor: pointer;
     color: var(--text-main);
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 /* parola uitata */
@@ -163,7 +163,7 @@
 }
 
 .btn-submit:hover {
-    opacity: 90%;
+    opacity: 0.9;
 }
 
 /* divider or */
@@ -173,7 +173,7 @@
     text-align: center;
     margin: var(--spacing-form) 0;
     color: var(--text-main);
-    opacity: 80%;
+    opacity: 0.8;
     font-size: var(--font-body);
     font-weight: 500;
 }

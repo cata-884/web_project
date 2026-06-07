@@ -86,11 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadCampings() {
     const grid = document.getElementById('campings-grid');
-    grid.innerHTML = `
-        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
-        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
-        <div class="camping-card skeleton"><div class="card-image skeleton"></div><div class="card-content"><div class="skeleton-text"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 50%;"></div></div></div>
-    `;
+    grid.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 3; i++) frag.appendChild(cloneTemplate('tpl-camping-skeleton'));
+    grid.appendChild(frag);
 
     // Gather filters
     const search = document.getElementById('filter-search').value;
@@ -120,8 +119,30 @@ async function loadCampings() {
         renderCampings(response);
     } catch (err) {
         console.error("Failed to load campings", err);
-        grid.innerHTML = `<p style="color: red;">${t('campings.load_err')}</p>`;
+        grid.innerHTML = '';
+        const p = document.createElement('p');
+        p.style.color = 'red';
+        p.textContent = t('campings.load_err');
+        grid.appendChild(p);
     }
+}
+
+function renderCampingCard(c) {
+    const node = cloneTemplate('tpl-camping-card');
+    const img = node.querySelector('.card-image');
+    img.src = c.cover_url || '../assets/About1.jpg';
+    img.alt = c.name;
+    img.onerror = () => { img.onerror = null; img.src = '../assets/About1.jpg'; };
+    node.querySelector('.card-type').textContent = c.type;
+    node.querySelector('.card-title').textContent = c.name;
+    node.querySelector('.card-region').textContent = c.region || 'Locație necunoscută';
+    node.querySelector('.card-price').textContent = `${c.price_per_night} RON / noapte`;
+    node.querySelector('.card-rating').textContent = c.rating_avg
+        ? `${parseFloat(c.rating_avg).toFixed(1)} ★` : 'Nou';
+    const link = node.querySelector('.btn-details');
+    link.href = `camping.html?slug=${c.slug}`;
+    link.textContent = 'Vezi Detalii';
+    return node;
 }
 
 function renderCampings(data) {
@@ -135,29 +156,13 @@ function renderCampings(data) {
     resultsCount.textContent = data.total || 0;
 
     if (!data.campings || data.campings.length === 0) {
-        grid.innerHTML = `<p>${t('campings.no_results')}</p>`;
+        const p = document.createElement('p');
+        p.textContent = t('campings.no_results');
+        grid.appendChild(p);
     } else {
-        data.campings.forEach(c => {
-            const defaultImg = '../assets/About1.jpg'; // fallback image
-            const ratingStr = c.rating_avg ? `${parseFloat(c.rating_avg).toFixed(1)} ` : 'Nou';
-
-            const card = document.createElement('div');
-            card.className = 'camping-card';
-            card.innerHTML = `
-                <img src="${defaultImg}" alt="${c.name}" class="card-image">
-                <div class="card-content">
-                    <span class="card-type">${c.type}</span>
-                    <h3 class="card-title">${c.name}</h3>
-                    <p class="card-region"> ${c.region || 'Locație necunoscută'}</p>
-                    <div class="card-bottom">
-                        <div class="card-price">${c.price_per_night} RON <span>/ noapte</span></div>
-                        <div class="card-rating">${ratingStr}</div>
-                    </div>
-                </div>
-<a href="camping.html?slug=${c.slug}" class="btn-details">Vezi Detalii</a>
-            `;
-            grid.appendChild(card);
-        });
+        const frag = document.createDocumentFragment();
+        data.campings.forEach(c => frag.appendChild(renderCampingCard(c)));
+        grid.appendChild(frag);
     }
 
     // Pagination controls

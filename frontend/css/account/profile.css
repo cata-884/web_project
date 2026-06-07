@@ -46,7 +46,7 @@
 }
 
 .cover-photo-area:hover {
-    opacity: 85%;
+    opacity: 0.85;
 }
 
 /* cercul pentru avatar */
@@ -144,9 +144,10 @@
     width: 100%;
 }
 
-.btn-save-prefs:hover { opacity: 88%; }
+.btn-save-prefs:hover { opacity: 0.88; }
+
 .btn-save-prefs:disabled {
-    opacity: 50%;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -173,7 +174,7 @@
 }
 
 .accordion-header:hover {
-    opacity: 90%;
+    opacity: 0.9;
 }
 
 .acc-icon {

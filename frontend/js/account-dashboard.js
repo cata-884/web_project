@@ -1,12 +1,14 @@
 // Trimite un singur fisier la un endpoint multipart (auth automat din localStorage)
 async function uploadFile(endpoint, file) {
     const token = localStorage.getItem('cat_token');
-    const fd    = new FormData();
+    const fd = new FormData();
     fd.append('file', file);
     const res = await fetch(API_BASE + endpoint, {
-        method:  'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body:    fd,
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: fd,
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Eroare upload');
@@ -32,17 +34,22 @@ function loadMyCampsites() {
             if (!res || !res.campings || res.campings.length === 0) return;
 
             res.campings.forEach(camping => {
-                const name       = camping.name   || 'Camping fără nume';
-                const region     = camping.region || 'România';
-                const address    = camping.address || '';
-                const type       = camping.type   || 'Nespecificat';
-                const coverImg   = mediaUrl(camping.cover_url);
+                const name = camping.name || 'Camping fără nume';
+                const region = camping.region || 'România';
+                const address = camping.address || '';
+                const type = camping.type || 'Nespecificat';
+                const coverImg = mediaUrl(camping.cover_url);
 
-                const st = { '-1': 'cs-rejected', '0': 'cs-pending', '1': 'cs-approved', '2': 'cs-rejected' };
+                const st = {
+                    '-1': 'cs-rejected',
+                    '0': 'cs-pending',
+                    '1': 'cs-approved',
+                    '2': 'cs-rejected'
+                };
                 const statusClass = st[String(camping.approval_status)] || 'cs-pending';
 
-                let feedbackMsg  = '';
-                let resubmitBtn  = '';
+                let feedbackMsg = '';
+                let resubmitBtn = '';
                 if (camping.approval_status === 2 && camping.admin_feedback) {
                     feedbackMsg = `<p class="camping-admin-feedback" style="color:red;font-size:12px;">${camping.admin_feedback}</p>`;
                 }
@@ -82,7 +89,7 @@ function initProfile() {
                 const profileImg = document.getElementById('profile-avatar-img');
                 const pillAvatar = document.getElementById('user-pill-avatar');
                 if (profileImg) profileImg.src = avatarSrc;
-                if (pillAvatar) pillAvatar.src  = avatarSrc;
+                if (pillAvatar) pillAvatar.src = avatarSrc;
             }
 
 
@@ -113,10 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Avatar upload
     const avatarInput = document.getElementById('avatar-upload');
-    const avatarImg   = document.getElementById('profile-avatar-img');
+    const avatarImg = document.getElementById('profile-avatar-img');
 
     if (avatarInput && avatarImg) {
-        avatarInput.addEventListener('change', async function () {
+        avatarInput.addEventListener('change', async function() {
             if (!this.files || !this.files[0]) return;
             const file = this.files[0];
 
@@ -141,7 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         let stored = JSON.parse(localStorage.getItem('cat_user') || '{}');
                         stored.avatar_url = data.user.avatar_url;
                         localStorage.setItem('cat_user', JSON.stringify(stored));
-                    } catch (e) { /* ignore */ }
+                    } catch (e) {
+                        /* ignore */ }
                 }
             } catch (err) {
                 showToast(err.message || 'Eroare la încărcarea avatarului', 'error');
@@ -152,17 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const changePwdBtn = document.getElementById('change-password-btn');
     if (changePwdBtn) {
         changePwdBtn.addEventListener('click', async () => {
-            const newPwd  = document.getElementById('new-password').value;
+            const newPwd = document.getElementById('new-password').value;
             const confirm = document.getElementById('confirm-password').value;
 
             try {
                 changePwdBtn.disabled = true;
                 await api.patch('/api/users/me/password', {
-                    new_password:     newPwd,
+                    new_password: newPwd,
                     confirm_password: confirm,
                 });
                 showToast('Parola a fost schimbată cu succes', 'success');
-                document.getElementById('new-password').value     = '';
+                document.getElementById('new-password').value = '';
                 document.getElementById('confirm-password').value = '';
             } catch (err) {
                 showToast(err.message || 'Eroare la schimbarea parolei', 'error');
@@ -174,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Manager global click-uri
-document.addEventListener('click', async function (e) {
+document.addEventListener('click', async function(e) {
 
     // A. Click pe card → deschide detalii
     const card = e.target.closest('.cat-card');
@@ -215,17 +223,17 @@ document.addEventListener('click', async function (e) {
         ].join(' ');
 
         const body = {
-            name:            document.getElementById('c-name').value,
-            description:     document.getElementById('c-full-desc').value,
+            name: document.getElementById('c-name').value,
+            description: document.getElementById('c-full-desc').value,
             address,
-            region:          document.getElementById('c-city').value,
-            latitude:        parseFloat(document.getElementById('c-lat').value),
-            longitude:       parseFloat(document.getElementById('c-lng').value),
-            capacity:        document.getElementById('campsite-capacity').value ? parseInt(document.getElementById('campsite-capacity').value) : null,
-            price_per_night: document.getElementById('campsite-price').value    ? parseFloat(document.getElementById('campsite-price').value)   : null,
-            type:         document.querySelector('input[name="type"]:checked')?.value || 'tent',
+            region: document.getElementById('c-city').value,
+            latitude: parseFloat(document.getElementById('c-lat').value),
+            longitude: parseFloat(document.getElementById('c-lng').value),
+            capacity: document.getElementById('campsite-capacity').value ? parseInt(document.getElementById('campsite-capacity').value) : null,
+            price_per_night: document.getElementById('campsite-price').value ? parseFloat(document.getElementById('campsite-price').value) : null,
+            type: document.querySelector('input[name="type"]:checked')?.value || 'tent',
             environments: [...document.querySelectorAll('input[name="environment"]:checked')].map(el => el.value),
-            facilities:   [...document.querySelectorAll('input[name="facility"]:checked')].map(el => el.value),
+            facilities: [...document.querySelectorAll('input[name="facility"]:checked')].map(el => el.value),
         };
 
         try {
@@ -268,7 +276,7 @@ document.addEventListener('click', async function (e) {
     const stepItem = e.target.closest('.campsite-stepper .step-item');
     if (stepItem) {
         const targetId = parseInt(stepItem.getAttribute('data-c-step'));
-        const active   = document.querySelector('.campsite-step[style*="block"]');
+        const active = document.querySelector('.campsite-step[style*="block"]');
         if (active) {
             const currentId = parseInt(active.id.replace('c-step-', ''));
             if (targetId < currentId) {
@@ -283,20 +291,20 @@ document.addEventListener('click', async function (e) {
     if (e.target.id === 'btn-edit-campsite') {
         if (!currentCampsiteData) return;
         document.getElementById('campsite-details-view').style.display = 'none';
-        document.getElementById('create-campsite-tab').style.display   = 'block';
+        document.getElementById('create-campsite-tab').style.display = 'block';
         resetCampsiteForm();
 
         document.getElementById('edit-campsite-id').value = currentCampsiteData.id;
-        document.getElementById('c-name').value           = currentCampsiteData.name        || '';
-        document.getElementById('c-full-desc').value      = currentCampsiteData.description  || '';
-        document.getElementById('c-lat').value            = currentCampsiteData.latitude      || '';
-        document.getElementById('c-lng').value            = currentCampsiteData.longitude     || '';
-        document.getElementById('campsite-price').value   = currentCampsiteData.price_per_night || '';
-        document.getElementById('campsite-capacity').value = currentCampsiteData.capacity     || '';
-        document.getElementById('c-city').value           = currentCampsiteData.region        || '';
-        document.getElementById('c-street').value         = currentCampsiteData.address       || '';
-        document.getElementById('c-number').value         = '-';
-        document.getElementById('c-zip').value            = '-';
+        document.getElementById('c-name').value = currentCampsiteData.name || '';
+        document.getElementById('c-full-desc').value = currentCampsiteData.description || '';
+        document.getElementById('c-lat').value = currentCampsiteData.latitude || '';
+        document.getElementById('c-lng').value = currentCampsiteData.longitude || '';
+        document.getElementById('campsite-price').value = currentCampsiteData.price_per_night || '';
+        document.getElementById('campsite-capacity').value = currentCampsiteData.capacity || '';
+        document.getElementById('c-city').value = currentCampsiteData.region || '';
+        document.getElementById('c-street').value = currentCampsiteData.address || '';
+        document.getElementById('c-number').value = '-';
+        document.getElementById('c-zip').value = '-';
 
         const envs = currentCampsiteData.environments || [];
         document.querySelectorAll('input[name="environment"]').forEach(cb => {
@@ -312,31 +320,40 @@ document.addEventListener('click', async function (e) {
     // F. Buton Messages din detalii
     if (e.target.id === 'btn-messages') {
         if (!currentCampsiteData) return;
-        document.getElementById('campsite-details-view').style.display  = 'none';
+        document.getElementById('campsite-details-view').style.display = 'none';
         document.getElementById('campsite-messages-view').style.display = 'block';
 
-        const msgContainer  = document.getElementById('messages-container');
-        const feedbackText  = currentCampsiteData.admin_feedback;
-        msgContainer.innerHTML = feedbackText && feedbackText.trim()
-            ? `<div class="message-card">
-                   <span class="message-sender-info">Echipa de Aprobare CaT</span>
-                   <p class="message-body">${feedbackText}</p>
-               </div>`
-            : '<p class="no-messages-text">Nu ai niciun mesaj nou pentru această locație.</p>';
+        const msgContainer = document.getElementById('messages-container');
+        const feedbackText = currentCampsiteData.admin_feedback;
+        msgContainer.innerHTML = '';
+        if (feedbackText && feedbackText.trim()) {
+            const node = cloneTemplate('tpl-message-card');
+            node.querySelector('.message-sender-info').textContent = 'Echipa de Aprobare CaT';
+            node.querySelector('.message-body').textContent = feedbackText;
+            msgContainer.appendChild(node);
+        } else {
+            const p = document.createElement('p');
+            p.className = 'no-messages-text';
+            p.textContent = 'Nu ai niciun mesaj nou pentru această locație.';
+            msgContainer.appendChild(p);
+        }
     }
 
     // G. Înapoi de la mesaje la detalii
     if (e.target.id === 'btn-back-from-messages' || e.target.closest('#btn-back-from-messages')) {
         document.getElementById('campsite-messages-view').style.display = 'none';
-        document.getElementById('campsite-details-view').style.display  = 'block';
+        document.getElementById('campsite-details-view').style.display = 'block';
     }
 
     // H. Buton Delete din detalii
     if (e.target.id === 'btn-delete-campsite') {
         if (!currentCampsiteData) return;
         const ok = await showConfirm(
-            `Ești sigur că vrei să ștergi "${currentCampsiteData.name}"? Acțiunea este ireversibilă.`,
-            { title: 'Șterge locația', confirmText: 'Șterge', type: 'error' }
+            `Ești sigur că vrei să ștergi "${currentCampsiteData.name}"? Acțiunea este ireversibilă.`, {
+                title: 'Șterge locația',
+                confirmText: 'Șterge',
+                type: 'error'
+            }
         );
         if (!ok) return;
 
@@ -344,7 +361,7 @@ document.addEventListener('click', async function (e) {
             await api.delete('/api/campings/' + currentCampsiteData.id);
             showToast('Locația a fost ștearsă.', 'success');
             document.getElementById('campsite-details-view').style.display = 'none';
-            document.getElementById('dashboard-tab').style.display          = 'block';
+            document.getElementById('dashboard-tab').style.display = 'block';
             currentCampsiteData = null;
             loadMyCampsites();
         } catch (err) {
@@ -357,58 +374,84 @@ let currentCampsiteData = null;
 
 async function openCampsiteDetails(id) {
     try {
-        const res            = await api.get('/api/campings/' + id);
-        const data           = res.camping;
-        currentCampsiteData  = data;
+        const res = await api.get('/api/campings/' + id);
+        const data = res.camping;
+        currentCampsiteData = data;
 
-        document.getElementById('dashboard-tab').style.display        = 'none';
+        document.getElementById('dashboard-tab').style.display = 'none';
         document.getElementById('campsite-details-view').style.display = 'block';
 
-        document.getElementById('detail-title').textContent       = data.name;
-        document.getElementById('detail-address').textContent     = [data.address, data.region].filter(Boolean).join(', ');
-        document.getElementById('detail-description').textContent  = data.description || 'Fără descriere disponibilă.';
-        document.getElementById('detail-type').textContent        = data.type;
-        document.getElementById('detail-price').textContent       = data.price_per_night ? data.price_per_night + ' RON' : 'Nespecificat';
-        document.getElementById('detail-capacity').textContent    = data.capacity ? data.capacity + ' pers.' : 'Nespecificat';
+        document.getElementById('detail-title').textContent = data.name;
+        document.getElementById('detail-address').textContent = [data.address, data.region].filter(Boolean).join(', ');
+        document.getElementById('detail-description').textContent = data.description || 'Fără descriere disponibilă.';
+        document.getElementById('detail-type').textContent = data.type;
+        document.getElementById('detail-price').textContent = data.price_per_night ? data.price_per_night + ' RON' : 'Nespecificat';
+        document.getElementById('detail-capacity').textContent = data.capacity ? data.capacity + ' pers.' : 'Nespecificat';
 
-        const badge        = document.getElementById('detail-status-badge');
+        const badge = document.getElementById('detail-status-badge');
         const feedbackAlert = document.getElementById('admin-feedback-alert');
         if (data.approval_status === 1) {
             badge.textContent = 'Aprobat';
-            badge.className   = 'status-badge badge-approved';
+            badge.className = 'status-badge badge-approved';
             feedbackAlert.style.display = 'none';
         } else if (data.approval_status === 2) {
             badge.textContent = 'Respins cu feedback';
-            badge.className   = 'status-badge badge-rejected';
+            badge.className = 'status-badge badge-rejected';
             feedbackAlert.style.display = 'block';
             document.getElementById('feedback-text').textContent = data.admin_feedback || 'Niciun motiv specificat.';
         } else if (data.approval_status === -1) {
             badge.textContent = 'Respins';
-            badge.className   = 'status-badge badge-rejected';
+            badge.className = 'status-badge badge-rejected';
             feedbackAlert.style.display = 'none';
         } else {
             badge.textContent = 'În așteptare';
-            badge.className   = 'status-badge badge-pending';
+            badge.className = 'status-badge badge-pending';
             feedbackAlert.style.display = 'none';
         }
 
         const facContainer = document.getElementById('detail-facilities');
-        facContainer.innerHTML = (data.facilities || []).length
-            ? data.facilities.map(f => `<span class="tag tag-facility">${f}</span>`).join('')
-            : '<span class="text-muted">Nicio facilitate bifată</span>';
+        facContainer.innerHTML = '';
+        if ((data.facilities || []).length) {
+            data.facilities.forEach(f => {
+                const tag = cloneTemplate('tpl-tag').querySelector('.tag');
+                tag.classList.add('tag-facility');
+                tag.textContent = f;
+                facContainer.appendChild(tag);
+            });
+        } else {
+            const s = document.createElement('span');
+            s.className = 'text-muted';
+            s.textContent = 'Nicio facilitate bifată';
+            facContainer.appendChild(s);
+        }
 
         const envContainer = document.getElementById('detail-environments');
-        envContainer.innerHTML = (data.environments || []).length
-            ? data.environments.map(v => `<span class="tag tag-environment">${v}</span>`).join('')
-            : '<span class="text-muted">Niciun mediu bifat</span>';
+        envContainer.innerHTML = '';
+        if ((data.environments || []).length) {
+            data.environments.forEach(v => {
+                const tag = cloneTemplate('tpl-tag').querySelector('.tag');
+                tag.classList.add('tag-environment');
+                tag.textContent = v;
+                envContainer.appendChild(tag);
+            });
+        } else {
+            const s = document.createElement('span');
+            s.className = 'text-muted';
+            s.textContent = 'Niciun mediu bifat';
+            envContainer.appendChild(s);
+        }
 
-        const heroImg      = document.getElementById('detail-hero-img');
+        const heroImg = document.getElementById('detail-hero-img');
         const thumbContainer = document.getElementById('detail-thumbnails');
         if (data.media && data.media.length > 0) {
             heroImg.src = mediaUrl(data.media[0].url);
-            thumbContainer.innerHTML = data.media
-                .map(m => `<img src="${mediaUrl(m.url)}" class="thumb-img" onclick="document.getElementById('detail-hero-img').src=this.src" alt="Thumbnail">`)
-                .join('');
+            thumbContainer.innerHTML = '';
+            data.media.forEach(m => {
+                const thumb = cloneTemplate('tpl-detail-thumb').querySelector('img');
+                thumb.src = mediaUrl(m.url);
+                thumb.addEventListener('click', () => { heroImg.src = thumb.src; });
+                thumbContainer.appendChild(thumb);
+            });
         } else {
             heroImg.src = '../../assets/images/camping-placeholder.jpg';
             thumbContainer.innerHTML = '';
@@ -418,14 +461,14 @@ async function openCampsiteDetails(id) {
     }
 }
 
-document.getElementById('btn-back-to-grid').addEventListener('click', function () {
+document.getElementById('btn-back-to-grid').addEventListener('click', function() {
     document.getElementById('campsite-details-view').style.display = 'none';
-    document.getElementById('dashboard-tab').style.display          = 'block';
+    document.getElementById('dashboard-tab').style.display = 'block';
 });
 
 function openCreateCampsiteForm() {
-    document.getElementById('dashboard-tab').style.display        = 'none';
-    document.getElementById('create-campsite-tab').style.display  = 'block';
+    document.getElementById('dashboard-tab').style.display = 'none';
+    document.getElementById('create-campsite-tab').style.display = 'block';
     document.getElementById('edit-campsite-id').value = '';
     resetCampsiteForm();
 }
@@ -448,28 +491,35 @@ function validateCurrentStep(stepElement) {
     let isValid = true;
 
     stepElement.querySelectorAll('input[type="text"][required], input[type="number"][required], textarea[required], select[required]').forEach(input => {
-        if (input.value.trim() === '') { input.style.borderColor = 'red'; isValid = false; }
-        else input.style.borderColor = '#ccc';
+        if (input.value.trim() === '') {
+            input.style.borderColor = 'red';
+            isValid = false;
+        } else input.style.borderColor = '#ccc';
     });
 
     stepElement.querySelectorAll('input[type="file"][required]').forEach(input => {
         const box = input.closest('.upload-dashed-box');
-        if (input.files.length === 0) { if (box) box.style.borderColor = 'red'; isValid = false; }
-        else if (box) box.style.borderColor = '#ccc';
+        if (input.files.length === 0) {
+            if (box) box.style.borderColor = 'red';
+            isValid = false;
+        } else if (box) box.style.borderColor = '#ccc';
     });
 
     stepElement.querySelectorAll('.req-group').forEach(group => {
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
         if (checkboxes.length > 0) {
             if (group.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
-                group.style.border = '1px solid red'; isValid = false;
+                group.style.border = '1px solid red';
+                isValid = false;
             } else {
                 group.style.border = 'none';
             }
         } else {
             group.querySelectorAll('select, input[type="number"]').forEach(input => {
-                if (input.value.trim() === '') { input.style.borderColor = 'red'; isValid = false; }
-                else input.style.borderColor = '#ccc';
+                if (input.value.trim() === '') {
+                    input.style.borderColor = 'red';
+                    isValid = false;
+                } else input.style.borderColor = '#ccc';
             });
         }
     });
@@ -479,7 +529,7 @@ function validateCurrentStep(stepElement) {
 
 const cCoverUpload = document.getElementById('c-cover-upload');
 if (cCoverUpload) {
-    cCoverUpload.addEventListener('change', function () {
+    cCoverUpload.addEventListener('change', function() {
         const label = document.getElementById('cover-filename');
         if (label) label.textContent = this.files.length > 0 ? `${this.files.length} poză selectată` : '';
     });
@@ -487,7 +537,7 @@ if (cCoverUpload) {
 
 const cGalleryUpload = document.getElementById('c-gallery-upload');
 if (cGalleryUpload) {
-    cGalleryUpload.addEventListener('change', function () {
+    cGalleryUpload.addEventListener('change', function() {
         const label = document.getElementById('gallery-count');
         if (label) label.textContent = this.files.length > 0 ? `${this.files.length} poze selectate` : '';
     });
@@ -495,7 +545,9 @@ if (cGalleryUpload) {
 
 async function resubmitCamping(id) {
     const ok = await showConfirm('Cererea va fi trimisă din nou spre aprobare.', {
-        title: 'Retrimite cererea', confirmText: 'Retrimite', type: 'warning'
+        title: 'Retrimite cererea',
+        confirmText: 'Retrimite',
+        type: 'warning'
     });
     if (!ok) return;
     try {
@@ -508,22 +560,27 @@ async function resubmitCamping(id) {
 }
 
 function initMapLogic() {
-    const btnPinMap         = document.getElementById('btn-pin-map');
-    const mapModal          = document.getElementById('map-modal');
-    const closeMapBtn       = document.getElementById('close-map-modal');
+    const btnPinMap = document.getElementById('btn-pin-map');
+    const mapModal = document.getElementById('map-modal');
+    const closeMapBtn = document.getElementById('close-map-modal');
     const confirmLocationBtn = document.getElementById('confirm-location-btn');
-    const coordsDisplay     = document.getElementById('selected-coords');
-    const inputLat          = document.getElementById('c-lat');
-    const inputLng          = document.getElementById('c-lng');
-    let pickerMap = null, pickerMarker = null, tempLat = null, tempLng = null;
+    const coordsDisplay = document.getElementById('selected-coords');
+    const inputLat = document.getElementById('c-lat');
+    const inputLng = document.getElementById('c-lng');
+    let pickerMap = null,
+        pickerMarker = null,
+        tempLat = null,
+        tempLng = null;
 
     if (btnPinMap && mapModal) {
         btnPinMap.addEventListener('click', () => {
             mapModal.style.display = 'flex';
             if (!pickerMap) {
                 pickerMap = L.map('picker-map').setView([45.9432, 24.9668], 6);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(pickerMap);
-                pickerMap.on('click', function (ev) {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(pickerMap);
+                pickerMap.on('click', function(ev) {
                     tempLat = ev.latlng.lat.toFixed(6);
                     tempLng = ev.latlng.lng.toFixed(6);
                     if (pickerMarker) pickerMap.removeLayer(pickerMarker);

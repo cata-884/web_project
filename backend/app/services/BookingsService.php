@@ -1,9 +1,9 @@
 <?php
-class BookingsService
+readonly class BookingsService
 {
     public function __construct(
-        private readonly BookingsRepository $bookings,
-        private readonly CampingsRepository $campings,
+        private BookingsRepository $bookings,
+        private CampingsRepository $campings,
     ) {}
 
     public function listForUser(int $userId, int $limit, int $offset, ?int $campingId): array

@@ -46,26 +46,27 @@
                     <span data-i18n="account.nav_explore">Exploreaza Campinguri</span> <span class="arrow"></span>
                 </a>
 
-                <button class="nav-item" data-tab="history">
+                <button type="button" class="nav-item" data-tab="history">
                     <span data-i18n="account.nav_history">Istoric</span> <span class="arrow"></span>
                 </button>
-                <button class="nav-item" data-tab="settings">
+                <button type="button" class="nav-item" data-tab="settings">
                     <span data-i18n="account.nav_settings">Setari</span> <span class="arrow"></span>
                 </button>
 
-                <button class="nav-item" data-tab="partner">
+                <button type="button" class="nav-item" data-tab="partner">
                     <span data-i18n="account.nav_partner">CaT Partner</span> <span class="arrow"></span>
                 </button>
 
-                <button class="nav-item" data-tab="admin-tab" id="admin-nav-btn"
+                <!-- html-validate-disable-next-line no-inline-style -->
+                <button type="button" class="nav-item" data-tab="admin-tab" id="admin-nav-btn"
                     style="display:none; background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.3); color: #DC2626;">
                     <span data-i18n="account.nav_admin">Admin Panel</span> <span class="arrow"></span>
                 </button>
 
-                <button class="nav-item active" data-tab="profile">
+                <button type="button" class="nav-item active" data-tab="profile">
                     <span data-i18n="account.nav_profile">Profil</span> <span class="arrow"></span>
                 </button>
-                <button class="nav-item" data-tab="wishlist">
+                <button type="button" class="nav-item" data-tab="wishlist">
                     <span data-i18n="account.nav_wishlist">Wishlist</span> <span class="arrow"></span>
                 </button>
             </nav>
@@ -75,7 +76,7 @@
 
         <main class="account-content">
             <header class="account-header">
-                <button class="hamburger-btn" id="hamburger-btn"></button>
+                <button type="button" class="hamburger-btn" id="hamburger-btn" aria-label="Meniu"></button>
 
                 <div class="header-logo">CaT</div>
 
@@ -124,12 +125,14 @@
                                 <div class="form-row">
                                     <div class="input-group">
                                         <label>Email</label>
+                                        <!-- html-validate-disable-next-line no-inline-style -->
                                         <label for="profile-email"></label><label
                                             for="profile-email"></label><input type="email" id="profile-email" placeholder="email@example.com" readonly
                                                                                style="opacity:.6; cursor:not-allowed;">
                                     </div>
                                 </div>
-                                <button class="btn-save-profile" id="save-profile-btn">Save Changes</button>
+                                <button type="button" class="btn-save-profile" id="save-profile-btn">Save Changes</button>
+                                <!-- html-validate-disable-next-line no-inline-style -->
                                 <div id="profile-msg" style="display:none; margin-top:8px; font-size:13px;"></div>
                             </div>
                         </div>
@@ -139,44 +142,51 @@
                             <p class="profile-subtitle" data-i18n="profile.subtitle">Selecteaza tipurile de camping, stilul de calatorie si zonele preferate. Aceste preferinte vor fi folosite pentru a-ti recomanda campinguri potrivite.</p>
 
                             <div class="accordion-item">
-                                <button class="accordion-header">
+                                <button type="button" class="accordion-header">
                                     <span data-i18n="profile.interest_title">Tip Camping</span> <span class="acc-icon"></span>
                                 </button>
                                 <div class="accordion-content">
+                                    <!-- html-validate-disable form-dup-name -->
                                     <label class="check-row"><span data-i18n="map.type_wild">Salbatic</span>    <input type="checkbox" name="camping_types" value="wild"></label>
                                     <label class="check-row"><span data-i18n="map.type_glamping">Glamping</span> <input type="checkbox" name="camping_types" value="glamping"></label>
                                     <label class="check-row"><span data-i18n="map.type_rv">Autorulota</span>    <input type="checkbox" name="camping_types" value="rv"></label>
                                     <label class="check-row"><span data-i18n="map.type_tent">Cort</span>        <input type="checkbox" name="camping_types" value="tent"></label>
                                     <label class="check-row"><span data-i18n="map.type_cabin">Casuta</span>     <input type="checkbox" name="camping_types" value="cabin"></label>
+                                    <!-- html-validate-enable form-dup-name -->
                                 </div>
                             </div>
 
                             <div class="accordion-item">
-                                <button class="accordion-header">
+                                <button type="button" class="accordion-header">
                                     <span data-i18n="profile.style_title">Stil de Calatorie</span> <span class="acc-icon"></span>
                                 </button>
                                 <div class="accordion-content">
+                                    <!-- html-validate-disable form-dup-name -->
                                     <label class="check-row"><span data-i18n="profile.style_solo">Solo</span>             <input type="checkbox" name="travel_styles" value="solo"></label>
                                     <label class="check-row"><span data-i18n="profile.style_couple">Cuplu</span>          <input type="checkbox" name="travel_styles" value="couple"></label>
                                     <label class="check-row"><span data-i18n="profile.style_family">Familie cu copii</span> <input type="checkbox" name="travel_styles" value="family"></label>
                                     <label class="check-row"><span data-i18n="profile.style_group">Grup mare</span>       <input type="checkbox" name="travel_styles" value="group"></label>
                                     <label class="check-row"><span data-i18n="profile.style_pets">Cu animale</span>       <input type="checkbox" name="travel_styles" value="pets"></label>
+                                    <!-- html-validate-enable form-dup-name -->
                                 </div>
                             </div>
 
                             <div class="accordion-item">
-                                <button class="accordion-header">
+                                <button type="button" class="accordion-header">
                                     <span data-i18n="profile.zone_title">Zone Preferate</span> <span class="acc-icon"></span>
                                 </button>
                                 <div class="accordion-content">
+                                    <!-- html-validate-disable form-dup-name -->
                                     <label class="check-row"><span data-i18n="profile.zone_mountain">Zona Montana</span>    <input type="checkbox" name="preferred_zones" value="mountain"></label>
                                     <label class="check-row"><span data-i18n="profile.zone_seaside">Litoral / Mare</span>   <input type="checkbox" name="preferred_zones" value="seaside"></label>
                                     <label class="check-row"><span data-i18n="profile.zone_delta">Delta Dunarii</span>      <input type="checkbox" name="preferred_zones" value="delta"></label>
                                     <label class="check-row"><span data-i18n="profile.zone_forest">Paduri si Lacuri</span>  <input type="checkbox" name="preferred_zones" value="forest_lake"></label>
+                                    <!-- html-validate-enable form-dup-name -->
                                 </div>
                             </div>
 
-                            <button class="btn-save-prefs" id="save-prefs-btn" data-i18n="profile.save_btn">Salveaza Preferintele</button>
+                            <button type="button" class="btn-save-prefs" id="save-prefs-btn" data-i18n="profile.save_btn">Salveaza Preferintele</button>
+                            <!-- html-validate-disable-next-line no-inline-style -->
                             <div id="prefs-msg" style="display:none; margin-top:8px; font-size:13px;"></div>
 
                         </div>
@@ -187,10 +197,10 @@
                     <div class="history-header">
                         <h2 data-i18n="account.history_title">Istoric Rezervari</h2>
                         <div class="history-filters">
-                            <button class="filter-btn active" data-filter="all" data-i18n="account.filter_all">Toate</button>
-                            <button class="filter-btn" data-filter="upcoming" data-i18n="account.filter_upcoming">Urmeaza</button>
-                            <button class="filter-btn" data-filter="completed" data-i18n="account.filter_completed">Finalizate</button>
-                            <button class="filter-btn" data-filter="cancelled" data-i18n="account.filter_cancelled">Anulate</button>
+                            <button type="button" class="filter-btn active" data-filter="all" data-i18n="account.filter_all">Toate</button>
+                            <button type="button" class="filter-btn" data-filter="upcoming" data-i18n="account.filter_upcoming">Urmeaza</button>
+                            <button type="button" class="filter-btn" data-filter="completed" data-i18n="account.filter_completed">Finalizate</button>
+                            <button type="button" class="filter-btn" data-filter="cancelled" data-i18n="account.filter_cancelled">Anulate</button>
                         </div>
                     </div>
 
@@ -220,7 +230,7 @@
                             <div class="bd-card">
                                 <h3>Contacteaza proprietatea</h3>
                                 <p><strong>Telefon:</strong> +40 757 578 558</p>
-                                <button class="btn-outline">Trimite un mesaj</button>
+                                <button type="button" class="btn-outline">Trimite un mesaj</button>
                             </div>
                         </div>
 
@@ -245,7 +255,7 @@
                                 <input type="file" id="file-upload" multiple accept="image/*,video/*"
                                     style="display: none;">
                             </div>
-                            <button class="btn-submit-review">Trimite Recenzia</button>
+                            <button type="button" class="btn-submit-review">Trimite Recenzia</button>
                         </section>
                     </div>
                 </div>
@@ -272,6 +282,7 @@
                                 <div class="input-group-settings">
                                     <label>Your Id</label>
                                     <label>
+                                        <!-- html-validate-disable-next-line no-inline-style -->
                                         <input type="text" value="#12894" readonly
                                             style="background-color: rgba(0,0,0,0.02); color: #666;">
                                     </label>
@@ -280,21 +291,23 @@
                         </div>
 
                         <div class="settings-section">
-                            <h3>Security & Privacy</h3>
+                            <h3>Security &amp; Privacy</h3>
                             <div class="form-row split">
                                 <div class="input-group-settings">
                                     <label data-i18n="account.new_password">Parola nouă</label>
-                                    <input type="password" id="new-password" placeholder="••••••••">
+                                    <input type="password" id="new-password" placeholder="••••••••" autocomplete="new-password">
                                 </div>
                                 <div class="input-group-settings">
                                     <label data-i18n="account.confirm_password">Confirmă parola</label>
-                                    <input type="password" id="confirm-password" placeholder="••••••••">
+                                    <input type="password" id="confirm-password" placeholder="••••••••" autocomplete="new-password">
                                 </div>
                             </div>
-                            <button class="btn-dark" id="change-password-btn" style="margin-top: 12px;" data-i18n="account.change_password">Schimbă parola</button>
+                            <!-- html-validate-disable-next-line no-inline-style -->
+                            <button type="button" class="btn-dark" id="change-password-btn" style="margin-top: 12px;" data-i18n="account.change_password">Schimbă parola</button>
                         </div>
 
-                        <button class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete
+                        <!-- html-validate-disable-next-line no-inline-style -->
+                        <button type="button" class="btn-primary" style="width: 100%; padding: 16px; margin-top: 16px;">Delete
                             Account</button>
 
                     </div>
@@ -334,10 +347,11 @@
                                 </div>
                             </div>
 
-                            <button class="btn-dark btn-next" data-next="2">Next</button>
+                            <button type="button" class="btn-dark btn-next" data-next="2">Next</button>
                         </div>
 
 
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <div class="partner-step" id="step-2" style="display: none;">
                             <div class="step-header">
                                 <h3>Business / Legal Entity Details</h3>
@@ -409,10 +423,11 @@
                                 </div>
                             </div>
 
-                            <button class="btn-dark btn-next" data-next="3">Next</button>
+                            <button type="button" class="btn-dark btn-next" data-next="3">Next</button>
                         </div>
 
 
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <div class="partner-step" id="step-3" style="display: none;">
                             <div class="step-header">
                                 <div class="step-title-row">
@@ -449,6 +464,7 @@
                             <button type="submit" class="btn-dark btn-submit">Finish</button>
                         </div>
 
+                        <!-- html-validate-disable no-inline-style -->
                         <div class="partner-step" id="step-4"
                             style="display: none; background-color: #fdf1f1; padding: 100px 40px; text-align: center; border-radius: 12px; min-height: 400px; flex-direction: column; justify-content: center; align-items: center;">
                             <h1
@@ -463,6 +479,7 @@
                                 having you on board!
                             </p>
                         </div>
+                        <!-- html-validate-enable no-inline-style -->
 
                         <div class="stepper-wrapper">
                             <div class="step-item active" data-step="1">
@@ -509,6 +526,7 @@
 
 
 
+                <!-- html-validate-disable-next-line no-inline-style -->
                 <div id="create-campsite-tab" class="tab-section" style="display: none;">
                     <div class="partner-form-wrapper">
 
@@ -553,16 +571,18 @@
                             <button type="button" class="btn-dark campsite-next" data-next="2">Next</button>
                         </div>
 
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <div class="campsite-step" id="c-step-2" style="display: none;">
                             <div class="step-header">
                                 <div class="step-title-row">
                                     <span class="doc-icon"></span>
-                                    <h3>Location & Mapping</h3>
+                                    <h3>Location &amp; Mapping</h3>
                                 </div>
                                 <p class="step-subtitle">Pinpoint your exact location so campers can easily find you and
                                     compare spots on the map.</p>
                             </div>
 
+                            <!-- html-validate-disable-next-line no-inline-style -->
                             <h4 class="section-title"
                                 style="margin-top: 20px; font-weight: 800; font-size: 16px; color: #000;">Full Physical
                                 Address</h4>
@@ -589,6 +609,7 @@
                                 </div>
                             </div>
 
+                            <!-- html-validate-disable-next-line no-inline-style -->
                             <button type="button" class="btn-dark" id="btn-pin-map"
                                 style="width: 100%; margin: 20px 0;">
                                 Pin on map
@@ -603,11 +624,14 @@
                                 </div>
                             </div>
 
+                            <!-- html-validate-disable-next-line no-inline-style -->
                             <div class="accordion-item" style="margin-top: 20px;">
+                                <!-- html-validate-disable-next-line no-inline-style -->
                                 <button type="button" class="accordion-header dark-acc-header">
                                     Environment Type <span class="acc-icon" style="margin-left: 8px;">^</span>
                                 </button>
                                 <div class="accordion-content show req-group">
+                                    <!-- html-validate-disable form-dup-name -->
                                     <label class="check-row-between">
                                         <span>Mountains</span>
                                         <input type="checkbox" name="environment" value="mountains">
@@ -620,21 +644,25 @@
                                         <span>Forest</span>
                                         <input type="checkbox" name="environment" value="forest">
                                     </label>
+                                    <!-- html-validate-enable form-dup-name -->
                                 </div>
                             </div>
 
+                            <!-- html-validate-disable-next-line no-inline-style -->
                             <button type="button" class="btn-dark campsite-next" data-next="3" style="width: 100%; margin-top: 30px;">Next</button>
                         </div>
 
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <div class="campsite-step" id="c-step-3" style="display: none;">
                             <div class="step-header">
                                 <div class="step-title-row">
                                     <span class="doc-icon"></span>
-                                    <h3>Capacity & Facilities</h3>
+                                    <h3>Capacity &amp; Facilities</h3>
                                 </div>
                                 <p class="step-subtitle">What kind of setups can you accommodate, and what amenities do you offer?</p>
                             </div>
 
+                            <!-- html-validate-disable no-inline-style, form-dup-name -->
                             <div class="accordion-item" style="margin-bottom: 20px;">
                                 <button type="button" class="accordion-header dark-acc-header">
                                     Camping Type <span class="acc-icon" style="margin-left: 8px;">^</span>
@@ -732,8 +760,10 @@
                             </div>
 
                             <button type="button" class="btn-dark campsite-next" data-next="4" style="width: 100%;">Next</button>
+                            <!-- html-validate-enable no-inline-style, form-dup-name -->
                         </div>
 
+                        <!-- html-validate-disable no-inline-style -->
                         <div class="campsite-step" id="c-step-4" style="display: none;">
                             <div class="step-header">
                                 <div class="step-title-row">
@@ -787,9 +817,11 @@
                                 <div class="step-circle">4</div>
                             </div>
                         </div>
+                        <!-- html-validate-enable no-inline-style -->
 
                     </div>
 
+                    <!-- html-validate-disable no-inline-style -->
                     <div id="map-modal" class="modal-overlay" style="display: none;">
                         <div class="modal-content">
                             <span class="close-modal" id="close-map-modal">&times;</span>
@@ -805,6 +837,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- html-validate-enable no-inline-style -->
                 </div>
 
                 <div id="wishlist" class="tab-section">
@@ -1089,9 +1122,146 @@
 
     </div>
 
+    <!-- ===== HISTORY / WISHLIST / CAMPSITE TEMPLATES ===== -->
+    <template id="tpl-booking-card">
+        <div class="booking-card">
+            <div class="booking-img" style="flex-shrink:0;overflow:hidden;"></div>
+            <div class="booking-info">
+                <h3 class="bc-name"></h3>
+                <p class="booking-dates bc-dates"></p>
+                <span class="booking-status bc-status"></span>
+            </div>
+            <div class="bc-action"></div>
+        </div>
+    </template>
+
+    <template id="tpl-wishlist-card">
+        <div class="wishlist-card">
+            <div class="wishlist-img" style="background:#e8ede8;flex-shrink:0;"></div>
+            <div class="wishlist-info">
+                <h3 class="wc-name"></h3>
+                <p class="wishlist-address wc-region"></p>
+                <p class="wishlist-meta wc-meta"></p>
+            </div>
+            <div class="wishlist-heart" title="Sterge din Favorite">×</div>
+        </div>
+    </template>
+
+    <template id="tpl-tag">
+        <span class="tag"></span>
+    </template>
+
+    <template id="tpl-detail-thumb">
+        <img class="thumb-img" alt="Thumbnail">
+    </template>
+
+    <template id="tpl-message-card">
+        <div class="message-card">
+            <span class="message-sender-info"></span>
+            <p class="message-body"></p>
+        </div>
+    </template>
+    <!-- ===== END HISTORY / WISHLIST / CAMPSITE TEMPLATES ===== -->
+
+    <!-- ===== ADMIN TEMPLATES ===== -->
+    <template id="tpl-admin-camping-card">
+        <div class="admin-camping-card">
+            <div class="admin-card-header">
+                <h3 class="ac-name"></h3>
+                <span class="a-badge ac-badge"></span>
+            </div>
+            <div class="admin-card-meta">
+                <span class="ac-type-region"></span>
+                <span class="ac-price" style="display:none;"></span>
+                <span class="ac-date"></span>
+            </div>
+            <div class="admin-info-row ac-user-row">
+                <span class="admin-info-label">Utilizator</span>
+                <span class="ac-user"></span>
+            </div>
+            <div class="admin-info-row ac-company-row" style="display:none;">
+                <span class="admin-info-label">Firma</span>
+                <span class="ac-company"></span>
+            </div>
+            <div class="admin-info-row ac-addr-row" style="display:none;">
+                <span class="admin-info-label">Adresa firma</span>
+                <span class="ac-addr"></span>
+            </div>
+            <div class="admin-info-row ac-contact-row" style="display:none;">
+                <span class="admin-info-label">Contact</span>
+                <span class="ac-contact"></span>
+            </div>
+            <div class="admin-docs ac-docs" style="display:none;"></div>
+            <div class="admin-feedback-block ac-feedback" style="display:none;"></div>
+            <div class="admin-card-actions ac-actions" style="display:none;">
+                <button class="btn-aa ac-btn-approve"></button>
+                <button class="btn-ar ac-btn-reject"></button>
+                <button class="btn-af ac-btn-feedback"></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-admin-doc-link">
+        <a class="admin-doc-link" download></a>
+    </template>
+
+    <template id="tpl-admin-user-card">
+        <div class="admin-user-card">
+            <div class="admin-user-avatar au-avatar"></div>
+            <div class="admin-user-info">
+                <h4 class="au-name"></h4>
+                <p class="au-meta"></p>
+            </div>
+            <span class="a-role au-role"></span>
+            <div class="admin-user-actions">
+                <button class="au-ban-btn"></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-stat-card">
+        <div class="stat-card">
+            <div class="stat-val"></div>
+            <div class="stat-lbl"></div>
+        </div>
+    </template>
+
+    <template id="tpl-stat-region-row">
+        <div class="stat-region-row">
+            <span class="sr-name"></span>
+            <span class="stat-region-cnt sr-cnt"></span>
+        </div>
+    </template>
+
+    <template id="tpl-admin-load-more">
+        <div class="admin-load-more" id="admin-users-more">
+            <span class="alm-count"></span>
+            <button class="alm-btn">Incarca mai multi</button>
+        </div>
+    </template>
+
+    <template id="tpl-admin-message-card">
+        <div class="admin-message-card expandable-card">
+            <div class="msg-header-row">
+                <div class="msg-avatar am-avatar"></div>
+                <div class="msg-info">
+                    <h3 class="msg-title am-name"></h3>
+                    <p class="msg-meta am-meta"></p>
+                    <span class="msg-date-badge am-date"></span>
+                </div>
+                <div class="msg-expand-icon"></div>
+            </div>
+            <div class="msg-body">
+                <p class="msg-text am-text"></p>
+            </div>
+        </div>
+    </template>
+    <!-- ===== END ADMIN TEMPLATES ===== -->
+
     <script src="../../js/i18n.js"></script>
     <script src="../../js/toast.js"></script>
     <script src="../../js/api.js"></script>
+    <script src="../../js/templates.js"></script>
     <script src="../../js/main.js"></script>
     <script src="../../js/partner-form.js"></script>
     <script src="../../js/admin.js"></script>

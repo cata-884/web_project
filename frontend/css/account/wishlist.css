@@ -50,7 +50,7 @@
     margin: 0;
     font-size: 14px;
     color: var(--text-main);
-    opacity: 80%;
+    opacity: 0.8;
 }
 
 .wishlist-meta {
@@ -72,5 +72,5 @@
 
 .wishlist-heart:hover {
     transform: scale(1.2);
-    opacity: 60%;
+    opacity: 0.6;
 }

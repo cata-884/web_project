@@ -3,6 +3,9 @@ const API_BASE = window.location.protocol === 'file:' || !window.location.host
     : '/cat/public';
 
 const api = {
+    /*
+        options = method, url, data, headers
+     */
     async fetch(endpoint, options = {}) {
         const token   = localStorage.getItem('cat_token');
         const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
@@ -14,6 +17,9 @@ const api = {
             localStorage.removeItem('cat_token');
             localStorage.removeItem('cat_user');
             if (!window.location.pathname.includes('auth.html')) {
+                /*
+                    /frontend/dashboard/settings => ['frontend', 'dashboard', 'settings']).
+                 */
                 const parts = window.location.pathname.split('/').filter(Boolean);
                 const depth = parts.length - parts.indexOf('frontend') - 1;
                 const prefix = depth > 1 ? '../'.repeat(depth - 1) : '';

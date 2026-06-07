@@ -88,6 +88,7 @@ h4 {
     display: flex;
     align-items: center;
 }
+
 .lang-toggle-btn {
     background: transparent;
     border: 1px solid rgb(255 255 255 / 40%);
@@ -100,6 +101,7 @@ h4 {
     letter-spacing: 0.05em;
     transition: background 0.2s, border-color 0.2s;
 }
+
 .lang-toggle-btn:hover {
     background: rgb(255 255 255 / 15%);
     border-color: rgb(255 255 255 / 70%);
@@ -110,6 +112,7 @@ h4 {
     border-color: rgb(0 0 0 / 25%);
     color: var(--color-text, #333);
 }
+
 .lang-toggle-btn.dark:hover {
     background: rgb(0 0 0 / 6%);
 }
@@ -121,7 +124,12 @@ h4 {
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0,0,0,0);
+    clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+}
+
+/* utility: hidden element */
+.d-none {
+    display: none;
 }

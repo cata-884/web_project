@@ -102,35 +102,56 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         if (bookingsArray.length === 0) {
-            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.no_bookings')}</p>`;
+            container.innerHTML = '';
+            const p = document.createElement('p');
+            p.style.cssText = 'color:#666;font-style:italic;padding:16px 0;';
+            p.textContent = t('account.no_bookings');
+            container.appendChild(p);
             return;
         }
 
-        container.innerHTML = bookingsArray.map(booking => {
+        container.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        bookingsArray.forEach(booking => {
             const filterCls = bookingFilterClass(booking.status);
             const label = STATUS_LABELS()[booking.status] || booking.status;
             const dates = formatDateRange(booking.check_in, booking.check_out, booking.guests);
-            const name = booking.camping_name || booking.camping?.name || '—';
+            const name  = booking.camping_name || booking.camping?.name || '—';
             const cover = booking.camping?.cover_url;
-            const imgHtml = cover
-                ? `<img src="${cover}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">`
-                : `<div style="width:100%;height:100%;background:#e8ede8;"></div>`;
-            const canCancel = booking.status === 'pending' || booking.status === 'confirmed';
-            return `
-                <div class="booking-card status-${filterCls}" onclick="openBookingDetails(${booking.id})">
-                    <div class="booking-img" style="flex-shrink:0;overflow:hidden;">${imgHtml}</div>
-                    <div class="booking-info">
-                        <h3>${name}</h3>
-                        <p class="booking-dates">${dates}</p>
-                        <span class="booking-status">${label}</span>
-                    </div>
-                    ${canCancel
-                ? `<button class="btn-cancel-booking" onclick="event.stopPropagation();cancelBooking(${booking.id})"
-                    style="flex-shrink:0;padding:8px 16px;background:transparent;color:#e05252;border:1.5px solid #e05252;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Anulează</button>`
-                : '<div class="booking-arrow"></div>'}
-                </div>
-            `;
-        }).join('');
+
+            const node = cloneTemplate('tpl-booking-card');
+            const card = node.querySelector('.booking-card');
+            card.classList.add(`status-${filterCls}`);
+            card.addEventListener('click', () => openBookingDetails(booking.id));
+
+            const imgWrap = card.querySelector('.booking-img');
+            if (cover) {
+                const img = document.createElement('img');
+                img.src = cover;
+                img.alt = name;
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                imgWrap.appendChild(img);
+            }
+
+            card.querySelector('.bc-name').textContent   = name;
+            card.querySelector('.bc-dates').textContent  = dates;
+            card.querySelector('.bc-status').textContent = label;
+
+            const actionEl = card.querySelector('.bc-action');
+            if (booking.status === 'pending' || booking.status === 'confirmed') {
+                const btn = document.createElement('button');
+                btn.className = 'btn-cancel-booking';
+                btn.style.cssText = 'flex-shrink:0;padding:8px 16px;background:transparent;color:#e05252;border:1.5px solid #e05252;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;';
+                btn.textContent = 'Anulează';
+                btn.addEventListener('click', e => { e.stopPropagation(); cancelBooking(booking.id); });
+                actionEl.appendChild(btn);
+            } else {
+                actionEl.className = 'booking-arrow';
+            }
+
+            frag.appendChild(node);
+        });
+        container.appendChild(frag);
     }
 
     async function loadBookings() {
@@ -143,7 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
             allBookings = data?.bookings || [];
             renderBookings(allBookings);
         } catch (err) {
-            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.load_bookings_err')}</p>`;
+            container.innerHTML = '';
+            const p = document.createElement('p');
+            p.style.cssText = 'color:#666;font-style:italic;padding:16px 0;';
+            p.textContent = t('account.load_bookings_err');
+            container.appendChild(p);
         }
     }
 
@@ -264,21 +289,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         if (!campings || campings.length === 0) {
-            container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.no_favorites')}</p>`;
+            container.innerHTML = '';
+            const p = document.createElement('p');
+            p.style.cssText = 'color:#666;font-style:italic;padding:16px 0;';
+            p.textContent = t('account.no_favorites');
+            container.appendChild(p);
             return;
         }
 
-        container.innerHTML = campings.map(c => `
-            <div class="wishlist-card" onclick="goToCampingPage('${c.slug}')">
-                <div class="wishlist-img" style="background:#e8ede8; flex-shrink:0;"></div>
-                <div class="wishlist-info">
-                    <h3>${c.name}</h3>
-                    <p class="wishlist-address">${c.region || 'Romania'}</p>
-                    <p class="wishlist-meta">${TYPE_LABELS_WL[c.type] || c.type} &nbsp;•&nbsp; ${c.price_per_night ? c.price_per_night + ' RON / noapte' : ''}</p>
-                </div>
-                <div class="wishlist-heart" onclick="removeFromWishlist(event, ${c.id})" title="Sterge din Favorite">×</div>
-            </div>
-        `).join('');
+        container.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        campings.forEach(c => {
+            const node = cloneTemplate('tpl-wishlist-card');
+            const card = node.querySelector('.wishlist-card');
+            card.addEventListener('click', () => goToCampingPage(c.slug));
+            card.querySelector('.wc-name').textContent   = c.name;
+            card.querySelector('.wc-region').textContent = c.region || 'Romania';
+            const meta = [TYPE_LABELS_WL[c.type] || c.type];
+            if (c.price_per_night) meta.push(`${c.price_per_night} RON / noapte`);
+            card.querySelector('.wc-meta').textContent = meta.join(' • ');
+            card.querySelector('.wishlist-heart').addEventListener('click', e => removeFromWishlist(e, c.id));
+            frag.appendChild(node);
+        });
+        container.appendChild(frag);
     }
 
     async function loadWishlist() {
@@ -301,7 +334,13 @@ document.addEventListener('DOMContentLoaded', () => {
             renderWishlist(campData?.campings || []);
         } catch (err) {
             const container = document.getElementById('wishlist-container');
-            if (container) container.innerHTML = `<p style="color:#666; font-style:italic; padding:16px 0;">${t('account.load_favorites_err')}</p>`;
+            if (container) {
+                container.innerHTML = '';
+                const p = document.createElement('p');
+                p.style.cssText = 'color:#666;font-style:italic;padding:16px 0;';
+                p.textContent = t('account.load_favorites_err');
+                container.appendChild(p);
+            }
         }
     }
 

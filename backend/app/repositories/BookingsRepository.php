@@ -1,5 +1,5 @@
 <?php
-class       BookingsRepository extends Repository
+class BookingsRepository extends Repository
 {
     public static function totalPriceExpr(string $b = 'b', string $c = 'c'): string
     {

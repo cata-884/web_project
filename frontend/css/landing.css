@@ -154,7 +154,7 @@
     font-size: var(--font-h4);
     font-weight: 400;
     margin-top: 0.5rem;
-    opacity: 90%;
+    opacity: 0.9;
     color: var(--text-light);
 }
 
@@ -283,7 +283,7 @@
     margin: 0;
     color: var(--text-main);
     font-size: var(--font-body);
-    opacity: 90%;
+    opacity: 0.9;
 }
 
 .feature-card .card-img img {
@@ -309,26 +309,26 @@
 }
 
 .card-btn:hover {
-    opacity: 90%;
+    opacity: 0.9;
 }
 
 .feature-card.pos-0 {
     transform: translateY(-50%) translateX(0) scale(1);
     z-index: 3;
-    opacity: 100%;
+    opacity: 1;
 }
 
 .feature-card.pos-1 {
     transform: translateY(-50%) translateX(50px) scale(0.90);
     z-index: 2;
-    opacity: 70%;
+    opacity: 0.7;
     cursor: pointer;
 }
 
 .feature-card.pos-2 {
     transform: translateY(-50%) translateX(100px) scale(0.80);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
     cursor: pointer;
 }
 
@@ -369,12 +369,12 @@
 
     .feature-card.pos-1 {
         transform: translateY(-50%) translateX(0) scale(0.95);
-        opacity: 80%;
+        opacity: 0.8;
     }
 
     .feature-card.pos-2 {
         transform: translateY(-50%) translateX(0) scale(0.90);
-        opacity: 50%;
+        opacity: 0.5;
     }
 }
 
@@ -407,7 +407,7 @@
 .reviews-header p {
     font-size: var(--font-body);
     line-height: 1.6;
-    opacity: 90%;
+    opacity: 0.9;
 }
 
 .reviews-interactive-container {
@@ -441,55 +441,55 @@
 #rev1:checked~.carousel-wrapper .review-card#review1 {
     transform: translate(-50%, -50%) scale(1);
     z-index: 3;
-    opacity: 100%;
+    opacity: 1;
 }
 
 #rev1:checked~.carousel-wrapper .review-card#review2 {
     transform: translate(50%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 #rev1:checked~.carousel-wrapper .review-card#review3 {
     transform: translate(-150%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 #rev2:checked~.carousel-wrapper .review-card#review2 {
     transform: translate(-50%, -50%) scale(1);
     z-index: 3;
-    opacity: 100%;
+    opacity: 1;
 }
 
 #rev2:checked~.carousel-wrapper .review-card#review3 {
     transform: translate(50%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 #rev2:checked~.carousel-wrapper .review-card#review1 {
     transform: translate(-150%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 #rev3:checked~.carousel-wrapper .review-card#review3 {
     transform: translate(-50%, -50%) scale(1);
     z-index: 3;
-    opacity: 100%;
+    opacity: 1;
 }
 
 #rev3:checked~.carousel-wrapper .review-card#review1 {
     transform: translate(50%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 #rev3:checked~.carousel-wrapper .review-card#review2 {
     transform: translate(-150%, -50%) scale(0.85);
     z-index: 1;
-    opacity: 40%;
+    opacity: 0.4;
 }
 
 .carousel-controls {
@@ -674,7 +674,7 @@
 }
 
 .contact-visual-card p {
-    opacity: 90%;
+    opacity: 0.9;
     line-height: 1.6;
     margin-bottom: 16px;
     font-size: clamp(0.9rem, 1.5vw, 1rem);
@@ -845,14 +845,14 @@
 
 .footer-text {
     font-size: 0.9rem;
-    opacity: 90%;
+    opacity: 0.9;
     line-height: 1.6;
     margin-bottom: 20px;
 }
 
 .footer-copy {
     font-size: 0.8rem;
-    opacity: 60%;
+    opacity: 0.6;
     margin-top: 20px;
 }
 
@@ -860,13 +860,13 @@
     color: var(--text-light);
     text-decoration: none;
     font-size: 0.9rem;
-    opacity: 90%;
+    opacity: 0.9;
     margin-bottom: 10px;
     transition: opacity 0.3s ease;
 }
 
 .footer-link:hover {
-    opacity: 100%;
+    opacity: 1;
     text-decoration: underline;
 }
 
