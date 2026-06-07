@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin="">
+          crossorigin>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
@@ -22,7 +22,7 @@
 <body data-page-title="map.title">
     <div class="map-page">
 
-        <button class="sidebar-toggle" id="sidebar-toggle"></button>
+        <button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="Comuta bara laterala"></button>
 
         <div class="map-overlay" id="map-overlay"></div>
 
@@ -103,14 +103,14 @@
 
         <div class="map-container">
             <div id="map"></div>
-            <button class="locate-btn" id="locate-me" data-i18n-title="map.locate_me" title="Localizeaza-ma">+</button>
+            <button type="button" class="locate-btn" id="locate-me" data-i18n-title="map.locate_me" title="Localizeaza-ma">+</button>
         </div>
 
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+            crossorigin></script>
 
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 

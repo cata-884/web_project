@@ -180,19 +180,18 @@
 
 @keyframes fade-in {
     from {
-        opacity: 0%;
+        opacity: 0;
         transform: translateY(5px);
     }
 
     to {
-        opacity: 100%;
+        opacity: 1;
         transform: translateY(0);
     }
 }
 
 .account-header,
 .account-pages-wrapper {
-
     width: clamp(280px, 100%, 1200px);
 }
 
@@ -207,7 +206,6 @@
 }
 
 @media (width <= 700px) {
-
     .hamburger-btn {
         display: block;
     }
@@ -251,13 +249,13 @@
         height: 100vh;
         background: var(--text-main);
         z-index: 999;
-        opacity: 0%;
+        opacity: 0;
         transition: opacity 0.3s ease;
     }
 
     .mobile-overlay.active {
         display: block;
-        opacity: 100%;
+        opacity: 1;
     }
 
     .booking-arrow {

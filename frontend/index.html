@@ -29,7 +29,7 @@
                 <a href="#contact" data-i18n="nav.contact">Contact</a>
                 <span class="lang-toggle-container"></span>
             </div>
-            <button class="hamburger-menu">
+            <button type="button" class="hamburger-menu" aria-label="Meniu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -216,7 +216,7 @@
                         <div class="contact-info">
                             <h3 data-i18n="home.contact_phone_label">Telefon</h3>
                             <p data-i18n="home.contact_phone_desc">Ai nevoie de ajutor urgent cu contul tau? Suna-ne</p>
-                            <a href="tel:+40123456">+40 000 123 456</a>
+                            <a href="tel:+40123456">+40&nbsp;000&nbsp;123&nbsp;456</a>
                         </div>
                     </div>
                 </div>
@@ -252,6 +252,7 @@
                                 placeholder="Mesajul tau..."></textarea>
                         </div>
 
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <div id="contact-feedback"
                             style="display:none; font-size:14px; margin-bottom:8px; padding:8px 12px; border-radius:6px;">
                         </div>
@@ -291,7 +292,9 @@
             <div class="footer-col">
                 <p class="footer-label" data-i18n="footer.social">Retele sociale:</p>
                 <div class="social-icons">
+                    <!-- html-validate-disable-next-line no-inline-style -->
                     <div class="icon-placeholder"><a href="https://www.facebook.com/" style="color:white">F</a></div>
+                    <!-- html-validate-disable-next-line no-inline-style -->
                     <div class="icon-placeholder"><a href="https://www.instagram.com/" style="color:white">I</a></div>
                 </div>
             </div>

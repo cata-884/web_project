@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/toast.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin="">
+          crossorigin>
     <link rel="stylesheet" href="../css/map.css">
 
 </head>
@@ -29,7 +29,7 @@
                 <a href="account/account.html" data-i18n="nav.account">Contul Meu</a>
                 <span class="lang-toggle-container"></span>
             </div>
-            <button class="hamburger-menu" aria-label="Meniu">
+            <button type="button" class="hamburger-menu" aria-label="Meniu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -42,16 +42,140 @@
     </main>
 
     <div id="media-lightbox">
-        <button id="media-lightbox-close"></button>
+        <button type="button" id="media-lightbox-close" aria-label="Inchide"></button>
         <div id="media-lightbox-content"></div>
     </div>
 
+    <!-- CAMPING DETAIL TEMPLATES -->
+    <template id="tpl-detail-main">
+<!-- html-validate-disable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+        <div class="gallery-container">
+            <img id="main-gallery-img" class="main-image" alt="">
+            <div class="thumbnail-list"></div>
+        </div>
+
+        <div class="content-split">
+            <div class="camping-info">
+                <h1 class="cd-name"></h1>
+                <div class="rating-location">
+                    <span class="rating-badge cd-rating"></span>
+                    <span class="cd-address"></span>
+                    <span class="cd-type"></span>
+                </div>
+
+                <div class="camping-description cd-description"></div>
+
+                <div id="camping-map" class="camping-mini-map"></div>
+
+                <div id="nearby-section" class="nearby-section" style="display:none;">
+                    <h2>În apropiere <small>(raza 5 km)</small></h2>
+                    <div id="nearby-pois" class="poi-chips"></div>
+                </div>
+
+                <div class="reviews-section" id="reviews-section">
+                    <h2>Recenzii</h2>
+                    <div id="review-form-container" class="review-form-container">
+                        <h3>Scrie o recenzie</h3>
+                        <div class="star-select" id="star-select">
+                            <span data-val="1">★</span><span data-val="2">★</span>
+                            <span data-val="3">★</span><span data-val="4">★</span>
+                            <span data-val="5">★</span>
+                        </div>
+                        <label for="review-text"></label><textarea id="review-text" placeholder="Cum a fost experienta ta?"></textarea>
+                        <label class="review-media-label">
+                            Ataseaza fisiere (imagini, audio, video)
+                            <input type="file" id="review-files" multiple accept="image/*,audio/*,video/*">
+                        </label>
+                        <div id="review-file-preview" class="review-file-preview"></div>
+                        <button type="button" class="btn-dark" id="btn-submit-review">Trimite Recenzia</button>
+                    </div>
+                    <div id="reviews-list"><p>Nu exista recenzii inca.</p></div>
+                </div>
+            </div>
+
+            <aside>
+                <button type="button" id="btn-wishlist" class="btn-wishlist" aria-label="Adauga la favorite" style="display:none;"></button>
+                <div class="booking-card">
+                    <h3 class="cd-book-title"></h3>
+                    <div class="booking-meta">
+                        <span class="cd-book-type"></span>
+                        <span class="cd-book-capacity" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Data Check-in</label>
+                        <input type="date" id="book-checkin">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Check-out</label>
+                        <input type="date" id="book-checkout">
+                    </div>
+                    <div class="form-group">
+                        <label>Numar oaspeti</label>
+                        <input type="number" id="book-guests" min="1" max="20" value="2">
+                    </div>
+                    <div class="price-calculation" id="price-calc-display" style="display:none;">
+                        <div class="calc-row">
+                            <span id="calc-nights"></span>
+                            <span id="calc-base-price">0 RON</span>
+                        </div>
+                        <div class="calc-total">
+                            <span>Total: </span>
+                            <span id="calc-total-price">0 RON</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-dark" id="btn-confirm-booking" style="width:100%;margin-top:16px;"></button>
+                </div>
+            </aside>
+        </div>
+<!-- html-validate-enable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+    </template>
+
+    <template id="tpl-thumbnail">
+<!-- html-validate-disable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+        <img class="thumb-img" alt="Thumbnail">
+<!-- html-validate-enable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+    </template>
+
+    <template id="tpl-review-item">
+<!-- html-validate-disable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+        <div class="review-item">
+            <div class="review-header">
+                <span class="review-author"></span>
+                <span class="review-rating"></span>
+                <div class="review-actions" style="display:none;">
+                    <button type="button" class="btn-review-edit">Editeaza</button>
+                    <button type="button" class="btn-review-delete">Sterge</button>
+                </div>
+            </div>
+            <div class="review-body">
+                <p class="rv-content" style="display:none;"></p>
+                <div class="review-media-list rv-media" style="display:none;"></div>
+            </div>
+            <div class="review-edit-form" style="display:none;"></div>
+        </div>
+<!-- html-validate-enable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+    </template>
+
+    <template id="tpl-edit-media-item">
+<!-- html-validate-disable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+        <div class="edit-media-item">
+            <button type="button" class="btn-review-delete edit-media-delete" aria-label="Sterge"></button>
+        </div>
+<!-- html-validate-enable no-inline-style, empty-heading, element-required-attributes, form-dup-name, attribute-misuse -->
+    </template>
+
+    <template id="tpl-poi-chip">
+        <span class="poi-chip"></span>
+    </template>
+    <!-- END CAMPING DETAIL TEMPLATES -->
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+            crossorigin></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/toast.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/templates.js"></script>
     <script src="../js/camping-detail.js"></script>
 </body>
 </html>

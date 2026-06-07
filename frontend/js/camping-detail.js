@@ -8,10 +8,18 @@ function openLightbox(type, url) {
     const content = document.getElementById('media-lightbox-content');
     if (!lb || !content) return;
 
+    content.innerHTML = '';
     if (type === 'image') {
-        content.innerHTML = `<img src="${url}" alt="media">`;
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'media';
+        content.appendChild(img);
     } else if (type === 'video') {
-        content.innerHTML = `<video src="${url}" controls autoplay></video>`;
+        const vid = document.createElement('video');
+        vid.src = url;
+        vid.controls = true;
+        vid.autoplay = true;
+        content.appendChild(vid);
     }
 
     lb.classList.add('open');
@@ -64,7 +72,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const id = params.get('id');
 
     if (!slug && !id) {
-        document.getElementById('detail-main').innerHTML = '<h2 style="color:red; text-align:center; padding:50px;">Camping invalid sau adresă greșită.</h2>';
+        const h2 = document.createElement('h2');
+        h2.style.cssText = 'color:red;text-align:center;padding:50px;';
+        h2.textContent = 'Camping invalid sau adresă greșită.';
+        document.getElementById('detail-main').appendChild(h2);
         return;
     }
 
@@ -89,146 +100,100 @@ document.addEventListener('DOMContentLoaded', async () => {
         checkReviewEligibility();
 
     } catch (err) {
-        // AFISAM EROAREA (404) DACA URL-UL E GRESIT
-        document.getElementById('detail-main').innerHTML =
-            `<div style="padding:40px;text-align:center">
-                <h2 style="color:#EF6A00">${t('camping.load_err')}</h2>
-                <p style="color:#666;margin-top:8px">Camping-ul "${slug}" nu există sau nu este public.</p>
-                <a href="campings.html" style="display:inline-block;margin-top:16px" class="btn-dark">← Înapoi la lista de campinguri</a>
-            </div>`;
+        const main = document.getElementById('detail-main');
+        main.innerHTML = '';
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'padding:40px;text-align:center;';
+        const h2 = document.createElement('h2');
+        h2.style.color = '#EF6A00';
+        h2.textContent = t('camping.load_err');
+        const p = document.createElement('p');
+        p.style.cssText = 'color:#666;margin-top:8px;';
+        p.textContent = `Camping-ul "${slug}" nu există sau nu este public.`;
+        const a = document.createElement('a');
+        a.href = 'campings.html';
+        a.style.cssText = 'display:inline-block;margin-top:16px;';
+        a.className = 'btn-dark';
+        a.textContent = '← Înapoi la lista de campinguri';
+        wrap.append(h2, p, a);
+        main.appendChild(wrap);
     }
 });
 function renderCampingDetails() {
     const main = document.getElementById('detail-main');
     const media = currentCamping.media || [];
-    const mainImg = media.length > 0 ? media[0].url : '../assets/About1.jpg';
+    const node = cloneTemplate('tpl-detail-main');
 
-    let thumbnailsHTML = '';
-    media.forEach((m, idx) => {
-        thumbnailsHTML += `<img src="${m.url}" class="${idx === 0 ? 'active' : ''}" onclick="changeMainImage(this, '${m.url}')" alt="Thumbnail">`;
+    // Galerie
+    const mainImgEl = node.querySelector('#main-gallery-img');
+    mainImgEl.src = media.length > 0 ? media[0].url : '../assets/About1.jpg';
+    mainImgEl.alt = currentCamping.name;
+
+    const thumbList = node.querySelector('.thumbnail-list');
+    const thumbSrcs = media.length > 0 ? media : [{ url: '../assets/About1.jpg' }];
+    thumbSrcs.forEach((m, idx) => {
+        const thumb = cloneTemplate('tpl-thumbnail').querySelector('img');
+        thumb.src = m.url;
+        if (idx === 0) thumb.classList.add('active');
+        thumb.addEventListener('click', () => changeMainImage(thumb, m.url));
+        thumbList.appendChild(thumb);
     });
 
-    if (thumbnailsHTML === '') {
-        thumbnailsHTML = `<img src="../assets/About1.jpg" class="active" alt="Thumbnail">`;
+    // Info
+    const ratingStr = currentCamping.rating_avg
+        ? `⭐ ${parseFloat(currentCamping.rating_avg).toFixed(1)} / 5` : 'Fara recenzii';
+    node.querySelector('.cd-name').textContent    = currentCamping.name;
+    node.querySelector('.cd-rating').textContent  = ratingStr;
+    node.querySelector('.cd-address').textContent = ` ${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}`;
+    node.querySelector('.cd-type').textContent    = `⛺ Tip: ${currentCamping.type}`;
+    node.querySelector('.cd-description').textContent = currentCamping.description || 'Nicio descriere disponibila.';
+
+    // Booking aside
+    node.querySelector('.cd-book-title').textContent = t('camping.book_title');
+    node.querySelector('.cd-book-type').textContent  = TYPE_LABELS[currentCamping.type] || currentCamping.type;
+    const capEl = node.querySelector('.cd-book-capacity');
+    if (currentCamping.capacity) {
+        capEl.textContent = `Max ${currentCamping.capacity} persoane`;
+        capEl.style.display = '';
     }
+    node.querySelector('#calc-nights').textContent = `0 nopti x ${currentPricePerNight} RON`;
+    node.querySelector('#btn-confirm-booking').textContent = t('camping.confirm_btn');
 
-    const ratingStr = currentCamping.rating_avg ? `${parseFloat(currentCamping.rating_avg).toFixed(1)} / 5` : 'Fara recenzii';
+    // Append în DOM
+    main.innerHTML = '';
+    main.appendChild(node);
 
-    main.innerHTML = `
-        <div class="gallery-container">
-            <img src="${mainImg}" id="main-gallery-img" class="main-image" alt="${currentCamping.name}">
-            <div class="thumbnail-list">
-                ${thumbnailsHTML}
-            </div>
-        </div>
+    // Events (după ce elementele sunt în DOM)
+    document.getElementById('book-checkin').addEventListener('change', calculatePrice);
+    document.getElementById('book-checkout').addEventListener('change', calculatePrice);
+    document.getElementById('btn-confirm-booking').addEventListener('click', handleBooking);
+    document.getElementById('btn-wishlist').addEventListener('click', toggleWishlist);
+    document.getElementById('btn-submit-review').addEventListener('click', submitReview);
 
-        <div class="content-split">
-            <div class="camping-info">
-                <h1>${currentCamping.name}</h1>
-                <div class="rating-location">
-                    <span class="rating-badge"> ${ratingStr}</span>
-                    <span> ${currentCamping.address || currentCamping.region || 'Locatie necunoscuta'}</span>
-                    <span>️ Tip: ${currentCamping.type}</span>
-                </div>
+    // Star select
+    const stars = document.querySelectorAll('#star-select span');
+    stars.forEach(s => {
+        s.addEventListener('click', () => {
+            const val = s.dataset.val;
+            window.currentReviewRating = val;
+            stars.forEach(st => st.classList.toggle('selected', st.dataset.val <= val));
+        });
+    });
 
-                <div class="camping-description">
-                    ${currentCamping.description || 'Nicio descriere disponibila.'}
-                </div>
-
-                <div id="camping-map" class="camping-mini-map"></div>
-
-                <div id="nearby-section" class="nearby-section" style="display:none">
-                    <h2>În apropiere <small>(raza 5 km)</small></h2>
-                    <div id="nearby-pois" class="poi-chips"></div>
-                </div>
-
-                <div class="reviews-section" id="reviews-section">
-                    <h2>Recenzii</h2>
-                    <div id="review-form-container" class="review-form-container">
-                        <h3>Scrie o recenzie</h3>
-                        <div class="star-select" id="star-select">
-                            <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
-                        </div>
-                        <textarea id="review-text" placeholder="Cum a fost experienta ta?"></textarea>
-                        <label class="review-media-label">
-                            Ataseaza fisiere (imagini, audio, video)
-                            <input type="file" id="review-files" multiple accept="image/*,audio/*,video/*">
-                        </label>
-                        <div id="review-file-preview" class="review-file-preview"></div>
-                        <button class="btn-dark" onclick="submitReview()">Trimite Recenzia</button>
-                    </div>
-                    <div id="reviews-list">
-                        <p>Nu exista recenzii inca.</p>
-                    </div>
-                </div>
-            </div>
-
-            <aside>
-                <button id="btn-wishlist" class="btn-wishlist" style="display:none;" onclick="toggleWishlist()"></button>
-                <div class="booking-card">
-                    <h3>${t('camping.book_title')}</h3>
-                    <div class="booking-meta">
-                        <span>${TYPE_LABELS[currentCamping.type] || currentCamping.type}</span>
-                        ${currentCamping.capacity ? `<span>Max ${currentCamping.capacity} persoane</span>` : ''}
-                    </div>
-                    <div class="form-group">
-                        <label>Data Check-in</label>
-                        <input type="date" id="book-checkin" onchange="calculatePrice()">
-                    </div>
-                    <div class="form-group">
-                        <label>Data Check-out</label>
-                        <input type="date" id="book-checkout" onchange="calculatePrice()">
-                    </div>
-                    <div class="form-group">
-                        <label>Numar oaspeti</label>
-                        <input type="number" id="book-guests" min="1" max="20" value="2">
-                    </div>
-
-                    <div class="price-calculation" id="price-calc-display" style="display: none;">
-                        <div class="calc-row">
-                            <span id="calc-nights">0 nopti x ${currentPricePerNight} RON</span>
-                            <span id="calc-base-price">0 RON</span>
-                        </div>
-                        <div class="calc-total">
-                            <span>Total: </span>
-                            <span id="calc-total-price">0 RON</span>
-                        </div>
-                    </div>
-
-                    <button class="btn-dark" style="width: 100%; margin-top: 16px;" onclick="handleBooking()">${t('camping.confirm_btn')}</button>
-                </div>
-            </aside>
-        </div>
-    `;
-
-    // Setup star logic + file preview
-    setTimeout(() => {
-        const stars = document.querySelectorAll('#star-select span');
-        let selected = 0;
-        stars.forEach(s => {
-            s.addEventListener('click', () => {
-                selected = s.dataset.val;
-                window.currentReviewRating = selected;
-                stars.forEach(st => {
-                    st.classList.toggle('selected', st.dataset.val <= selected);
-                });
+    // File preview
+    const filesInput = document.getElementById('review-files');
+    const previewEl  = document.getElementById('review-file-preview');
+    if (filesInput && previewEl) {
+        filesInput.addEventListener('change', () => {
+            previewEl.innerHTML = '';
+            Array.from(filesInput.files).forEach(f => {
+                const chip = document.createElement('span');
+                chip.className = 'review-file-chip';
+                chip.textContent = f.name;
+                previewEl.appendChild(chip);
             });
         });
-
-        const filesInput = document.getElementById('review-files');
-        const previewEl = document.getElementById('review-file-preview');
-        if (filesInput && previewEl) {
-            filesInput.addEventListener('change', () => {
-                previewEl.innerHTML = '';
-                Array.from(filesInput.files).forEach(f => {
-                    const chip = document.createElement('span');
-                    chip.className = 'review-file-chip';
-                    chip.textContent = f.name;
-                    previewEl.appendChild(chip);
-                });
-            });
-        }
-    }, 100);
+    }
 
     loadReviews();
     initMiniMap();
@@ -358,9 +323,15 @@ async function checkReviewEligibility() {
 
     const token = localStorage.getItem('cat_token');
     if (!token) {
-        container.innerHTML = `<p class="review-login-prompt">
-            <a href="auth.html">Autentifica-te</a> pentru a lasa o recenzie.
-        </p>`;
+        container.innerHTML = '';
+        const p = document.createElement('p');
+        p.className = 'review-login-prompt';
+        const a = document.createElement('a');
+        a.href = 'auth.html';
+        a.textContent = 'Autentifica-te';
+        p.appendChild(a);
+        p.appendChild(document.createTextNode(' pentru a lasa o recenzie.'));
+        container.appendChild(p);
         container.style.display = 'block';
         return;
     }
@@ -372,7 +343,11 @@ async function checkReviewEligibility() {
         const alreadyReviewed = userId && res.reviews && res.reviews.some(r => String(r.user_id) === String(userId));
 
         if (alreadyReviewed) {
-            container.innerHTML = `<p class="review-already">Ai lasat deja o recenzie pentru acest camping.</p>`;
+            container.innerHTML = '';
+            const p = document.createElement('p');
+            p.className = 'review-already';
+            p.textContent = 'Ai lasat deja o recenzie pentru acest camping.';
+            container.appendChild(p);
             container.style.display = 'block';
         } else {
             container.style.display = 'block';
@@ -393,58 +368,74 @@ async function loadReviews() {
 
         if (res.reviews && res.reviews.length > 0) {
             list.innerHTML = '';
+            const frag = document.createDocumentFragment();
+
             res.reviews.forEach(r => {
                 reviewDataMap[r.id] = { rating: r.rating, content: r.content || '', media: r.media || [] };
-
                 const isOwn = currentUserId && String(r.user_id) === currentUserId;
 
-                const mediaHTML = (r.media || []).map(m => {
-                    if (m.type === 'image') return `<img src="${m.url}" class="review-media-img" alt="media" data-url="${m.url}">`;
-                    if (m.type === 'video') return `<div class="review-media-video-wrap"><video src="${m.url}" class="review-media-video" data-url="${m.url}" preload="metadata" muted></video></div>`;
-                    if (m.type === 'audio') return `<audio src="${m.url}" controls class="review-media-audio"></audio>`;
-                    return '';
-                }).join('');
+                const node = cloneTemplate('tpl-review-item');
+                const el   = node.querySelector('.review-item');
+                el.id = `review-${r.id}`;
+                node.querySelector('.review-body').id   = `review-body-${r.id}`;
+                node.querySelector('.review-edit-form').id = `review-edit-${r.id}`;
 
-                const actionsHTML = isOwn ? `
-                    <div class="review-actions">
-                        <button class="btn-review-edit" data-id="${r.id}">Editeaza</button>
-                        <button class="btn-review-delete" data-id="${r.id}">Sterge</button>
-                    </div>` : '';
+                node.querySelector('.review-author').textContent = r.username || 'Utilizator';
+                node.querySelector('.review-rating').textContent = `⭐ ${r.rating}`;
 
-                list.innerHTML += `
-                    <div class="review-item" id="review-${r.id}">
-                        <div class="review-header">
-                            <span class="review-author">${r.username || 'Utilizator'}</span>
-                            <span class="review-rating"> ${r.rating}</span>
-                            ${actionsHTML}
-                        </div>
-                        <div class="review-body" id="review-body-${r.id}">
-                            ${r.content ? `<p>${r.content}</p>` : ''}
-                            ${mediaHTML ? `<div class="review-media-list">${mediaHTML}</div>` : ''}
-                        </div>
-                        <div class="review-edit-form" id="review-edit-${r.id}" style="display:none"></div>
-                    </div>
-                `;
-            });
+                if (r.content) {
+                    const pEl = node.querySelector('.rv-content');
+                    pEl.textContent = r.content;
+                    pEl.style.display = '';
+                }
 
-            list.querySelectorAll('.btn-review-edit').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.dataset.id);
-                    const d = reviewDataMap[id];
-                    openEditReview(id, d.rating, d.content);
+                const mediaListEl = node.querySelector('.rv-media');
+                (r.media || []).forEach(m => {
+                    if (m.type === 'image') {
+                        const img = document.createElement('img');
+                        img.src = m.url;
+                        img.className = 'review-media-img';
+                        img.alt = 'media';
+                        img.dataset.url = m.url;
+                        img.addEventListener('click', () => openLightbox('image', m.url));
+                        mediaListEl.appendChild(img);
+                    } else if (m.type === 'video') {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'review-media-video-wrap';
+                        const vid = document.createElement('video');
+                        vid.src = m.url;
+                        vid.className = 'review-media-video';
+                        vid.dataset.url = m.url;
+                        vid.preload = 'metadata';
+                        vid.muted = true;
+                        vid.addEventListener('loadedmetadata', () => { vid.currentTime = 0.1; });
+                        wrap.addEventListener('click', () => openLightbox('video', m.url));
+                        wrap.appendChild(vid);
+                        mediaListEl.appendChild(wrap);
+                    } else if (m.type === 'audio') {
+                        const aud = document.createElement('audio');
+                        aud.src = m.url;
+                        aud.controls = true;
+                        aud.className = 'review-media-audio';
+                        mediaListEl.appendChild(aud);
+                    }
                 });
-            });
-            list.querySelectorAll('.btn-review-delete').forEach(btn => {
-                btn.addEventListener('click', () => deleteReview(parseInt(btn.dataset.id)));
+                if (mediaListEl.children.length) mediaListEl.style.display = '';
+
+                if (isOwn) {
+                    const actionsEl = node.querySelector('.review-actions');
+                    actionsEl.style.display = '';
+                    actionsEl.querySelector('.btn-review-edit').addEventListener('click', () => {
+                        const d = reviewDataMap[r.id];
+                        openEditReview(r.id, d.rating, d.content);
+                    });
+                    actionsEl.querySelector('.btn-review-delete').addEventListener('click', () => deleteReview(r.id));
+                }
+
+                frag.appendChild(node);
             });
 
-            list.querySelectorAll('.review-media-img').forEach(img => {
-                img.addEventListener('click', () => openLightbox('image', img.dataset.url));
-            });
-            list.querySelectorAll('.review-media-video').forEach(vid => {
-                vid.addEventListener('loadedmetadata', () => { vid.currentTime = 0.1; });
-                vid.parentElement.addEventListener('click', () => openLightbox('video', vid.dataset.url));
-            });
+            list.appendChild(frag);
         }
     } catch (e) {
         // Ignored
@@ -461,65 +452,104 @@ window.openEditReview = function (id) {
     editEl.style.display = 'block';
     bodyEl.style.display = 'none';
 
-    let starsHTML = '';
-    for (let i = 1; i <= 5; i++) {
-        starsHTML += `<span class="${i <= d.rating ? 'selected' : ''}" data-val="${i}">★</span>`;
-    }
-
-    const existingMediaHTML = d.media.map(m => {
-        let preview = '';
-        if (m.type === 'image') preview = `<img src="${m.url}" class="edit-media-thumb" alt="">`;
-        else if (m.type === 'audio') preview = `<audio controls src="${m.url}" class="edit-media-audio"></audio>`;
-        else if (m.type === 'video') preview = `<video controls src="${m.url}" class="edit-media-video"></video>`;
-        return `<div class="edit-media-item" id="edit-media-item-${m.id}">
-            ${preview}
-            <button class="btn-review-delete edit-media-delete" data-media-id="${m.id}"></button>
-        </div>`;
-    }).join('');
-
-    editEl.innerHTML = `
-        <div class="star-select" id="edit-stars-${id}">${starsHTML}</div>
-        <textarea id="edit-text-${id}" class="edit-review-textarea">${d.content}</textarea>
-        ${d.media.length ? `<div class="edit-media-list" id="edit-media-list-${id}">${existingMediaHTML}</div>` : ''}
-        <label class="review-media-label">
-            Adauga fisiere noi
-            <input type="file" id="edit-files-${id}" multiple accept="image/*,audio/*,video/*">
-        </label>
-        <div class="edit-review-actions">
-            <button class="btn-dark" id="edit-save-${id}">Salveaza</button>
-            <button class="btn-review-cancel" id="edit-cancel-${id}">Anuleaza</button>
-        </div>
-    `;
-
+    editEl.innerHTML = '';
     let editRating = d.rating;
     editEl._editRating = editRating;
 
-    editEl.querySelectorAll(`#edit-stars-${id} span`).forEach(s => {
-        s.style.cssText = 'font-size:1.5rem;cursor:pointer;color:' + (parseInt(s.dataset.val) <= editRating ? 'var(--color-accent)' : '#ccc');
+    // Star select
+    const starWrap = document.createElement('div');
+    starWrap.className = 'star-select';
+    starWrap.id = `edit-stars-${id}`;
+    for (let i = 1; i <= 5; i++) {
+        const s = document.createElement('span');
+        s.dataset.val = i;
+        s.textContent = '★';
+        s.style.cssText = `font-size:1.5rem;cursor:pointer;color:${i <= editRating ? 'var(--color-accent)' : '#ccc'}`;
         s.addEventListener('click', () => {
-            editRating = parseInt(s.dataset.val);
-            editEl._editRating = editRating;
-            editEl.querySelectorAll(`#edit-stars-${id} span`).forEach(st => {
-                st.style.color = parseInt(st.dataset.val) <= editRating ? 'var(--color-accent)' : '#ccc';
+            editRating = i;
+            editEl._editRating = i;
+            starWrap.querySelectorAll('span').forEach(st => {
+                st.style.color = parseInt(st.dataset.val) <= i ? 'var(--color-accent)' : '#ccc';
             });
         });
-    });
+        starWrap.appendChild(s);
+    }
+    editEl.appendChild(starWrap);
 
-    editEl.querySelectorAll('.edit-media-delete').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const mid = parseInt(btn.dataset.mediaId);
-            try {
-                await api.delete(`/api/media/review/${mid}`);
-                document.getElementById(`edit-media-item-${mid}`)?.remove();
-                reviewDataMap[id].media = reviewDataMap[id].media.filter(m => m.id !== mid);
-            } catch (err) {
-                window.showToast(err.message || t('camping.delete_media_err'), 'error');
+    // Textarea
+    const textarea = document.createElement('textarea');
+    textarea.id = `edit-text-${id}`;
+    textarea.className = 'edit-review-textarea';
+    textarea.textContent = d.content;
+    editEl.appendChild(textarea);
+
+    // Existing media
+    if (d.media.length) {
+        const mediaList = document.createElement('div');
+        mediaList.className = 'edit-media-list';
+        mediaList.id = `edit-media-list-${id}`;
+        d.media.forEach(m => {
+            const item = cloneTemplate('tpl-edit-media-item').querySelector('.edit-media-item');
+            item.id = `edit-media-item-${m.id}`;
+            let preview;
+            if (m.type === 'image') {
+                preview = document.createElement('img');
+                preview.src = m.url;
+                preview.className = 'edit-media-thumb';
+                preview.alt = '';
+            } else if (m.type === 'audio') {
+                preview = document.createElement('audio');
+                preview.controls = true;
+                preview.src = m.url;
+                preview.className = 'edit-media-audio';
+            } else if (m.type === 'video') {
+                preview = document.createElement('video');
+                preview.controls = true;
+                preview.src = m.url;
+                preview.className = 'edit-media-video';
             }
+            if (preview) item.insertBefore(preview, item.firstChild);
+            const delBtn = item.querySelector('.edit-media-delete');
+            delBtn.dataset.mediaId = m.id;
+            delBtn.addEventListener('click', async () => {
+                try {
+                    await api.delete(`/api/media/review/${m.id}`);
+                    item.remove();
+                    reviewDataMap[id].media = reviewDataMap[id].media.filter(x => x.id !== m.id);
+                } catch (err) {
+                    window.showToast(err.message || t('camping.delete_media_err'), 'error');
+                }
+            });
+            mediaList.appendChild(item);
         });
-    });
+        editEl.appendChild(mediaList);
+    }
 
-    document.getElementById(`edit-save-${id}`).addEventListener('click', () => saveEditReview(id));
-    document.getElementById(`edit-cancel-${id}`).addEventListener('click', () => cancelEditReview(id));
+    // File input
+    const label = document.createElement('label');
+    label.className = 'review-media-label';
+    label.textContent = 'Adauga fisiere noi';
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = `edit-files-${id}`;
+    fileInput.multiple = true;
+    fileInput.accept = 'image/*,audio/*,video/*';
+    label.appendChild(fileInput);
+    editEl.appendChild(label);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.className = 'edit-review-actions';
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-dark';
+    saveBtn.textContent = 'Salveaza';
+    saveBtn.addEventListener('click', () => saveEditReview(id));
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-review-cancel';
+    cancelBtn.textContent = 'Anuleaza';
+    cancelBtn.addEventListener('click', () => cancelEditReview(id));
+    actions.append(saveBtn, cancelBtn);
+    editEl.appendChild(actions);
 };
 
 window.cancelEditReview = function (id) {
@@ -709,9 +739,15 @@ async function loadNearbyPOIs(map, lat, lng) {
             const pois = document.getElementById('nearby-pois');
             const section = document.getElementById('nearby-section');
             if (pois && section) {
-                pois.innerHTML = Object.values(groups)
-                    .map(g => `<span class="poi-chip">${g.emoji} ${g.label} <b>${g.count}</b></span>`)
-                    .join('');
+                pois.innerHTML = '';
+                Object.values(groups).forEach(g => {
+                    const chip = cloneTemplate('tpl-poi-chip').querySelector('.poi-chip');
+                    chip.textContent = `${g.emoji} ${g.label} `;
+                    const bold = document.createElement('b');
+                    bold.textContent = g.count;
+                    chip.appendChild(bold);
+                    pois.appendChild(chip);
+                });
                 section.style.display = 'block';
             }
         }

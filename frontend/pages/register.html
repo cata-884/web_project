@@ -20,6 +20,7 @@
 
         <div class="auth-form-container">
             <div class="auth-card">
+                <!-- html-validate-disable-next-line no-inline-style -->
                 <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
                     <span class="lang-toggle-container"></span>
                 </div>
@@ -38,6 +39,7 @@
                     </div>
 
                     <div class="form-group">
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <label for="fullname"><span data-i18n="register.fullname_label">Nume complet</span> <span
                                 style="font-weight:400; color:#999;"
                                 data-i18n="register.fullname_optional">(optional)</span></label>
@@ -56,12 +58,13 @@
                     </div>
 
                     <div class="form-group">
+                        <!-- html-validate-disable-next-line no-inline-style -->
                         <label for="password"><span data-i18n="register.pass_label">Parola</span> <span
                                 style="font-weight:400; color:#999;" data-i18n="register.pass_hint">(min. 8
                                 caractere)</span></label>
                         <div class="input-wrapper">
                             <input type="password" id="password" name="password" data-i18n-ph="register.pass_ph"
-                                placeholder="Creeaza o parola" required minlength="8">
+                                placeholder="Creeaza o parola" required minlength="8" autocomplete="new-password">
                         </div>
                     </div>
 
@@ -69,7 +72,7 @@
                         <label for="confirm-password" data-i18n="register.confirm_label">Confirma parola</label>
                         <div class="input-wrapper">
                             <input type="password" id="confirm-password" name="confirm-password"
-                                data-i18n-ph="register.confirm_ph" placeholder="Repeta parola" required>
+                                data-i18n-ph="register.confirm_ph" placeholder="Repeta parola" required autocomplete="new-password">
                         </div>
                     </div>
 
@@ -79,6 +82,7 @@
                                 data-i18n="register.terms_link">Termenii si Conditiile</a></label>
                     </div>
 
+                    <!-- html-validate-disable-next-line no-inline-style -->
                     <div id="register-error"
                         style="display:none; color:#EF6A00; font-size:14px; margin-bottom:10px; padding:8px 12px; background:rgba(239,106,0,.08); border-radius:6px;">
                     </div>

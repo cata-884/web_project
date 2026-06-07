@@ -490,11 +490,11 @@
 
 @keyframes am-fade {
     from {
-        opacity: 0%;
+        opacity: 0;
     }
 
     to {
-        opacity: 100%;
+        opacity: 1;
     }
 }
 
@@ -511,12 +511,12 @@
 @keyframes am-up {
     from {
         transform: translateY(18px);
-        opacity: 0%;
+        opacity: 0;
     }
 
     to {
         transform: translateY(0);
-        opacity: 100%;
+        opacity: 1;
     }
 }
 
@@ -822,7 +822,7 @@
 }
 
 .btn-stats-pdf:hover {
-    opacity: 85%;
+    opacity: 0.85;
 }
 
 
@@ -1189,7 +1189,7 @@
     font-size: 1.8rem;
     display: block;
     margin-bottom: 8px;
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .import-drop-zone p {
@@ -1212,11 +1212,11 @@
 }
 
 .btn-import:disabled {
-    opacity: 45%;
+    opacity: 0.45;
     cursor: not-allowed;
 }
 
-.btn-import:not(:disabled):hover { opacity: 85%; }
+.btn-import:not(:disabled):hover { opacity: 0.85; }
 
 .import-result {
     font-size: 0.83rem;

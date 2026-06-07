@@ -121,13 +121,14 @@ foreach ($routes as $pattern => $handler) {
 
     /*
         $matches[0] va fi intregul text potrivit: '/api/campings/45'
-        $matches[1] va fi doar bucata prinsa in paranteze (\d+), adica ID-ul: '45'
+        $matches[1] - 45'
+        $matches[2] - active
     */
     if (preg_match('#^' . $routePath . '$#', $uri, $matches)) {
         [$class, $action] = $handler;
         try {
             $controller = new $class();
-            $controller->$action(...array_slice($matches, 1));
+            $controller->$action(...array_slice($matches, 1)); //'45, active'
         } catch (ApiException $e) {
             http_response_code($e->getStatus());
             header('Content-Type: application/json; charset=utf-8');
