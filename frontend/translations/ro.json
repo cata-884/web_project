@@ -119,6 +119,7 @@
     "no_account": "Nu ai cont?",
     "create": "Creeaza un cont",
     "loading": "Se conecteaza...",
+    "error_email": "Adresa de email nu este valida.",
     "error_default": "Eroare la autentificare. Incearca din nou.",
     "error_oauth": "Eroare Google OAuth: "
   },
@@ -145,6 +146,7 @@
     "have_account": "Ai deja cont?",
     "loading": "Se creeaza contul...",
     "error_username": "Username-ul trebuie sa aiba minim 3 caractere.",
+    "error_email": "Adresa de email nu este valida.",
     "error_pass_short": "Parola trebuie sa aiba minim 8 caractere.",
     "error_pass_match": "Parolele nu se potrivesc.",
     "error_terms": "Trebuie sa accepti Termenii si Conditiile.",

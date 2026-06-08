@@ -39,8 +39,10 @@ class ImportController extends Controller
     {
         $handle = fopen($path, 'r');
         if (!$handle) return null;
+        //consumam cele 3 caractere, in caz contrar o luam de la inceput
         $bom = fread($handle, 3);
         if ($bom !== "\xEF\xBB\xBF") rewind($handle);
+        //cream lista de atribute
         $headers = fgetcsv($handle);
         if (!$headers) { fclose($handle); return null; }
         $headers = array_map('trim', $headers);

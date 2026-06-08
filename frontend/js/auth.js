@@ -30,6 +30,15 @@
         const password = document.getElementById('password').value;
 
         errEl.style.display = 'none';
+
+        const isEmail = identifier.includes('@');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (isEmail && !emailPattern.test(identifier)) {
+            errEl.textContent = t('auth.error_email');
+            errEl.style.display = 'block';
+            return;
+        }
+
         btn.disabled = true;
         btn.textContent = t('auth.loading');
 
@@ -37,11 +46,12 @@
             const body = {
                 password
             };
-            if (identifier.includes('@')) {
+            if (isEmail) {
                 body.email = identifier;
             } else {
                 body.username = identifier;
             }
+            /** @type {{ token: string, user: object }} */
             const data = await api.post('/api/auth/login', body);
             localStorage.setItem('cat_token', data.token);
             localStorage.setItem('cat_user', JSON.stringify(data.user));

@@ -1,3 +1,5 @@
+/** @typedef {import('./types.js').CampingListRow} CampingListRow */
+
 let currentPage = 1;
 const limit = 12;
 let activeZones = [];
@@ -7,7 +9,7 @@ function debounce(fn, delay) {
     return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (localStorage.getItem('cat_token')) {
         const authLink = document.querySelector('.nav-group a[href="auth.html"]');
         const hartaLink = document.querySelector('.nav-group a[href="map.html"]');
@@ -25,16 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnNext = document.getElementById('btn-next');
     const searchInput = document.getElementById('filter-search');
 
-    filtersForm.addEventListener('submit', (e) => {
+    filtersForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         currentPage = 1;
-        loadCampings();
+        await loadCampings();
     });
 
     if (searchInput) {
-        searchInput.addEventListener('input', debounce(() => {
+        searchInput.addEventListener('input', debounce(async () => {
             currentPage = 1;
-            loadCampings();
+            await loadCampings();
         }, 400));
     }
 
@@ -45,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const orig = btnRecommend.textContent;
             btnRecommend.textContent = '...';
             try {
+                /** @type {{ camping_types: string[], travel_styles: string[], preferred_zones: string[] }} */
                 const prefs = await api.get('/api/preferences');
 
                 // aplica tipuri de camping
@@ -69,19 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // la orice submit manual, resetam zonele active din recomandare
     filtersForm.addEventListener('submit', () => { activeZones = []; });
 
-    btnPrev.addEventListener('click', () => {
+    btnPrev.addEventListener('click', async () => {
         if (currentPage > 1) {
             currentPage--;
-            loadCampings();
+            await loadCampings();
         }
     });
 
-    btnNext.addEventListener('click', () => {
+    btnNext.addEventListener('click', async () => {
         currentPage++;
-        loadCampings();
+        await loadCampings();
     });
 
-    loadCampings();
+    await loadCampings();
 });
 
 async function loadCampings() {
@@ -103,8 +106,8 @@ async function loadCampings() {
 
     // Build URLSearchParams
     const params = new URLSearchParams();
-    params.append('limit', limit);
-    params.append('offset', (currentPage - 1) * limit);
+    params.append('limit', String(limit));
+    params.append('offset', String((currentPage - 1) * limit));
 
     if (search) params.append('search', search);
     if (region) params.append('region', region);
@@ -115,6 +118,7 @@ async function loadCampings() {
     activeZones.forEach(z => params.append('zone[]', z));
 
     try {
+        /** @type {{ total?: number, campings?: CampingListRow[] }} */
         const response = await api.get(`/api/campings?${params.toString()}`);
         renderCampings(response);
     } catch (err) {
@@ -127,6 +131,7 @@ async function loadCampings() {
     }
 }
 
+/** @param {CampingListRow} c */
 function renderCampingCard(c) {
     const node = cloneTemplate('tpl-camping-card');
     const img = node.querySelector('.card-image');

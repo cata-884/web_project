@@ -1,3 +1,14 @@
+/** @type {import('leaflet')} */
+const L = window.L;
+
+const FALLBACK_IMG = '../assets/About1.jpg';
+
+document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (img instanceof HTMLImageElement && img.dataset.fallback && img.src !== img.dataset.fallback) {
+        img.src = img.dataset.fallback;
+    }
+}, true);
 
 const TYPE_EMOJI = {
     tent: '️',
@@ -17,7 +28,9 @@ const TYPE_LABEL = {
 
 let map;
 let clusterGroup;
+/** @type {import('./types.js').MapMarker[]} */
 let allMarkers = [];
+/** @type {import('./types.js').MapMarker[]} */
 let filteredMarkers = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,7 +54,7 @@ function initMap() {
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    clusterGroup = L.markerClusterGroup({
+    clusterGroup = (L).markerClusterGroup({
         maxClusterRadius: 50,
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
@@ -71,6 +84,7 @@ async function fetchMarkers() {
     showResultsLoading();
 
     try {
+        /** @type {{ markers?: import('./types.js').MapMarker[] }} */
         const data = await api.get(`/api/campings/map?bbox=${bbox}`);
         allMarkers = data.markers || [];
         applyFiltersAndRender();
@@ -98,8 +112,8 @@ function applyFiltersAndRender() {
     filteredMarkers = allMarkers.filter(m => {
         if (types.length > 0 && !types.includes(m.type)) return false;
         if (parseFloat(m.price) > maxPrice) return false;
-        if (minRating > 0 && (parseFloat(m.rating) || 0) < minRating) return false;
-        return true;
+        return !(minRating > 0 && (parseFloat(m.rating) || 0) < minRating);
+
     });
 
     renderClusterMarkers();
@@ -120,14 +134,13 @@ function renderClusterMarkers() {
             popupAnchor: [0, -20]
         });
 
-        const fallbackImg = '../assets/About1.jpg';
-        const imgSrc = m.image_url || fallbackImg;
-        const ratingStr = m.rating ? ` ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
-        const priceStr = m.price ? `${parseFloat(m.price).toFixed(0)} RON / noapte` : '';
+        const imgSrc = m.image_url || FALLBACK_IMG;
+        const ratingStr = m.rating ? ` ${m.rating.toFixed(1)}` : 'Nou';
+        const priceStr = m.price ? `${m.price.toFixed(0)} RON / noapte` : '';
 
         const popupContent = `
             <div class="camping-popup">
-                <img src="${imgSrc}" alt="${m.name}" onerror="this.src='${fallbackImg}'">
+                <img src="${imgSrc}" alt="${m.name}" data-fallback="${FALLBACK_IMG}">
                 <h4>${m.name}</h4>
                 <div class="popup-meta">
                     <span>${emoji} ${TYPE_LABEL[m.type] || m.type}</span>
@@ -138,7 +151,7 @@ function renderClusterMarkers() {
             </div>
         `;
 
-        const marker = L.marker([parseFloat(m.lat), parseFloat(m.lng)], { icon })
+        const marker = L.marker([m.lat, m.lng], { icon })
             .bindPopup(popupContent, { maxWidth: 260, minWidth: 220 });
 
         marker._campingData = m;
@@ -151,7 +164,7 @@ function renderResultsList() {
     const countEl = document.getElementById('visible-count');
 
     const visibleItems = filteredMarkers.slice(0, 20);
-    countEl.textContent = filteredMarkers.length;
+    countEl.textContent = String(filteredMarkers.length);
 
     if (visibleItems.length === 0) {
         listEl.innerHTML = `
@@ -163,23 +176,21 @@ function renderResultsList() {
         return;
     }
 
-    const fallbackImg = '../assets/About1.jpg';
-
     listEl.innerHTML = visibleItems.map(m => {
         const emoji = TYPE_EMOJI[m.type] || '';
-        const ratingStr = m.rating ? ` ${parseFloat(m.rating).toFixed(1)}` : 'Nou';
-        const imgSrc = m.image_url || fallbackImg;
+        const ratingStr = m.rating ? ` ${m.rating.toFixed(1)}` : 'Nou';
+        const imgSrc = m.image_url || FALLBACK_IMG;
 
         return `
             <li class="result-card" data-id="${m.id}" data-lat="${m.lat}" data-lng="${m.lng}">
-                <img src="${imgSrc}" alt="${m.name}" class="result-card-img" onerror="this.src='${fallbackImg}'">
+                <img src="${imgSrc}" alt="${m.name}" class="result-card-img" data-fallback="${FALLBACK_IMG}">
                 <div class="result-card-info">
                     <h4>${m.name}</h4>
                     <div class="result-card-meta">
                         <span class="type-emoji">${emoji}</span>
                         <span class="rating-stars">${ratingStr}</span>
                     </div>
-                    <div class="result-card-price">${m.price ? parseFloat(m.price).toFixed(0) + ' RON / noapte' : ''}</div>
+                    <div class="result-card-price">${m.price ? m.price.toFixed(0) + ' RON / noapte' : ''}</div>
                 </div>
             </li>
         `;
@@ -196,7 +207,7 @@ function renderResultsList() {
 
             setTimeout(() => {
                 clusterGroup.eachLayer(layer => {
-                    if (layer._campingData && layer._campingData.id == id) {
+                    if (layer._campingData && layer._campingData.id === id) {
                         clusterGroup.zoomToShowLayer(layer, () => {
                             layer.openPopup();
                         });

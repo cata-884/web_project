@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!localStorage.getItem('cat_token')) return;
 
     try {
+        /** @type {{ application?: object }} */
         const data = await api.get('/api/organizers/my-application');
         if (data?.application) {
             const btn = document.querySelector('.nav-item[data-tab="partner"]');

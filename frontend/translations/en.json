@@ -119,6 +119,7 @@
     "no_account": "Don't have an account?",
     "create": "Create an account",
     "loading": "Signing in...",
+    "error_email": "Invalid email address.",
     "error_default": "Authentication error. Please try again.",
     "error_oauth": "Google OAuth error: "
   },
@@ -145,6 +146,7 @@
     "have_account": "Already have an account?",
     "loading": "Creating account...",
     "error_username": "Username must be at least 3 characters.",
+    "error_email": "Invalid email address.",
     "error_pass_short": "Password must be at least 8 characters.",
     "error_pass_match": "Passwords do not match.",
     "error_terms": "You must accept the Terms and Conditions.",

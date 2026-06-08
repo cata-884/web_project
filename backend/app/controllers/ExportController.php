@@ -45,7 +45,9 @@ class ExportController extends Controller
         header('Content-Disposition: attachment; filename="' . $name . '_' . date('Y-m-d') . '.csv"');
         header('Cache-Control: no-cache, no-store');
         $out = fopen('php://output', 'w');
+        //flag pentru diacritice
         fwrite($out, "\xEF\xBB\xBF");
+        //extrage id, nume, slug, etc etc
         fputcsv($out, array_keys($rows[0]));
         foreach ($rows as $row) fputcsv($out, array_values($row));
         fclose($out);

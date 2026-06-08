@@ -34,7 +34,11 @@ abstract class Controller
 
     private function extractBearerToken(): ?string
     {
+        //problema specifica apache-ului. mod_rewrite cauzeaza ca bearar sa nu supravietuiasca in http authorization
+        //dar supravietuieste la redirect http authorization
         $header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+        //daca nu exista headere in variabile globale, apache nu e configurat corect
+        //in cazul dat apelăm la functia nativa Apache ca plan de fallback
         if (!$header && function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
             $header  = $headers['Authorization'] ?? $headers['authorization'] ?? '';
@@ -43,6 +47,7 @@ abstract class Controller
     }
 
     #[NoReturn]
+    //mixed = string|int|float|bool|array|object|null|callable|resource
     protected function json(mixed $data, int $status = 200): void
     {
         http_response_code($status);

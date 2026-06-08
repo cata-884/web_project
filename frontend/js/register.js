@@ -22,6 +22,12 @@
             errEl.style.display = 'block';
             return;
         }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            errEl.textContent = t('register.error_email');
+            errEl.style.display = 'block';
+            return;
+        }
         if (password.length < 8) {
             errEl.textContent = t('register.error_pass_short');
             errEl.style.display = 'block';
@@ -49,6 +55,7 @@
             };
             if (fullname) body.full_name = fullname;
 
+            /** @type {{ token: string, user: object }} */
             const data = await api.post('/api/auth/register', body);
             localStorage.setItem('cat_token', data.token);
             localStorage.setItem('cat_user', JSON.stringify(data.user));

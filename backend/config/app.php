@@ -1,6 +1,8 @@
 <?php
 const BASE_URL = '/cat/public';
 
+require_once ROOT . SEP . 'vendor' . SEP . 'autoload.php';
+
 // Incarca .env daca variabilele nu sunt deja in mediu (Apache nu citeste .env automat)
 // in mediul de executie al mediului php curent
 (function () {

@@ -56,6 +56,7 @@ class CampingDTO
             'capacity'        => isset($r['capacity']) ? (int)$r['capacity'] : null,
             'rating_avg'      => isset($r['rating_avg']) ? (float)$r['rating_avg'] : null,
             'rating_count'    => (int)($r['rating_count'] ?? 0),
+            'cover_url'       => $r['cover_url'] ?? null,
             'created_at'      => $r['created_at'] ?? null,
         ];
     }

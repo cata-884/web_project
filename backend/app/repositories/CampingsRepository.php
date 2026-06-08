@@ -8,7 +8,8 @@ class CampingsRepository extends Repository
         $offset = max(0, (int)($filters['offset'] ?? 0));
 
         $sql = "SELECT id, name, slug, type, region, latitude, longitude,
-                       price_per_night, capacity, rating_avg, rating_count, created_at
+                       price_per_night, capacity, rating_avg, rating_count, created_at,
+                       (SELECT url FROM camping_media WHERE camping_id = campings.id ORDER BY created_at LIMIT 1) AS cover_url
                 FROM campings WHERE $where
                 ORDER BY rating_avg DESC NULLS LAST, created_at DESC
                 LIMIT $limit OFFSET $offset";
