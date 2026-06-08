@@ -22,7 +22,8 @@ class StatsRepository extends Repository
     {
         $tp = BookingsRepository::totalPriceExpr();
         return (float) $this->pdo->query(
-            "SELECT COALESCE(SUM($tp), 0) FROM bookings b JOIN campings c ON c.id = b.camping_id WHERE b.status = 'confirmed'"
+            "SELECT COALESCE(SUM($tp), 0) FROM bookings b JOIN campings c ON c.id = b.camping_id
+             WHERE b.status IN ('confirmed', 'completed') AND b.check_out <= CURRENT_DATE"
         )->fetchColumn();
     }
 
