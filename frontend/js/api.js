@@ -14,9 +14,18 @@ const api = {
         const response = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
 
         if (response.status === 401) {
-            localStorage.removeItem('cat_token');
-            localStorage.removeItem('cat_user');
-            if (!window.location.pathname.includes('auth.html')) {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data   = isJson ? await response.json() : null;
+            if (window.location.pathname.includes('auth.html')) {
+                const err = new Error((data && data.error) || response.statusText);
+                err.response = response;
+                err.data     = data;
+                throw err;
+            }
+
+            if (token) {
+                localStorage.removeItem('cat_token');
+                localStorage.removeItem('cat_user');
                 /*
                     /frontend/dashboard/settings => ['frontend', 'dashboard', 'settings']).
                  */

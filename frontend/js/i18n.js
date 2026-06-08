@@ -72,7 +72,7 @@
         document.querySelectorAll('.lang-toggle-container').forEach(container => {
             if (container.querySelector('.lang-toggle-btn')) return;
             const btn = document.createElement('button');
-            btn.className = 'lang-toggle-btn';
+            btn.className = container.classList.contains('dark') ? 'lang-toggle-btn dark' : 'lang-toggle-btn';
             btn.type = 'button';
             container.appendChild(btn);
         });
@@ -103,6 +103,6 @@
         applyAll();
     });
 
-    window.i18n = { t, setLang, getLang };
+    window.i18n = { t };
     window.t = t;
 })();
