@@ -1,3 +1,6 @@
+/** @typedef {import('./types.js').AdminCampingRow} AdminCampingRow */
+/** @typedef {import('./types.js').AdminUserRow} AdminUserRow */
+
 let adminCampingFilter = '';
 let adminUserOffset = 0;
 const ADMIN_USER_LIMIT = 20;
@@ -11,11 +14,6 @@ function STATUS_META() {
         '1':  { label: t('admin.status_label_approved'), cls: 'a-badge-1',  card: 'st-1'  },
         '2':  { label: t('admin.status_label_feedback'), cls: 'a-badge-2',  card: 'st-2'  },
     };
-}
-
-function esc(s) {
-    if (s == null) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function adminMsg(container, cls, text) {
@@ -38,6 +36,7 @@ async function loadAdminCampings(status = '') {
 
     try {
         const qs = status !== '' ? `?status=${encodeURIComponent(status)}` : '';
+        /** @type {{ campings?: AdminCampingRow[], total?: number }} */
         const res = await api.get(`/api/admin/campings${qs}`);
 
         const campings = res?.campings ?? [];
@@ -56,6 +55,7 @@ async function loadAdminCampings(status = '') {
     }
 }
 
+/** @param {AdminCampingRow} c */
 function renderCampingCard(c) {
     const meta = STATUS_META();
     const st = meta[String(c.approval_status)] ?? meta['0'];
@@ -154,7 +154,7 @@ async function adminCampingAction(id, action) {
     if (!ok) return;
     try {
         await api.post(`/api/admin/campings/${id}/${action}`, {});
-        loadAdminCampings(adminCampingFilter);
+        await loadAdminCampings(adminCampingFilter);
     } catch (err) {
         showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
     }
@@ -180,6 +180,7 @@ async function loadAdminUsers(reset = false) {
         if (search) qs += `&search=${encodeURIComponent(search)}`;
         if (banned) qs += `&banned=${banned}`;
 
+        /** @type {{ users?: AdminUserRow[], total?: number }} */
         const res = await api.get(`/api/admin/users${qs}`);
         const users = res?.users ?? [];
         const total = res?.total ?? 0;
@@ -211,6 +212,7 @@ async function loadAdminUsers(reset = false) {
     }
 }
 
+/** @param {AdminUserRow} u */
 function renderUserCard(u) {
     const initial = (u.username ?? '?')[0].toUpperCase();
     const roleClass = { user: 'a-role-user', organizer: 'a-role-organizer', admin: 'a-role-admin' }[u.role] ?? 'a-role-user';
@@ -272,7 +274,7 @@ async function adminUnbanUser(userId) {
     try {
         await api.post(`/api/admin/users/${userId}/unban`, {});
         showToast(t('admin.unban_ok'), 'success');
-        loadAdminUsers(true);
+        await loadAdminUsers(true);
     } catch (err) {
         showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
     }
@@ -284,6 +286,7 @@ async function loadAdminStats() {
     adminMsg(container, 'admin-loading', t('admin.loading'));
 
     try {
+        /** @type {{ bookings_by_status?: Record<string, number>, nr_users?: number, nr_campings?: number, nr_pending?: number, total_revenue?: number, top_regions?: { region: string, cnt: number }[] }} */
         const d = await api.get('/api/admin/stats/summary');
         if (!d) return;
         const bookings = d.bookings_by_status ?? {};
@@ -334,7 +337,7 @@ async function loadAdminStats() {
         showToast(t('admin.stats_err'), 'error');
     }
 
-    loadAdminChart();
+    await loadAdminChart();
 }
 
 
@@ -345,7 +348,9 @@ async function loadAdminMessages() {
     adminMsg(grid, 'admin-loading', 'Se încarcă mesajele...');
 
     try {
+        /** @type {{ messages?: { name: string, email: string, phone: string|null, message: string, created_at: string|null }[] }} */
         const res = await api.get('/api/admin/messages');
+        /** @type {{ name: string, email: string, phone: string|null, message: string, created_at: string|null }[]} */
         const messages = res?.messages ?? [];
 
         if (messages.length > 0) {
@@ -397,9 +402,12 @@ async function loadAdminChart() {
         const res = await fetch(`/cat/public/api/admin/stats/chart.svg?type=${encodeURIComponent(type)}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const svg = await res.text();
-        container.innerHTML = svg;
+        if (!res.ok) {
+            adminMsg(container, 'admin-empty', t('admin.err_prefix') + `HTTP ${res.status}`);
+            container.querySelector('.admin-empty').style.color = 'var(--ar)';
+            return;
+        }
+        container.innerHTML = await res.text();
     } catch (err) {
         adminMsg(container, 'admin-empty', t('admin.err_prefix') + (err.message ?? ''));
         container.querySelector('.admin-empty').style.color = 'var(--ar)';
@@ -440,17 +448,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Incarca datele cand tab-ul admin e deschis
-    document.getElementById('admin-nav-btn')?.addEventListener('click', () => {
+    document.getElementById('admin-nav-btn')?.addEventListener('click', async () => {
         // reseteaza la primul panel
         document.querySelectorAll('.admin-panel-tab').forEach((b, i) => b.classList.toggle('active', i === 0));
         document.getElementById('admin-panel-campings').style.display = 'block';
         document.getElementById('admin-panel-users').style.display = 'none';
-        loadAdminCampings('');
+        await loadAdminCampings('');
     });
 
  // Sub-nav (Cereri Camping / Utilizatori / Statistici / Mesaje)
     document.querySelectorAll('.admin-panel-tab').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             //Resetam active pe butoane
             document.querySelectorAll('.admin-panel-tab').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -464,19 +472,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             //Apelam functia de incarcare corespunzatoare (O SINGURA DATA!)
             const target = btn.dataset.panel;
-            if (target === 'users') loadAdminUsers(true);
-            if (target === 'stats') loadAdminStats();
-            if (target === 'messages') loadAdminMessages();
+            if (target === 'users') await loadAdminUsers(true);
+            if (target === 'stats') await loadAdminStats();
+            if (target === 'messages') await loadAdminMessages();
         });
     });
 
     // Filtre status campings
     document.querySelectorAll('.status-filter').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             document.querySelectorAll('.status-filter').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             adminCampingFilter = btn.dataset.status ?? '';
-            loadAdminCampings(adminCampingFilter);
+            await loadAdminCampings(adminCampingFilter);
         });
     });
 
@@ -498,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await api.post(`/api/admin/campings/${pendingFeedbackId}/reject-feedback`, { feedback: text });
             document.getElementById('admin-feedback-modal').style.display = 'none';
             showToast(t('admin.feedback_ok'), 'success');
-            loadAdminCampings(adminCampingFilter);
+            await loadAdminCampings(adminCampingFilter);
         } catch (err) {
             showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
         }
@@ -519,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await api.post(`/api/admin/users/${pendingBanId}/ban`, { reason, days });
             document.getElementById('admin-ban-modal').style.display = 'none';
             showToast(t('admin.ban_ok'), 'success');
-            loadAdminUsers(true);
+            await loadAdminUsers(true);
         } catch (err) {
             showToast(t('admin.err_prefix') + (err.message ?? t('admin.err_generic')), 'error');
         }
@@ -602,6 +610,7 @@ async function adminImport() {
             headers: { Authorization: 'Bearer ' + token },
             body: formData,
         });
+        /** @type {{ inserted?: number, total?: number, error?: string, errors?: { row: number, error: string }[] }} */
         const data = await resp.json();
 
         resultEl.innerHTML = '';

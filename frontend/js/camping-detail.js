@@ -1,7 +1,14 @@
+/** @type {import('leaflet')} */
+const L = window.L;
+
 let currentCamping = null;
 let currentPricePerNight = 0;
 let wishlistSectionId = null;
 let campingInWishlist = false;
+
+function reviewMediaUrl(id) {
+    return `${API_BASE}/api/media/review/${id}`;
+}
 
 function openLightbox(type, url) {
     const lb = document.getElementById('media-lightbox');
@@ -56,6 +63,26 @@ const TYPE_LABELS = {
     wild: 'Sălbatic',
 };
 
+function renderLoadError(slug) {
+    const main = document.getElementById('detail-main');
+    main.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'padding:40px;text-align:center;';
+    const h2 = document.createElement('h2');
+    h2.style.color = '#EF6A00';
+    h2.textContent = t('camping.load_err');
+    const p = document.createElement('p');
+    p.style.cssText = 'color:#666;margin-top:8px;';
+    p.textContent = `Camping-ul "${slug}" nu există sau nu este public.`;
+    const a = document.createElement('a');
+    a.href = 'campings.html';
+    a.style.cssText = 'display:inline-block;margin-top:16px;';
+    a.className = 'btn-dark';
+    a.textContent = 'Înapoi la lista de campinguri';
+    wrap.append(h2, p, a);
+    main.appendChild(wrap);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     //  Logica existenta de meniu
     if (localStorage.getItem('cat_token')) {
@@ -80,12 +107,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+        /** @type {{ camping?: import('./types.js').CampingDetail } | null} */
         const res = id
             ? await api.get(`/api/campings/${id}`)
             : await api.get(`/api/campings/by-slug/${encodeURIComponent(slug)}`);
-        currentCamping = res.camping;
+        currentCamping = res?.camping ?? null;
 
-        if (!currentCamping) throw new Error("Camping not found");
+        if (!currentCamping) {
+            renderLoadError(slug);
+            return;
+        }
 
         //  MAGIE PENTRU SEO: Setam titlul si meta descrierea dinamic
         document.title = `${currentCamping.name} | CaT Camping Info`;
@@ -100,23 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         checkReviewEligibility();
 
     } catch (err) {
-        const main = document.getElementById('detail-main');
-        main.innerHTML = '';
-        const wrap = document.createElement('div');
-        wrap.style.cssText = 'padding:40px;text-align:center;';
-        const h2 = document.createElement('h2');
-        h2.style.color = '#EF6A00';
-        h2.textContent = t('camping.load_err');
-        const p = document.createElement('p');
-        p.style.cssText = 'color:#666;margin-top:8px;';
-        p.textContent = `Camping-ul "${slug}" nu există sau nu este public.`;
-        const a = document.createElement('a');
-        a.href = 'campings.html';
-        a.style.cssText = 'display:inline-block;margin-top:16px;';
-        a.className = 'btn-dark';
-        a.textContent = '← Înapoi la lista de campinguri';
-        wrap.append(h2, p, a);
-        main.appendChild(wrap);
+        renderLoadError(slug);
     }
 });
 function renderCampingDetails() {
@@ -209,11 +224,13 @@ async function initWishlistBtn() {
     btn.textContent = '...';
 
     try {
+        /** @type {{ sections?: import('./types.js').SectionRow[] }} */
         const data = await api.get('/api/sections');
         const favSection = (data?.sections || []).find(s => s.name === 'Favorite');
 
         if (favSection) {
             wishlistSectionId = favSection.id;
+            /** @type {{ campings?: { id: number }[] }} */
             const campData = await api.get(`/api/sections/${favSection.id}/campings`);
             campingInWishlist = (campData?.campings || []).some(c => c.id === currentCamping.id);
         }
@@ -246,6 +263,7 @@ window.toggleWishlist = async function () {
             campingInWishlist = false;
         } else {
             if (!wishlistSectionId) {
+                /** @type {{ section: { id: number } }} */
                 const created = await api.post('/api/sections', { name: 'Favorite', color: '#EF6A00' });
                 wishlistSectionId = created.section.id;
             }
@@ -337,6 +355,7 @@ async function checkReviewEligibility() {
     }
 
     try {
+        /** @type {{ reviews?: import('./types.js').ReviewRow[] }} */
         const res = await api.get(`/api/campings/${currentCamping.id}/reviews`);
         const userRaw = localStorage.getItem('cat_user');
         const userId = userRaw ? JSON.parse(userRaw).id : null;
@@ -361,6 +380,7 @@ const reviewDataMap = {};
 
 async function loadReviews() {
     try {
+        /** @type {{ reviews?: import('./types.js').ReviewRow[] }} */
         const res = await api.get(`/api/campings/${currentCamping.id}/reviews`);
         const list = document.getElementById('reviews-list');
         const userRaw = localStorage.getItem('cat_user');
@@ -380,7 +400,7 @@ async function loadReviews() {
                 node.querySelector('.review-body').id   = `review-body-${r.id}`;
                 node.querySelector('.review-edit-form').id = `review-edit-${r.id}`;
 
-                node.querySelector('.review-author').textContent = r.username || 'Utilizator';
+                node.querySelector('.review-author').textContent = r.author?.username || 'Utilizator';
                 node.querySelector('.review-rating').textContent = `⭐ ${r.rating}`;
 
                 if (r.content) {
@@ -391,30 +411,31 @@ async function loadReviews() {
 
                 const mediaListEl = node.querySelector('.rv-media');
                 (r.media || []).forEach(m => {
+                    const url = reviewMediaUrl(m.id);
                     if (m.type === 'image') {
                         const img = document.createElement('img');
-                        img.src = m.url;
+                        img.src = url;
                         img.className = 'review-media-img';
                         img.alt = 'media';
-                        img.dataset.url = m.url;
-                        img.addEventListener('click', () => openLightbox('image', m.url));
+                        img.dataset.url = url;
+                        img.addEventListener('click', () => openLightbox('image', url));
                         mediaListEl.appendChild(img);
                     } else if (m.type === 'video') {
                         const wrap = document.createElement('div');
                         wrap.className = 'review-media-video-wrap';
                         const vid = document.createElement('video');
-                        vid.src = m.url;
+                        vid.src = url;
                         vid.className = 'review-media-video';
-                        vid.dataset.url = m.url;
+                        vid.dataset.url = url;
                         vid.preload = 'metadata';
                         vid.muted = true;
                         vid.addEventListener('loadedmetadata', () => { vid.currentTime = 0.1; });
-                        wrap.addEventListener('click', () => openLightbox('video', m.url));
+                        wrap.addEventListener('click', () => openLightbox('video', url));
                         wrap.appendChild(vid);
                         mediaListEl.appendChild(wrap);
                     } else if (m.type === 'audio') {
                         const aud = document.createElement('audio');
-                        aud.src = m.url;
+                        aud.src = url;
                         aud.controls = true;
                         aud.className = 'review-media-audio';
                         mediaListEl.appendChild(aud);
@@ -462,7 +483,7 @@ window.openEditReview = function (id) {
     starWrap.id = `edit-stars-${id}`;
     for (let i = 1; i <= 5; i++) {
         const s = document.createElement('span');
-        s.dataset.val = i;
+        s.dataset.val = String(i);
         s.textContent = '★';
         s.style.cssText = `font-size:1.5rem;cursor:pointer;color:${i <= editRating ? 'var(--color-accent)' : '#ccc'}`;
         s.addEventListener('click', () => {
@@ -491,21 +512,22 @@ window.openEditReview = function (id) {
         d.media.forEach(m => {
             const item = cloneTemplate('tpl-edit-media-item').querySelector('.edit-media-item');
             item.id = `edit-media-item-${m.id}`;
+            const url = reviewMediaUrl(m.id);
             let preview;
             if (m.type === 'image') {
                 preview = document.createElement('img');
-                preview.src = m.url;
+                preview.src = url;
                 preview.className = 'edit-media-thumb';
                 preview.alt = '';
             } else if (m.type === 'audio') {
                 preview = document.createElement('audio');
                 preview.controls = true;
-                preview.src = m.url;
+                preview.src = url;
                 preview.className = 'edit-media-audio';
             } else if (m.type === 'video') {
                 preview = document.createElement('video');
                 preview.controls = true;
-                preview.src = m.url;
+                preview.src = url;
                 preview.className = 'edit-media-video';
             }
             if (preview) item.insertBefore(preview, item.firstChild);
@@ -573,7 +595,7 @@ window.saveEditReview = async function (id) {
             }
         }
 
-        loadReviews();
+        await loadReviews();
     } catch (err) {
         window.showToast(err.message || t('camping.save_review_err'), 'error');
     }
@@ -584,8 +606,8 @@ window.deleteReview = async function (id) {
     if (!confirmed) return;
     try {
         await api.delete(`/api/reviews/${id}`);
-        loadReviews();
-        checkReviewEligibility();
+        await loadReviews();
+        await checkReviewEligibility();
     } catch (err) {
         window.showToast(err.message || t('camping.delete_review_err'), 'error');
     }
@@ -598,9 +620,13 @@ async function uploadMediaFiles(reviewId, files) {
         const fd = new FormData();
         fd.append('file', file);
         try {
+            /** @type {Record<string, string>} */
+            const headers = {};
+            if (token) headers.Authorization = `Bearer ${token}`;
+
             const res = await fetch(`/cat/public/api/reviews/${reviewId}/media`, {
                 method: 'POST',
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                headers,
                 body: fd,
             });
             if (!res.ok) {
@@ -625,6 +651,7 @@ window.submitReview = async function () {
     }
 
     try {
+        /** @type {{ review?: { id: number } }} */
         const res = await api.post(`/api/campings/${currentCamping.id}/reviews`, {
             rating: parseInt(rating),
             content: comment,
@@ -644,7 +671,7 @@ window.submitReview = async function () {
     }
 };
 
-function initMiniMap() {
+async function initMiniMap() {
     const mapEl = document.getElementById('camping-map');
     if (!mapEl || !currentCamping) return;
 
@@ -673,7 +700,7 @@ function initMiniMap() {
 
     setTimeout(() => { miniMap.invalidateSize(); }, 200);
 
-    loadNearbyPOIs(miniMap, lat, lng);
+    await loadNearbyPOIs(miniMap, lat, lng);
 }
 
 const POI_CONFIG = {
@@ -684,6 +711,9 @@ const POI_CONFIG = {
     'leisure=picnic_table': { emoji: '️', label: 'Picnic' },
 };
 
+/** @typedef {import('./types.js').POITags} POITags */
+
+/** @param {POITags|null|undefined} tags */
 function classifyPOI(tags) {
     if (!tags) return null;
     if (tags.natural === 'peak') return 'natural=peak';
@@ -708,6 +738,7 @@ async function loadNearbyPOIs(map, lat, lng) {
             body: query,
         });
         if (!res.ok) return;
+        /** @type {{ elements?: { lat: number, lon: number, tags?: POITags }[] }} */
         const data = await res.json();
 
         const groups = {};

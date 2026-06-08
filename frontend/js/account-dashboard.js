@@ -2,11 +2,13 @@
 async function uploadFile(endpoint, file) {
     const token = localStorage.getItem('cat_token');
     const fd = new FormData();
+    //$_FILES['file']
     fd.append('file', file);
     const res = await fetch(API_BASE + endpoint, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
+            //browserul pune singur content type pentru fisiere
         },
         body: fd,
     });
@@ -15,7 +17,7 @@ async function uploadFile(endpoint, file) {
     return data;
 }
 
-// Normalizeaza URL-uri media (vechi: relative, noi: absolute)
+// Normalizeaza URL-uri media
 function mediaUrl(url) {
     if (!url) return '../../assets/images/camping-placeholder.jpg';
     return url.startsWith('/') ? url : '/cat/public/' + url;
@@ -26,7 +28,7 @@ function loadMyCampsites() {
     if (!container) return;
 
     api.get('/api/campings/mine')
-        .then(res => {
+        .then((/** @type {{ campings?: { id: number, name: string, region: string|null, address: string|null, type: string, cover_url: string|null, approval_status: number, admin_feedback: string|null }[] }} */ res) => {
             const createCard = container.querySelector('.create-card');
             container.innerHTML = '';
             if (createCard) container.appendChild(createCard);
@@ -54,13 +56,13 @@ function loadMyCampsites() {
                     feedbackMsg = `<p class="camping-admin-feedback" style="color:red;font-size:12px;">${camping.admin_feedback}</p>`;
                 }
                 if (camping.approval_status === -1 || camping.approval_status === 2) {
-                    resubmitBtn = `<button class="btn-resubmit" onclick="event.stopPropagation();resubmitCamping(${camping.id})">Retrimite</button>`;
+                    resubmitBtn = `<button class="btn-resubmit">Retrimite</button>`;
                 }
 
                 container.insertAdjacentHTML('beforeend', `
                     <div class="cat-card ${statusClass}" data-id="${camping.id}">
                         <div class="cat-card-img-wrapper">
-                            <img src="${coverImg}" alt="${name}" onerror="this.onerror=null;this.src='../../assets/images/camping-placeholder.jpg'">
+                            <img src="${coverImg}" alt="${name}">
                         </div>
                         <div class="cat-card-content">
                             <h3 class="cat-card-title">${name}</h3>
@@ -181,16 +183,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Fallback
+document.addEventListener('error', function(e) {
+    const img = e.target;
+    if (img instanceof HTMLImageElement && img.closest('.cat-card-img-wrapper') && !img.dataset.fallback) {
+        img.dataset.fallback = '1';
+        img.src = '../../assets/images/camping-placeholder.jpg';
+    }
+}, true);
+
 // Manager global click-uri
 document.addEventListener('click', async function(e) {
 
-    // A. Click pe card → deschide detalii
-    const card = e.target.closest('.cat-card');
-    if (card && !e.target.closest('.btn-resubmit')) {
-        openCampsiteDetails(card.getAttribute('data-id'));
+    // A. Click pe buton Resubmit → retrimite cererea (nu deschide detaliile)
+    const resubmitBtn = e.target.closest('.btn-resubmit');
+    if (resubmitBtn) {
+        e.stopPropagation();
+        const resubmitCard = resubmitBtn.closest('.cat-card');
+        if (resubmitCard) await resubmitCamping(resubmitCard.getAttribute('data-id'));
+        return;
     }
 
-    // B. Navigare NEXT (stepper formular)
+    // B. Click pe card → deschide detalii
+    const card = e.target.closest('.cat-card');
+    if (card) {
+        await openCampsiteDetails(card.getAttribute('data-id'));
+    }
+
+    // C. Navigare NEXT (stepper formular)
     if (e.target.classList.contains('campsite-next')) {
         const currentStep = e.target.closest('.campsite-step');
         if (!validateCurrentStep(currentStep)) {
@@ -204,7 +224,7 @@ document.addEventListener('click', async function(e) {
         updateCampsiteStepper(nextStep);
     }
 
-    // C. Buton FINISH formular
+    // D. Buton FINISH formular
     if (e.target.classList.contains('campsite-finish')) {
         e.preventDefault();
 
@@ -243,6 +263,7 @@ document.addEventListener('click', async function(e) {
                 await api.patch('/api/campings/' + editId, body);
                 campingId = parseInt(editId);
             } else {
+                /** @type {{ camping: { id: number } }} */
                 const res = await api.post('/api/campings', body);
                 campingId = res.camping.id;
             }
@@ -272,7 +293,7 @@ document.addEventListener('click', async function(e) {
         }
     }
 
-    // D. Navigare bulina înapoi în stepper
+    // E. Navigare bulina înapoi în stepper
     const stepItem = e.target.closest('.campsite-stepper .step-item');
     if (stepItem) {
         const targetId = parseInt(stepItem.getAttribute('data-c-step'));
@@ -287,7 +308,7 @@ document.addEventListener('click', async function(e) {
         }
     }
 
-    // E. Buton Edit din detalii
+    // F. Buton Edit din detalii
     if (e.target.id === 'btn-edit-campsite') {
         if (!currentCampsiteData) return;
         document.getElementById('campsite-details-view').style.display = 'none';
@@ -317,7 +338,7 @@ document.addEventListener('click', async function(e) {
         });
     }
 
-    // F. Buton Messages din detalii
+    // G. Buton Messages din detalii
     if (e.target.id === 'btn-messages') {
         if (!currentCampsiteData) return;
         document.getElementById('campsite-details-view').style.display = 'none';
@@ -339,13 +360,13 @@ document.addEventListener('click', async function(e) {
         }
     }
 
-    // G. Înapoi de la mesaje la detalii
+    // H. Înapoi de la mesaje la detalii
     if (e.target.id === 'btn-back-from-messages' || e.target.closest('#btn-back-from-messages')) {
         document.getElementById('campsite-messages-view').style.display = 'none';
         document.getElementById('campsite-details-view').style.display = 'block';
     }
 
-    // H. Buton Delete din detalii
+    // I. Buton Delete din detalii
     if (e.target.id === 'btn-delete-campsite') {
         if (!currentCampsiteData) return;
         const ok = await showConfirm(
@@ -374,6 +395,14 @@ let currentCampsiteData = null;
 
 async function openCampsiteDetails(id) {
     try {
+        /**
+         * @type {{ camping: {
+         *   name: string, type: string, region: string|null, address: string|null,
+         *   description: string|null, price_per_night: number|null, capacity: number|null,
+         *   approval_status: number, admin_feedback: string|null,
+         *   facilities: string[], environments: string[], media: object[]
+         * } }}
+         */
         const res = await api.get('/api/campings/' + id);
         const data = res.camping;
         currentCampsiteData = data;
@@ -571,6 +600,8 @@ function initMapLogic() {
         pickerMarker = null,
         tempLat = null,
         tempLng = null;
+    /** @type {any} */
+    const L = window.L;
 
     if (btnPinMap && mapModal) {
         btnPinMap.addEventListener('click', () => {

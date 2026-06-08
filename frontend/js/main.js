@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // CARD SLIDER (landing / about page)
     const cards = document.querySelectorAll('.about-cards-stack .feature-card');
@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${from} – ${to} • ${guests} adult${guests !== 1 ? 'i' : ''}`;
     }
 
+    /** @param {import('./types.js').BookingRow[]} bookingsArray */
     function renderBookings(bookingsArray) {
         const container = document.getElementById('bookings-container');
         if (!container) return;
@@ -143,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.className = 'btn-cancel-booking';
                 btn.style.cssText = 'flex-shrink:0;padding:8px 16px;background:transparent;color:#e05252;border:1.5px solid #e05252;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;';
                 btn.textContent = 'Anulează';
-                btn.addEventListener('click', e => { e.stopPropagation(); cancelBooking(booking.id); });
+                btn.addEventListener('click', async e => { e.stopPropagation(); await cancelBooking(booking.id); });
                 actionEl.appendChild(btn);
             } else {
                 actionEl.className = 'booking-arrow';
@@ -160,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof api === 'undefined') return;
 
         try {
+            /** @type {{ bookings?: import('./types.js').BookingRow[] }} */
             const data = await api.get('/api/bookings');
             allBookings = data?.bookings || [];
             renderBookings(allBookings);
@@ -212,8 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (datesEl) datesEl.textContent = formatDateRange(booking.check_in, booking.check_out, booking.guests);
 
         if (statusEl) {
-            const label = STATUS_LABELS()[booking.status] || booking.status;
-            statusEl.textContent = label;
+            statusEl.textContent = STATUS_LABELS()[booking.status] || booking.status;
             statusEl.style.backgroundColor = '';
             statusEl.style.color = 'white';
             if (booking.status === 'pending') statusEl.style.backgroundColor = '#84AC00';
@@ -284,6 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const TYPE_LABELS_WL = { tent: 'Cort', glamping: 'Glamping', rv: 'Autorulotă', cabin: 'Căsuță', wild: 'Sălbatic' };
 
+    /** @param {import('./types.js').WishlistCamping[]} campings */
     function renderWishlist(campings) {
         const container = document.getElementById('wishlist-container');
         if (!container) return;
@@ -320,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof api === 'undefined') return;
 
         try {
+            /** @type {{ sections?: import('./types.js').SectionRow[] }} */
             const data = await api.get('/api/sections');
             const sections = data?.sections || [];
             const favSection = sections.find(s => s.name === 'Favorite');
@@ -330,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             favoritesSectionId = favSection.id;
+            /** @type {{ campings?: import('./types.js').WishlistCamping[] }} */
             const campData = await api.get(`/api/sections/${favSection.id}/campings`);
             renderWishlist(campData?.campings || []);
         } catch (err) {
@@ -353,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!favoritesSectionId) return;
         try {
             await api.delete(`/api/sections/${favoritesSectionId}/campings/${campingId}`);
-            loadWishlist();
+            await loadWishlist();
         } catch (err) {
             if (typeof showToast !== 'undefined') showToast(t('account.remove_fav_err'));
         }
@@ -405,6 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            /** @type {{ user: import('./types.js').UserProfile }} */
             const data = await api.get('/api/auth/me');
             if (!data) return; // 401 redirect prin api.js
             localStorage.setItem('cat_user', JSON.stringify(data.user));
@@ -430,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (usernameVal) body.username = usernameVal;
                 if (fullnameVal) body.full_name = fullnameVal;
 
+                /** @type {{ user: import('./types.js').UserProfile }} */
                 const data = await api.patch('/api/users/me', body);
                 localStorage.setItem('cat_user', JSON.stringify(data.user));
                 populateUserPill(data.user);
@@ -647,9 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // INIT (Incarcare date API)
     if (typeof api !== 'undefined') {
-        loadUser();
-        loadBookings();
-        loadWishlist();
+        await Promise.all([loadUser(), loadBookings(), loadWishlist()]);
     }
 
 
