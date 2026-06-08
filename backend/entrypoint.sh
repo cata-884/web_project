@@ -1,10 +1,8 @@
 #!/bin/sh
 set -e
 
-if [ ! -d /var/www/html/vendor ]; then
-    echo "[entrypoint] Running composer install..."
-    composer install --no-interaction --no-dev --optimize-autoloader --working-dir=/var/www/html
-fi
+echo "[entrypoint] Sincronizare dependinte Composer..."
+composer install --no-interaction --no-dev --optimize-autoloader --working-dir=/var/www/html
 
 mkdir -p /var/www/html/public/uploads/documents \
          /var/www/html/public/uploads/campings \
