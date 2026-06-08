@@ -197,17 +197,48 @@
 
 .hamburger-btn {
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
     background: transparent;
-    border: none;
-    font-size: 28px;
-    color: var(--color-teal);
+    border: 1px solid color-mix(in srgb, var(--color-teal) 35%, transparent);
+    border-radius: 10px;
     cursor: pointer;
-    padding: 0 10px 0 0;
+    padding: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.hamburger-btn:hover {
+    background-color: color-mix(in srgb, var(--color-teal) 12%, transparent);
+    border-color: var(--color-teal);
+}
+
+.hamburger-btn .bar {
+    width: 20px;
+    height: 2px;
+    background-color: var(--color-teal);
+    border-radius: 10px;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+}
+
+.hamburger-btn.active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 @media (width <= 700px) {
     .hamburger-btn {
-        display: block;
+        display: flex;
     }
 
     .account-header {
