@@ -10,6 +10,13 @@ function debounce(fn, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // MENIU HAMBURGER (mobil)
+    const hamburgerNav = document.querySelector('.hamburger-menu');
+    const mainNav = document.querySelector('.main-nav');
+    if (hamburgerNav && mainNav) {
+        hamburgerNav.addEventListener('click', () => mainNav.classList.toggle('nav-open'));
+    }
+
     if (localStorage.getItem('cat_token')) {
         const authLink = document.querySelector('.nav-group a[href="auth.html"]');
         const hartaLink = document.querySelector('.nav-group a[href="map.html"]');

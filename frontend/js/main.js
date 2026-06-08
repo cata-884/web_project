@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
+    // MENIU HAMBURGER (mobil)
+    const hamburgerNav = document.querySelector('.hamburger-menu');
+    const mainNav = document.querySelector('.main-nav');
+    if (hamburgerNav && mainNav) {
+        hamburgerNav.addEventListener('click', () => mainNav.classList.toggle('nav-open'));
+    }
+
     // CARD SLIDER (landing / about page)
     const cards = document.querySelectorAll('.about-cards-stack .feature-card');
     let positions = ['pos-0', 'pos-1', 'pos-2'];
@@ -554,8 +561,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.appendChild(overlay);
 
         function toggleMobileMenu() {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active', sidebar.classList.contains('open'));
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.classList.toggle('active', isOpen);
+            hamburgerBtn.classList.toggle('active', isOpen);
         }
 
         hamburgerBtn.addEventListener('click', toggleMobileMenu);

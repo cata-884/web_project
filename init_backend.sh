@@ -2,6 +2,7 @@
 
 echo "Pornire mediu Docker (Backend, PostgreSQL)..."
 docker compose up -d --build
+# shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
     echo "EROARE: Nu s-a putut porni mediul Docker."
     exit 1
